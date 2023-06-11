@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   marchingCubeChunkPrefab: {fileID: 1601710243236222091, guid: 4cf914c2d13140342883ee29afb1946f,
     type: 3}
-  chunkSize: 16
+  chunkSize: 10
   noiseScale: 0.15
   offset: {x: 0, y: 0, z: 0}
 --- !u!1 &4488157032547380079

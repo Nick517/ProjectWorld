@@ -119,6 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d07d220770ae1e4ca3a5058ac1e6eff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  smoothTerrain: 1
+  smoothMesh: 1
   smoothShaded: 1
+  cubeSize: 1
   mapSurface: 0.5
+  chunkPosition: {x: 0, y: 0, z: 0}

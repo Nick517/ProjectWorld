@@ -5,8 +5,12 @@ public class MarchingCubes : MonoBehaviour
 {
     public bool smoothMesh = true;
     public bool smoothShaded = true;
-    [Range(0, 1)] public float mapSurface = 0.5f;
+    public float cubeSize = 1.0f;
 
+    [HideInInspector]
+    public float mapSurface;
+    [HideInInspector]
+    public Vector3 chunkPosition;
     public CubeMap cubeMap;
 
     private MeshFilter meshFilter;
@@ -91,11 +95,11 @@ public class MarchingCubes : MonoBehaviour
 
                 if (smoothShaded)
                 {
-                    triangles.Add(VertForIndice(vertPosition));
+                    triangles.Add(VertForIndice(vertPosition * cubeSize));
                 }
                 else
                 {
-                    vertices.Add(vertPosition);
+                    vertices.Add(vertPosition * cubeSize);
                     triangles.Add(vertices.Count - 1);
                 }
 

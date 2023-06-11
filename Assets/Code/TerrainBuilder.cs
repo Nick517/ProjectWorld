@@ -1,28 +1,41 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TerrainBuilder : MonoBehaviour
 {
     public MarchingCubes marchingCubeChunkPrefab;
 
-    public int chunkSize = 16;
+    public int cubeCount = 10;
     public float noiseScale = 0.15f;
-    public Vector3Int offset = new(0, 0, 0);
+    [Range(0, 1)]
+    public float mapSurface = 0.5f;
 
-    private CubeMap cubeMap;
-    private MarchingCubes chunk;
+    public Dictionary<Vector3Int, MarchingCubes> chunks = new();
 
-    public void CreateChunk()
+    public void CreateChunk(Vector3Int chunkPosition)
     {
-        cubeMap = new(chunkSize);
+        if (!chunks.ContainsKey(chunkPosition))
+        {
+            MarchingCubes chunk = Instantiate(marchingCubeChunkPrefab, cubeCount * marchingCubeChunkPrefab.cubeSize * (Vector3)chunkPosition, Quaternion.identity);
+            chunk.name = $"Chunk {chunkPosition}";
+            chunk.mapSurface = mapSurface;
+            chunk.chunkPosition = chunkPosition;
+            chunks.Add(chunkPosition, chunk);
 
-        chunk = Instantiate(marchingCubeChunkPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-        UpdateChunk();
+            UpdateChunk(chunk);
+        }
     }
 
-    public void UpdateChunk()
+    public void UpdateChunk(MarchingCubes chunk)
     {
-        cubeMap.map = TerrainGenerator.PopulateMap(cubeMap.map.GetLength(0), offset, noiseScale);
+        CubeMap cubeMap = new(cubeCount);
+        cubeMap.map = TerrainGenerator.PopulateMap(cubeMap.map.GetLength(0), cubeCount * chunk.chunkPosition, noiseScale);
         chunk.cubeMap = cubeMap;
         chunk.CreateMeshData();
+    }
+
+    public float GetChunkSize()
+    {
+        return cubeCount * marchingCubeChunkPrefab.cubeSize;
     }
 }

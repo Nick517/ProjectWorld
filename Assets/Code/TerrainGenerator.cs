@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class TerrainGenerator
 {
-    public static float[,,] PopulateMap(int size, Vector3Int offset, float noiseScale)
+    public static float[,,] PopulateMap(int size, Vector3 offset, float noiseScale)
     {
         float[,,] map = new float[size, size, size];
 
