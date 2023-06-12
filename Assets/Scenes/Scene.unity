@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2167.3723, g: 2278.5862, b: 3327.3403, a: 1}
+  m_IndirectSpecularColor: {r: 2168.9456, g: 2281.381, b: 3334.2583, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -631,6 +631,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1230561288257023421, guid: 8d1d2f5fcdc438e42ba4a44bd1afedb6,
+        type: 3}
+      propertyPath: cubeCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1230561288257023421, guid: 8d1d2f5fcdc438e42ba4a44bd1afedb6,
+        type: 3}
+      propertyPath: noiseScale
+      value: 0.15
+      objectReference: {fileID: 0}
     - target: {fileID: 4488157032547380079, guid: 8d1d2f5fcdc438e42ba4a44bd1afedb6,
         type: 3}
       propertyPath: m_Name
@@ -756,6 +766,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Chunk Loader
+      objectReference: {fileID: 0}
+    - target: {fileID: 7381547001749003155, guid: 72cb2659e7325204ebe8e6ccce2cefed,
+        type: 3}
+      propertyPath: maxLOD
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7381547001749003155, guid: 72cb2659e7325204ebe8e6ccce2cefed,
+        type: 3}
+      propertyPath: cubicChunks
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9042003666144540010, guid: 72cb2659e7325204ebe8e6ccce2cefed,
         type: 3}

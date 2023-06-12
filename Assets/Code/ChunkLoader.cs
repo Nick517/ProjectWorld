@@ -4,10 +4,10 @@ public class ChunkLoader : MonoBehaviour
 {
     public World world;
 
-    public void CreateChunk()
+    public void CreateChunk(float cubeSize)
     {
         Vector3Int currentChunk = GetCurrentChunk();
-        world.terrainBuilder.CreateChunk(currentChunk);
+        world.terrainBuilder.CreateChunk(currentChunk, cubeSize);
     }
 
     public Vector3Int GetCurrentChunk()

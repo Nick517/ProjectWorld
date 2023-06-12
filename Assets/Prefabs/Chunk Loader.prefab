@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 0}
-  chunkSize: 0
 --- !u!114 &7381547001749003155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,5 +58,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93fdc6ac4dd431f4b9ca75d3ef4bd2d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkLoader: {fileID: 9079753968452752057}
-  cubicChunks: 10
+  maxLOD: 3
+  cubePrefab: {fileID: 3813972758009414561, guid: 21af1e96417e2a84ba6931fc909fbb36,
+    type: 3}

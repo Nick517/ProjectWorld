@@ -1,35 +1,48 @@
+using System;
 using UnityEngine;
 
 public class ChunkLoaderMover : MonoBehaviour
 {
-    public int cubicChunks = 10;
+    public int maxLOD = 10;
 
     private ChunkLoader chunkLoader;
+
+    private float chunkSize;
 
     private void Start()
     {
         chunkLoader = GetComponent<ChunkLoader>();
 
-        float chunkSize = chunkLoader.world.terrainBuilder.GetChunkSize();
+        chunkSize = chunkLoader.world.terrainBuilder.GetChunkSize();
 
-        MoveChunkLoader(chunkSize);
+        SpawnChunks(chunkSize);
     }
 
-    private void MoveChunkLoader(float chunkSize)
+    private void SpawnChunks(float chunkSize)
     {
-        for (int x = 0; x < cubicChunks; x++)
+        int LOD = 1;
+
+        while (LOD < Math.Pow(2, maxLOD))
         {
-            for (int y = 0; y < cubicChunks; y++)
+            for (int x = -2; x < 2; x++)
             {
-                for (int z = 0; z < cubicChunks; z++)
+                for (int y = -2; y < 2; y++)
                 {
-                    Vector3 position = new(x, y, z);
+                    for (int z = -2; z < 2; z++)
+                    {
+                        if (LOD == 1 || !(x >= -1 && x <= 0) || !(y >= -1 && y <= 0) || !(z >= -1 && z <= 0))
+                        {
+                            Vector3 position = new(x, y, z);
 
-                    transform.position = position * chunkSize;
+                            transform.position = chunkSize * LOD * position;
 
-                    chunkLoader.CreateChunk();
+                            chunkLoader.CreateChunk(LOD);
+                        }
+                    }
                 }
             }
+
+            LOD *= 2;
         }
     }
 }

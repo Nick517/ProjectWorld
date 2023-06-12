@@ -2,17 +2,19 @@ using UnityEngine;
 
 public static class TerrainGenerator
 {
-    public static float[,,] PopulateMap(int size, Vector3 offset, float noiseScale)
+    public static float[,,] PopulateMap(int cubeCount, float cubeSize, Vector3 offset, float noiseScale)
     {
-        float[,,] map = new float[size, size, size];
+        float[,,] map = new float[cubeCount, cubeCount, cubeCount];
 
-        for (int x = 0; x < size; x++)
+        for (int x = 0; x < cubeCount; x++)
         {
-            for (int y = 0; y < size; y++)
+            for (int y = 0; y < cubeCount; y++)
             {
-                for (int z = 0; z < size; z++)
+                for (int z = 0; z < cubeCount; z++)
                 {
                     Vector3 position = new(x, y, z);
+                    position *= cubeSize;
+
                     map[x, y, z] = GetSample(position + offset, noiseScale);
                 }
             }
@@ -27,8 +29,9 @@ public static class TerrainGenerator
         float y = noiseScale * position.y;
         float z = noiseScale * position.z;
 
-        Vector3 noisePosition = new(x, y, z);
+        //Vector3 noisePosition = new(x, y, z);
+        //return Noise3D.Perlin(noisePosition);
 
-        return Noise3D.Perlin(noisePosition);
+        return y * Mathf.PerlinNoise(x, z);
     }
 }
