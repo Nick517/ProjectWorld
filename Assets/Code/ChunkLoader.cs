@@ -5,20 +5,33 @@ public class ChunkLoader : MonoBehaviour
 {
     public World world;
 
-    public Vector3Int origin = new(0, 0, 0);
+    public Transform trackPoint;
+
     public int maxLOD = 10;
 
     private float chunkSize;
+    private Vector3 lastChunk;
 
     private void Start()
     {
         chunkSize = world.terrainBuilder.GetChunkSize();
+    }
 
-        SpawnChunks(origin);
+    private void Update()
+    {
+        Vector3Int currentChunk = ChunkOperations.GetCurrentChunk(trackPoint.position, chunkSize);
+
+        if (currentChunk != lastChunk)
+        {
+            SpawnChunks(currentChunk);
+            lastChunk = currentChunk;
+        }
     }
 
     private void SpawnChunks(Vector3Int origin)
     {
+        world.terrainBuilder.DeleteAllChunks();
+
         int LOD = 1;
 
         while (LOD < Math.Pow(2, maxLOD))
@@ -33,7 +46,7 @@ public class ChunkLoader : MonoBehaviour
                         {
                             Vector3 position = new(x, y, z);
                             position *= chunkSize * LOD;
-                            position += origin;
+                            position += new Vector3(origin.x * chunkSize, origin.y * chunkSize, origin.z * chunkSize);
 
                             transform.position = position;
 

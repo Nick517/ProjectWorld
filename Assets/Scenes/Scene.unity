@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2163.1926, g: 2334.1624, b: 3573.9731, a: 1}
+  m_IndirectSpecularColor: {r: 2187.672, g: 2345.0999, b: 3557.434, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -401,6 +401,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46587cc6e10273144aaa2fb00ff60cea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1588850210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1588850211}
+  m_Layer: 0
+  m_Name: Track Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1588850211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588850210}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1823688464
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,7 +670,7 @@ PrefabInstance:
     - target: {fileID: 1230561288257023421, guid: 8d1d2f5fcdc438e42ba4a44bd1afedb6,
         type: 3}
       propertyPath: noiseScale
-      value: 0.15
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 4488157032547380079, guid: 8d1d2f5fcdc438e42ba4a44bd1afedb6,
         type: 3}
@@ -762,6 +793,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5084996479602229496, guid: 72cb2659e7325204ebe8e6ccce2cefed,
+        type: 3}
+      propertyPath: world
+      value: 
+      objectReference: {fileID: 1488107415}
+    - target: {fileID: 5084996479602229496, guid: 72cb2659e7325204ebe8e6ccce2cefed,
+        type: 3}
+      propertyPath: origin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5084996479602229496, guid: 72cb2659e7325204ebe8e6ccce2cefed,
+        type: 3}
+      propertyPath: trackPoint
+      value: 
+      objectReference: {fileID: 1588850211}
     - target: {fileID: 6421447493212708115, guid: 72cb2659e7325204ebe8e6ccce2cefed,
         type: 3}
       propertyPath: m_Name
