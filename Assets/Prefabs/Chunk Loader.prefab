@@ -9,8 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9042003666144540010}
-  - component: {fileID: 9079753968452752057}
-  - component: {fileID: 7381547001749003155}
+  - component: {fileID: 5084996479602229496}
   m_Layer: 0
   m_Name: Chunk Loader
   m_TagString: Untagged
@@ -31,22 +30,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9079753968452752057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6421447493212708115}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0835e36823d9a34488eb0a1e64b0fdd4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  world: {fileID: 0}
---- !u!114 &7381547001749003155
+--- !u!114 &5084996479602229496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93fdc6ac4dd431f4b9ca75d3ef4bd2d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxLOD: 3
-  cubePrefab: {fileID: 3813972758009414561, guid: 21af1e96417e2a84ba6931fc909fbb36,
-    type: 3}
+  world: {fileID: 0}
+  origin: {x: 0, y: 0, z: 0}
+  maxLOD: 10
