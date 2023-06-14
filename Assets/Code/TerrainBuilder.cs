@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TerrainBuilder : MonoBehaviour
@@ -11,36 +12,23 @@ public class TerrainBuilder : MonoBehaviour
     public float mapSurface = 0.5f;
     private readonly List<MarchingCubes> chunks = new();
 
-    public void CreateChunk(Vector3Int chunkPosition, float cubeSize)
+    public void LoadChunks(List<MarchingCubes> newChunks)
     {
-        MarchingCubes chunk = Instantiate(marchingCubeChunkPrefab, marchingCubeChunkPrefab.cubeSize * cubeCount * (Vector3)chunkPosition, Quaternion.identity);
-        chunk.name = $"Chunk {chunkPosition}, size: {cubeSize}";
-        chunk.cubeSize = cubeSize;
-        chunk.mapSurface = mapSurface;
-        chunk.chunkPosition = chunkPosition;
-        chunks.Add(chunk);
+        List<MarchingCubes> chunksToDestroy = chunks.Except(newChunks).ToList();
+        chunksToDestroy.ForEach(thing => Destroy(thing.gameObject));
+        _ = chunks.RemoveAll(chunk => chunksToDestroy.Contains(chunk));
 
-        UpdateChunk(chunk, cubeSize);
+        List<MarchingCubes> chunksToCreate = newChunks.Except(chunks).ToList();
+        chunks.AddRange(chunksToCreate);
+        chunksToCreate.ForEach(chunk => UpdateChunk(chunk));
     }
 
-    public void UpdateChunk(MarchingCubes chunk, float cubeSize)
+    private void UpdateChunk(MarchingCubes chunk)
     {
         CubeMap cubeMap = new(cubeCount);
-        cubeMap.map = TerrainGenerator.PopulateMap(cubeMap.map.GetLength(0), cubeSize, GetChunkSize() * chunk.chunkPosition, noiseScale);
+        cubeMap.map = TerrainGenerator.PopulateMap(cubeMap.map.GetLength(0), chunk.cubeSize, chunk.transform.position, noiseScale);
         chunk.cubeMap = cubeMap;
         chunk.CreateMeshData();
-    }
-
-    public void DeleteAllChunks()
-    {
-        MarchingCubes[] chunkArray = chunks.ToArray();
-
-        foreach (MarchingCubes chunk in chunkArray)
-        {
-            Destroy(chunk.gameObject);
-        }
-
-        chunks.Clear();
     }
 
     public float GetChunkSize()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ChunkLoader : MonoBehaviour
@@ -10,7 +11,7 @@ public class ChunkLoader : MonoBehaviour
     public int maxLOD = 10;
 
     private float chunkSize;
-    private Vector3 lastChunk;
+    private Vector3 lastChunk = new(-1, 0, 0);
 
     private void Start()
     {
@@ -19,7 +20,7 @@ public class ChunkLoader : MonoBehaviour
 
     private void Update()
     {
-        Vector3Int currentChunk = ChunkOperations.GetCurrentChunk(trackPoint.position, chunkSize);
+        Vector3 currentChunk = GetCurrentChunk(trackPoint.position, chunkSize);
 
         if (currentChunk != lastChunk)
         {
@@ -28,9 +29,9 @@ public class ChunkLoader : MonoBehaviour
         }
     }
 
-    private void SpawnChunks(Vector3Int origin)
+    private void SpawnChunks(Vector3 origin)
     {
-        world.terrainBuilder.DeleteAllChunks();
+        List<MarchingCubes> chunks = new();
 
         int LOD = 1;
 
@@ -46,11 +47,9 @@ public class ChunkLoader : MonoBehaviour
                         {
                             Vector3 position = new(x, y, z);
                             position *= chunkSize * LOD;
-                            position += new Vector3(origin.x * chunkSize, origin.y * chunkSize, origin.z * chunkSize);
+                            position += chunkSize * origin;
 
-                            transform.position = position;
-
-                            CreateChunk(LOD);
+                            chunks.Add(CreateChunk(position, LOD));
                         }
                     }
                 }
@@ -58,11 +57,27 @@ public class ChunkLoader : MonoBehaviour
 
             LOD *= 2;
         }
+
+        world.terrainBuilder.LoadChunks(chunks);
     }
 
-    private void CreateChunk(float cubeSize)
+    private MarchingCubes CreateChunk(Vector3 position, float cubeSize)
     {
-        Vector3Int currentChunk = ChunkOperations.GetCurrentChunk(transform.position, chunkSize);
-        world.terrainBuilder.CreateChunk(currentChunk, cubeSize);
+        MarchingCubes chunk = Instantiate(world.terrainBuilder.marchingCubeChunkPrefab, position, Quaternion.identity);
+        chunk.name = $"Chunk {position}, size: {cubeSize}";
+        chunk.cubeSize *= cubeSize;
+
+        return chunk;
+    }
+
+    public Vector3Int GetCurrentChunk(Vector3 position, float chunkSize)
+    {
+        int chunkX = (int)(position.x / chunkSize);
+        int chunkY = (int)(position.y / chunkSize);
+        int chunkZ = (int)(position.z / chunkSize);
+
+        Vector3Int chunk = new(chunkX, chunkY, chunkZ);
+
+        return chunk;
     }
 }

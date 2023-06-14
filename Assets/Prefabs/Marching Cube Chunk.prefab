@@ -123,4 +123,3 @@ MonoBehaviour:
   smoothShaded: 1
   cubeSize: 1
   mapSurface: 0.5
-  chunkPosition: {x: 0, y: 0, z: 0}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,8 +10,6 @@ public class MarchingCubes : MonoBehaviour
 
     [HideInInspector]
     public float mapSurface;
-    [HideInInspector]
-    public Vector3 chunkPosition;
     public CubeMap cubeMap;
 
     private MeshFilter meshFilter;
@@ -27,20 +26,40 @@ public class MarchingCubes : MonoBehaviour
 
     public void CreateMeshData()
     {
-        ClearMeshData();
-
-        for (int x = 0; x < cubeMap.map.GetLength(0) - 1; x++)
+        if (cubeMap != null)
         {
-            for (int y = 0; y < cubeMap.map.GetLength(0) - 1; y++)
+            ClearMeshData();
+
+            for (int x = 0; x < cubeMap.map.GetLength(0) - 1; x++)
             {
-                for (int z = 0; z < cubeMap.map.GetLength(0) - 1; z++)
+                for (int y = 0; y < cubeMap.map.GetLength(0) - 1; y++)
                 {
-                    MarchCube(new Vector3Int(x, y, z));
+                    for (int z = 0; z < cubeMap.map.GetLength(0) - 1; z++)
+                    {
+                        MarchCube(new Vector3Int(x, y, z));
+                    }
                 }
             }
+
+            BuildMesh();
+        }
+    }
+
+    public override bool Equals(object obj)
+    {
+
+        if (obj is null or not MarchingCubes)
+        {
+            return false;
         }
 
-        BuildMesh();
+        MarchingCubes chunk = (MarchingCubes)obj;
+        return transform.position == chunk.transform.position && cubeSize == chunk.cubeSize;
+    }
+
+    public override int GetHashCode()
+    {
+        return transform.position.GetHashCode() ^ cubeSize.GetHashCode();
     }
 
     private void MarchCube(Vector3Int position)
@@ -161,5 +180,10 @@ public class MarchingCubes : MonoBehaviour
         mesh.RecalculateNormals();
         meshFilter.mesh = mesh;
         meshCollider.sharedMesh = mesh;
+    }
+
+    public bool Equals(MarchingCubes other)
+    {
+        throw new NotImplementedException();
     }
 }
