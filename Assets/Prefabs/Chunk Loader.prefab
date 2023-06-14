@@ -44,9 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93fdc6ac4dd431f4b9ca75d3ef4bd2d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackPoint: {fileID: 0}
-  maxLOD: 10
   marchingCubeChunkPrefab: {fileID: 1601710243236222091, guid: 4cf914c2d13140342883ee29afb1946f,
     type: 3}
-  cubeCount: 10
-  mapSurface: 0.5
+  trackPoint: {fileID: 0}
+  chunkCubeCount: 8
+  maxChunkScale: 10
