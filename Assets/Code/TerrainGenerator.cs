@@ -2,8 +2,9 @@ using UnityEngine;
 
 public static class TerrainGenerator
 {
-    public static float[,,] PopulateMap(int cubeCount, float cubeSize, Vector3 offset, float noiseScale)
+    public static float[,,] PopulateMap(int cubeCount, float cubeSize, Vector3 offset)
     {
+        cubeCount++;
         float[,,] map = new float[cubeCount, cubeCount, cubeCount];
 
         for (int x = 0; x < cubeCount; x++)
@@ -15,7 +16,7 @@ public static class TerrainGenerator
                     Vector3 position = new(x, y, z);
                     position *= cubeSize;
 
-                    map[x, y, z] = GetSample(position + offset, noiseScale);
+                    map[x, y, z] = GetSample(position + offset);
                 }
             }
         }
@@ -23,14 +24,23 @@ public static class TerrainGenerator
         return map;
     }
 
-    public static float GetSample(Vector3 position, float noiseScale)
+    public static float GetSample(Vector3 position)
     {
-        float x = noiseScale * position.x;
-        float y = noiseScale * position.y;
-        float z = noiseScale * position.z;
+        Vector3 offset = new(0, 800, 0);
+        position += offset;
 
-        //Vector3 noisePosition = new(x, y, z);
-        //return Noise3D.Perlin(noisePosition);
+        float layer1 = NoiseLayer(position, 0.00001f) * 4;
+        float layer2 = NoiseLayer(position, 0.0001f) * 16;
+        float layer3 = NoiseLayer(position, 0.001f) * 64;
+
+        return layer1 * layer2 * layer3;
+    }
+
+    private static float NoiseLayer(Vector3 position, float scale)
+    {
+        float x = scale * position.x;
+        float y = scale * position.y;
+        float z = scale * position.z;
 
         return y * Mathf.PerlinNoise(x, z);
     }

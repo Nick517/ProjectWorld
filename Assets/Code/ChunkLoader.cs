@@ -1,26 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ChunkLoader : MonoBehaviour
 {
-    public World world;
+    public MarchingCubes marchingCubeChunkPrefab;
 
     public Transform trackPoint;
 
-    public int maxLOD = 10;
+    public int chunkCubeCount = 10;
+    public int maxChunkScale = 10;
 
-    private float chunkSize;
+    private float ChunkSize => chunkCubeCount * marchingCubeChunkPrefab.cubeSize;
     private Vector3 lastChunk = new(-1, 0, 0);
 
-    private void Start()
-    {
-        chunkSize = world.terrainBuilder.GetChunkSize();
-    }
+    private readonly List<MarchingCubes> chunks = new();
 
     private void Update()
     {
-        Vector3 currentChunk = GetCurrentChunk(trackPoint.position, chunkSize);
+        Vector3 currentChunk = GetCurrentChunk(trackPoint.position);
 
         if (currentChunk != lastChunk)
         {
@@ -33,9 +32,9 @@ public class ChunkLoader : MonoBehaviour
     {
         List<MarchingCubes> chunks = new();
 
-        int LOD = 1;
+        int chunkScale = 1;
 
-        while (LOD < Math.Pow(2, maxLOD))
+        while (chunkScale < Math.Pow(2, maxChunkScale))
         {
             for (int x = -2; x < 2; x++)
             {
@@ -43,41 +42,56 @@ public class ChunkLoader : MonoBehaviour
                 {
                     for (int z = -2; z < 2; z++)
                     {
-                        if (LOD == 1 || !(x >= -1 && x <= 0) || !(y >= -1 && y <= 0) || !(z >= -1 && z <= 0))
+                        if (chunkScale == 1 || !(x >= -1 && x <= 0) || !(y >= -1 && y <= 0) || !(z >= -1 && z <= 0))
                         {
                             Vector3 position = new(x, y, z);
-                            position *= chunkSize * LOD;
-                            position += chunkSize * origin;
+                            position *= ChunkSize * chunkScale;
+                            position += ChunkSize * origin;
 
-                            chunks.Add(CreateChunk(position, LOD));
+                            chunks.Add(CreateChunk(position, chunkScale));
                         }
                     }
                 }
             }
 
-            LOD *= 2;
+            chunkScale *= 2;
         }
 
-        world.terrainBuilder.LoadChunks(chunks);
+        LoadChunks(chunks);
     }
 
     private MarchingCubes CreateChunk(Vector3 position, float cubeSize)
     {
-        MarchingCubes chunk = Instantiate(world.terrainBuilder.marchingCubeChunkPrefab, position, Quaternion.identity);
+        MarchingCubes chunk = Instantiate(marchingCubeChunkPrefab, position, Quaternion.identity, transform);
         chunk.name = $"Chunk {position}, size: {cubeSize}";
         chunk.cubeSize *= cubeSize;
 
         return chunk;
     }
 
-    public Vector3Int GetCurrentChunk(Vector3 position, float chunkSize)
+    public void LoadChunks(List<MarchingCubes> newChunks)
     {
-        int chunkX = (int)(position.x / chunkSize);
-        int chunkY = (int)(position.y / chunkSize);
-        int chunkZ = (int)(position.z / chunkSize);
+        List<MarchingCubes> chunksToDestroy = chunks.Except(newChunks).ToList();
+        chunksToDestroy.ForEach(thing => Destroy(thing.gameObject));
+        _ = chunks.RemoveAll(chunk => chunksToDestroy.Contains(chunk));
 
-        Vector3Int chunk = new(chunkX, chunkY, chunkZ);
+        List<MarchingCubes> chunksToCreate = newChunks.Except(chunks).ToList();
+        chunks.AddRange(chunksToCreate);
+        chunksToCreate.ForEach(chunk => UpdateChunk(chunk));
+    }
 
-        return chunk;
+    private void UpdateChunk(MarchingCubes chunk)
+    {
+        chunk.cubeMap = TerrainGenerator.PopulateMap(chunkCubeCount, chunk.cubeSize, chunk.transform.position);
+        chunk.CreateMeshData();
+    }
+
+    public Vector3 GetCurrentChunk(Vector3 position)
+    {
+        int chunkX = (int)(position.x / ChunkSize);
+        int chunkY = (int)(position.y / ChunkSize);
+        int chunkZ = (int)(position.z / ChunkSize);
+
+        return new(chunkX, chunkY, chunkZ);
     }
 }
