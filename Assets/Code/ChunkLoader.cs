@@ -88,7 +88,7 @@ public class ChunkLoader : MonoBehaviour
     public void LoadChunks(List<MarchingCubes> newChunks)
     {
         List<MarchingCubes> chunksToDestroy = chunks.Except(newChunks).ToList();
-        chunksToDestroy.ForEach(chunk => chunk.DestroyChunk());
+        chunksToDestroy.ForEach(thing => Destroy(thing.gameObject));
         _ = chunks.RemoveAll(chunk => chunksToDestroy.Contains(chunk));
 
         List<MarchingCubes> chunksToCreate = newChunks.Except(chunks).ToList();
