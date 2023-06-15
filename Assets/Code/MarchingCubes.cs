@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,8 @@ public class MarchingCubes : MonoBehaviour
     public float cubeSize = 1.0f;
     [Range(0.0f, 1.0f)]
     public float mapSurface = 0.5f;
+    public float fadeDuration = 2.0f;
+    public float fadeAtChunkScale = 4.0f;
 
     public float[,,] cubeMap;
 
@@ -17,6 +20,8 @@ public class MarchingCubes : MonoBehaviour
 
     private readonly List<Vector3> vertices = new();
     private readonly List<int> triangles = new();
+
+    private bool fadingIn = false;
 
     private void Awake()
     {
@@ -42,6 +47,11 @@ public class MarchingCubes : MonoBehaviour
             }
 
             BuildMesh();
+        }
+
+        if (cubeSize >= Math.Pow(2, fadeAtChunkScale))
+        {
+            _ = StartCoroutine(FadeIn());
         }
     }
 
@@ -182,8 +192,69 @@ public class MarchingCubes : MonoBehaviour
         meshCollider.sharedMesh = mesh;
     }
 
-    public bool Equals(MarchingCubes other)
+    public void DestroyChunk()
     {
-        throw new NotImplementedException();
+        if (cubeSize >= Math.Pow(2, fadeAtChunkScale))
+        {
+            _ = StartCoroutine(FadeOut());
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private IEnumerator FadeIn()
+    {
+        fadingIn = true;
+
+        Material material = GetComponent<Renderer>().material;
+
+        float startTime = Time.time;
+        float startAlpha = 0;
+        float targetAlpha = 1;
+
+        while (fadingIn && Time.time - startTime < fadeDuration)
+        {
+            float normalizedTime = (Time.time - startTime) / fadeDuration;
+
+            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, normalizedTime);
+
+            material.SetFloat("_Alpha", newAlpha);
+
+            yield return null;
+        }
+
+        material.SetFloat("_Alpha", targetAlpha);
+
+        fadingIn = false;
+        yield return null;
+    }
+
+    private IEnumerator FadeOut()
+    {
+        fadingIn = false;
+
+        Material material = GetComponent<Renderer>().material;
+
+        float startTime = Time.time;
+        float startAlpha = material.GetFloat("_Alpha");
+        float targetAlpha = 0;
+
+        while (Time.time - startTime < fadeDuration)
+        {
+            float normalizedTime = (Time.time - startTime) / fadeDuration;
+
+            float newAlpha = Mathf.Lerp(startAlpha, targetAlpha, normalizedTime);
+
+            material.SetFloat("_Alpha", newAlpha);
+
+            yield return null;
+        }
+
+        material.SetFloat("_Alpha", targetAlpha);
+
+        Destroy(gameObject);
+        yield return null;
     }
 }

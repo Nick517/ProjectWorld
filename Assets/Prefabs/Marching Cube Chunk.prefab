@@ -123,3 +123,5 @@ MonoBehaviour:
   smoothShaded: 1
   cubeSize: 1
   mapSurface: 0.5
+  fadeDuration: 1
+  fadeAtChunkScale: 8
