@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class ChunkLoader : MonoBehaviour
@@ -11,6 +12,7 @@ public class ChunkLoader : MonoBehaviour
 
     public int chunkCubeCount = 10;
     public int maxChunkScale = 10;
+    public bool trackSceneView = false;
 
     private float ChunkSize => chunkCubeCount * marchingCubeChunkPrefab.cubeSize;
     private Vector3 lastChunk = new(-1, 0, 0);
@@ -19,7 +21,21 @@ public class ChunkLoader : MonoBehaviour
 
     private void Update()
     {
-        Vector3 currentChunk = GetCurrentChunk(trackPoint.position);
+        Vector3 currentChunk = lastChunk;
+
+        if (trackSceneView)
+        {
+            SceneView sceneView = SceneView.lastActiveSceneView;
+
+            if (sceneView != null)
+            {
+                currentChunk = GetCurrentChunk(sceneView.camera.transform.position);
+            }
+        }
+        else
+        {
+            currentChunk = GetCurrentChunk(trackPoint.position);
+        }
 
         if (currentChunk != lastChunk)
         {
