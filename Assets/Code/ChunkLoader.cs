@@ -14,10 +14,10 @@ public class ChunkLoader : MonoBehaviour
     public int maxChunkScale = 10;
     public bool trackSceneView = false;
 
-    private float ChunkSize => chunkCubeCount * marchingCubeChunkPrefab.cubeSize;
     private Vector3 _lastChunk = new(-1, 0, 0);
 
-    private readonly List<Tuple<Vector3, float, MarchingCubes>> _chunks = new();
+    public readonly List<Tuple<Vector3, float, MarchingCubes>> _chunks = new();
+    private MegaChunk megaChunk;
 
     private void Update()
     {
@@ -29,12 +29,12 @@ public class ChunkLoader : MonoBehaviour
 
             if (sceneView != null)
             {
-                currentChunk = GetCurrentChunk(sceneView.camera.transform.position);
+                currentChunk = GetClosestChunkPosition(sceneView.camera.transform.position, 1);
             }
         }
         else
         {
-            currentChunk = GetCurrentChunk(trackPoint.position);
+            currentChunk = GetClosestChunkPosition(trackPoint.position, 1);
         }
 
         if (currentChunk != _lastChunk)
@@ -44,36 +44,10 @@ public class ChunkLoader : MonoBehaviour
         }
     }
 
-    private void SpawnChunks(Vector3 origin)
+    public void SpawnChunks(Vector3 origin)
     {
-        List<Tuple<Vector3, float, MarchingCubes>> newChunks = new();
-
-        int chunkScale = 1;
-
-        while (chunkScale < Math.Pow(2, maxChunkScale))
-        {
-            for (int x = -2; x < 2; x++)
-            {
-                for (int y = -2; y < 2; y++)
-                {
-                    for (int z = -2; z < 2; z++)
-                    {
-                        if (chunkScale == 1 || !(x >= -1 && x <= 0) || !(y >= -1 && y <= 0) || !(z >= -1 && z <= 0))
-                        {
-                            Vector3 position = new(x, y, z);
-                            position *= ChunkSize * chunkScale;
-                            position += ChunkSize * origin;
-
-                            newChunks.Add(new(position, chunkScale, null));
-                        }
-                    }
-                }
-            }
-
-            chunkScale *= 2;
-        }
-
-        LoadChunks(newChunks);
+        megaChunk = new(this, GetClosestChunkPosition(origin, maxChunkScale), maxChunkScale);
+        megaChunk.CreateSubChunks(origin);
     }
 
     public void LoadChunks(List<Tuple<Vector3, float, MarchingCubes>> newChunks)
@@ -103,23 +77,32 @@ public class ChunkLoader : MonoBehaviour
         }
     }
 
-    private MarchingCubes CreateChunk(Vector3 position, float cubeSize)
+    public MarchingCubes CreateChunk(Vector3 position, float chunkScale)
     {
         MarchingCubes chunk = Instantiate(marchingCubeChunkPrefab, position, Quaternion.identity, transform);
-        chunk.name = $"Chunk {position}, size: {cubeSize}";
-        chunk.cubeSize *= cubeSize;
-        chunk.cubeMap = TerrainGenerator.PopulateMap(chunkCubeCount, cubeSize, position);
+        chunk.name = $"Chunk {position}, scale: {chunkScale + 1}";
+        chunk.cubeSize *= Mathf.Pow(2, chunkScale);
+        chunk.cubeMap = TerrainGenerator.PopulateMap(chunkCubeCount, chunk.cubeSize, position);
         chunk.CreateMeshData();
 
         return chunk;
     }
 
-    public Vector3 GetCurrentChunk(Vector3 position)
+    public Vector3 GetClosestChunkPosition(Vector3 position, float chunkScale)
     {
-        int chunkX = (int)(position.x / ChunkSize);
-        int chunkY = (int)(position.y / ChunkSize);
-        int chunkZ = (int)(position.z / ChunkSize);
+        float chunkSize = GetChunkSize(chunkScale);
 
-        return new(chunkX, chunkY, chunkZ);
+        float x = (float)Math.Floor(position.x / chunkSize);
+        float y = (float)Math.Floor(position.y / chunkSize);
+        float z = (float)Math.Floor(position.z / chunkSize);
+
+        Vector3 chunkPosition = new(x, y, z);
+
+        return chunkPosition * chunkSize;
+    }
+
+    public float GetChunkSize(float chunkScale)
+    {
+        return (float)Math.Pow(2, chunkScale) * chunkCubeCount * marchingCubeChunkPrefab.cubeSize;
     }
 }

@@ -24,6 +24,30 @@ public class MarchingCubes : MonoBehaviour
         meshCollider = GetComponent<MeshCollider>();
     }
 
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+
+        Vector3 debugCubeSize = new(cubeSize, cubeSize, cubeSize);
+        debugCubeSize *= cubeMap.GetLength(0) - 1;
+        Vector3 debugCubePosition = transform.position;
+        debugCubePosition += debugCubeSize / 2;
+
+        Gizmos.DrawWireCube(debugCubePosition, debugCubeSize);
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+
+        Vector3 debugCubeSize = new(cubeSize, cubeSize, cubeSize);
+        debugCubeSize *= cubeMap.GetLength(0) - 1;
+        Vector3 debugCubePosition = transform.position;
+        debugCubePosition += debugCubeSize / 2;
+
+        Gizmos.DrawWireCube(debugCubePosition, debugCubeSize);
+    }
+
     public void CreateMeshData()
     {
         if (cubeMap != null)
@@ -180,10 +204,5 @@ public class MarchingCubes : MonoBehaviour
         mesh.RecalculateNormals();
         meshFilter.mesh = mesh;
         meshCollider.sharedMesh = mesh;
-    }
-
-    public bool Equals(MarchingCubes other)
-    {
-        throw new NotImplementedException();
     }
 }

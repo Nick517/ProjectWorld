@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2160.008, g: 2263.8167, b: 3286.5708, a: 1}
+  m_IndirectSpecularColor: {r: 2184.2786, g: 2322.717, b: 3465.8794, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -196,6 +196,11 @@ PrefabInstance:
       propertyPath: trackPoint
       value: 
       objectReference: {fileID: 1823688467}
+    - target: {fileID: 5459897776275569217, guid: 72cb2659e7325204ebe8e6ccce2cefed,
+        type: 3}
+      propertyPath: maxChunkScale
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -553,7 +558,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823688464}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 180, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
