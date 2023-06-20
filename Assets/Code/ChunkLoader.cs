@@ -16,12 +16,12 @@ public class ChunkLoader : MonoBehaviour
 
     private Vector3 _lastChunk = new(-1, 0, 0);
 
-    public readonly List<Tuple<Vector3, float, MarchingCubes>> _chunks = new();
-    private MegaChunk megaChunk;
+    private readonly List<Tuple<Vector3, float, MarchingCubes>> _chunks = new();
 
     private void Update()
     {
         Vector3 currentChunk = _lastChunk;
+        Vector3 trackPointPosition = currentChunk;
 
         if (trackSceneView)
         {
@@ -29,13 +29,15 @@ public class ChunkLoader : MonoBehaviour
 
             if (sceneView != null)
             {
-                currentChunk = GetClosestChunkPosition(sceneView.camera.transform.position, 1);
+                trackPointPosition = sceneView.camera.transform.position;
             }
         }
         else
         {
-            currentChunk = GetClosestChunkPosition(trackPoint.position, 1);
+            trackPointPosition = trackPoint.position;
         }
+
+        currentChunk = GetClosestChunkPosition(trackPointPosition, 1);
 
         if (currentChunk != _lastChunk)
         {
@@ -44,10 +46,42 @@ public class ChunkLoader : MonoBehaviour
         }
     }
 
+    public List<Tuple<Vector3, float, MarchingCubes>> CreateChunks(Vector3 position, float scale, Vector3 point)
+    {
+        List<Tuple<Vector3, float, MarchingCubes>> subChunks = new();
+
+        float subChunkScale = scale - 1;
+        float subChunkSize = GetChunkSize(subChunkScale);
+        Vector3 pointPosition = GetClosestChunkPosition(point, subChunkScale);
+
+        for (int x = 0; x < 2; x++)
+        {
+            for (int y = 0; y < 2; y++)
+            {
+                for (int z = 0; z < 2; z++)
+                {
+                    Vector3 subChunkPosition = new(x, y, z);
+                    subChunkPosition *= subChunkSize;
+                    subChunkPosition += position;
+
+                    if (pointPosition == subChunkPosition && subChunkScale > 0)
+                    {
+                        subChunks.AddRange(CreateChunks(subChunkPosition, subChunkScale, point));
+                    }
+                    else
+                    {
+                        subChunks.Add(new(subChunkPosition, subChunkScale, null));
+                    }
+                }
+            }
+        }
+
+        return subChunks;
+    }
+
     public void SpawnChunks(Vector3 origin)
     {
-        megaChunk = new(this, GetClosestChunkPosition(origin, maxChunkScale), maxChunkScale);
-        megaChunk.CreateSubChunks(origin);
+        LoadChunks(CreateChunks(GetClosestChunkPosition(origin, maxChunkScale), maxChunkScale, origin));
     }
 
     public void LoadChunks(List<Tuple<Vector3, float, MarchingCubes>> newChunks)

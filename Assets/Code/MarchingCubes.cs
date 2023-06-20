@@ -12,40 +12,16 @@ public class MarchingCubes : MonoBehaviour
 
     public float[,,] cubeMap;
 
-    private MeshFilter meshFilter;
-    private MeshCollider meshCollider;
+    private MeshFilter _meshFilter;
+    private MeshCollider _meshCollider;
 
-    private readonly List<Vector3> vertices = new();
-    private readonly List<int> triangles = new();
+    private readonly List<Vector3> _vertices = new();
+    private readonly List<int> _triangles = new();
 
     private void Awake()
     {
-        meshFilter = GetComponent<MeshFilter>();
-        meshCollider = GetComponent<MeshCollider>();
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.white;
-
-        Vector3 debugCubeSize = new(cubeSize, cubeSize, cubeSize);
-        debugCubeSize *= cubeMap.GetLength(0) - 1;
-        Vector3 debugCubePosition = transform.position;
-        debugCubePosition += debugCubeSize / 2;
-
-        Gizmos.DrawWireCube(debugCubePosition, debugCubeSize);
-    }
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-
-        Vector3 debugCubeSize = new(cubeSize, cubeSize, cubeSize);
-        debugCubeSize *= cubeMap.GetLength(0) - 1;
-        Vector3 debugCubePosition = transform.position;
-        debugCubePosition += debugCubeSize / 2;
-
-        Gizmos.DrawWireCube(debugCubePosition, debugCubeSize);
+        _meshFilter = GetComponent<MeshFilter>();
+        _meshCollider = GetComponent<MeshCollider>();
     }
 
     public void CreateMeshData()
@@ -67,23 +43,6 @@ public class MarchingCubes : MonoBehaviour
 
             BuildMesh();
         }
-    }
-
-    public override bool Equals(object obj)
-    {
-
-        if (obj is null or not MarchingCubes)
-        {
-            return false;
-        }
-
-        MarchingCubes chunk = (MarchingCubes)obj;
-        return transform.position == chunk.transform.position && cubeSize == chunk.cubeSize;
-    }
-
-    public override int GetHashCode()
-    {
-        return transform.position.GetHashCode() ^ cubeSize.GetHashCode();
     }
 
     private void MarchCube(Vector3Int position)
@@ -138,12 +97,12 @@ public class MarchingCubes : MonoBehaviour
 
                 if (smoothShaded)
                 {
-                    triangles.Add(VertForIndice(vertPosition * cubeSize));
+                    _triangles.Add(VertForIndice(vertPosition * cubeSize));
                 }
                 else
                 {
-                    vertices.Add(vertPosition * cubeSize);
-                    triangles.Add(vertices.Count - 1);
+                    _vertices.Add(vertPosition * cubeSize);
+                    _triangles.Add(_vertices.Count - 1);
                 }
 
                 edgeIndex++;
@@ -174,35 +133,59 @@ public class MarchingCubes : MonoBehaviour
 
     private int VertForIndice(Vector3 vert)
     {
-        for (int i = 0; i < vertices.Count; i++)
+        for (int i = 0; i < _vertices.Count; i++)
         {
-            if (vertices[i] == vert)
+            if (_vertices[i] == vert)
             {
                 return i;
             }
         }
 
-        vertices.Add(vert);
+        _vertices.Add(vert);
 
-        return vertices.Count - 1;
+        return _vertices.Count - 1;
     }
 
     private void ClearMeshData()
     {
-        vertices.Clear();
-        triangles.Clear();
+        _vertices.Clear();
+        _triangles.Clear();
     }
 
     private void BuildMesh()
     {
         Mesh mesh = new()
         {
-            vertices = vertices.ToArray(),
-            triangles = triangles.ToArray()
+            vertices = _vertices.ToArray(),
+            triangles = _triangles.ToArray()
         };
 
         mesh.RecalculateNormals();
-        meshFilter.mesh = mesh;
-        meshCollider.sharedMesh = mesh;
+        _meshFilter.mesh = mesh;
+        _meshCollider.sharedMesh = mesh;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.white;
+
+        Vector3 debugCubeSize = new(cubeSize, cubeSize, cubeSize);
+        debugCubeSize *= cubeMap.GetLength(0) - 1;
+        Vector3 debugCubePosition = transform.position;
+        debugCubePosition += debugCubeSize / 2;
+
+        Gizmos.DrawWireCube(debugCubePosition, debugCubeSize);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+
+        Vector3 debugCubeSize = new(cubeSize, cubeSize, cubeSize);
+        debugCubeSize *= cubeMap.GetLength(0) - 1;
+        Vector3 debugCubePosition = transform.position;
+        debugCubePosition += debugCubeSize / 2;
+
+        Gizmos.DrawWireCube(debugCubePosition, debugCubeSize);
     }
 }
