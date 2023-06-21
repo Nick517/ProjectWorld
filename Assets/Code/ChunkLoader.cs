@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class ChunkLoader : MonoBehaviour
@@ -14,7 +13,6 @@ public class ChunkLoader : MonoBehaviour
     public int maxChunkScale = 8;
     public float LOD = 2.0f;
     public int megaChunks = 2;
-    public bool trackSceneView = false;
 
     private Vector3 _lastChunk = new(-1, 0, 0);
 
@@ -22,24 +20,7 @@ public class ChunkLoader : MonoBehaviour
 
     private void Update()
     {
-        Vector3 currentChunk = _lastChunk;
-        Vector3 trackPointPosition = currentChunk;
-
-        if (trackSceneView)
-        {
-            SceneView sceneView = SceneView.lastActiveSceneView;
-
-            if (sceneView != null)
-            {
-                trackPointPosition = sceneView.camera.transform.position;
-            }
-        }
-        else
-        {
-            trackPointPosition = trackPoint.position;
-        }
-
-        currentChunk = GetClosestChunkPosition(trackPointPosition, 1);
+        Vector3 currentChunk = GetClosestChunkPosition(trackPoint.position, 1);
 
         if (currentChunk != _lastChunk)
         {
@@ -52,7 +33,7 @@ public class ChunkLoader : MonoBehaviour
     {
         List<Tuple<Vector3, float, MarchingCubes>> subChunks = new();
 
-        Vector3 pointPosition = GetClosestChunkPosition(point, maxChunkScale);
+        Vector3 pointPosition = GetClosestChunkPosition(point, maxChunkScale - 1);
 
         for (int x = -megaChunks; x < megaChunks; x++)
         {
