@@ -48,4 +48,6 @@ MonoBehaviour:
     type: 3}
   trackPoint: {fileID: 0}
   chunkCubeCount: 8
-  maxChunkScale: 10
+  maxChunkScale: 8
+  LOD: 2
+  trackSceneView: 0

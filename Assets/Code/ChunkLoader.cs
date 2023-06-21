@@ -10,8 +10,10 @@ public class ChunkLoader : MonoBehaviour
 
     public Transform trackPoint;
 
-    public int chunkCubeCount = 10;
-    public int maxChunkScale = 10;
+    public int chunkCubeCount = 8;
+    public int maxChunkScale = 8;
+    public float LOD = 2.0f;
+    public int megaChunks = 2;
     public bool trackSceneView = false;
 
     private Vector3 _lastChunk = new(-1, 0, 0);
@@ -46,7 +48,31 @@ public class ChunkLoader : MonoBehaviour
         }
     }
 
-    public List<Tuple<Vector3, float, MarchingCubes>> CreateChunks(Vector3 position, float scale, Vector3 point)
+    private List<Tuple<Vector3, float, MarchingCubes>> CreateChunkData(Vector3 point)
+    {
+        List<Tuple<Vector3, float, MarchingCubes>> subChunks = new();
+
+        Vector3 pointPosition = GetClosestChunkPosition(point, maxChunkScale);
+
+        for (int x = -megaChunks; x < megaChunks; x++)
+        {
+            for (int y = -megaChunks; y < megaChunks; y++)
+            {
+                for (int z = -megaChunks; z < megaChunks; z++)
+                {
+                    Vector3 position = new(x, y, z);
+                    position *= GetChunkSize(maxChunkScale);
+                    position += pointPosition;
+
+                    subChunks.AddRange(CreateSubChunkData(position, maxChunkScale, point));
+                }
+            }
+        }
+
+        return subChunks;
+    }
+
+    private List<Tuple<Vector3, float, MarchingCubes>> CreateSubChunkData(Vector3 position, float scale, Vector3 point)
     {
         List<Tuple<Vector3, float, MarchingCubes>> subChunks = new();
 
@@ -64,9 +90,11 @@ public class ChunkLoader : MonoBehaviour
                     subChunkPosition *= subChunkSize;
                     subChunkPosition += position;
 
-                    if (pointPosition == subChunkPosition && subChunkScale > 0)
+                    float distance = Vector3.Distance(GetClosestChunkCenter(pointPosition, subChunkScale), GetClosestChunkCenter(subChunkPosition, subChunkScale));
+
+                    if (distance < subChunkSize * LOD && subChunkScale > 0)
                     {
-                        subChunks.AddRange(CreateChunks(subChunkPosition, subChunkScale, point));
+                        subChunks.AddRange(CreateSubChunkData(subChunkPosition, subChunkScale, point));
                     }
                     else
                     {
@@ -79,12 +107,12 @@ public class ChunkLoader : MonoBehaviour
         return subChunks;
     }
 
-    public void SpawnChunks(Vector3 origin)
+    private void SpawnChunks(Vector3 origin)
     {
-        LoadChunks(CreateChunks(GetClosestChunkPosition(origin, maxChunkScale), maxChunkScale, origin));
+        LoadChunks(CreateChunkData(origin));
     }
 
-    public void LoadChunks(List<Tuple<Vector3, float, MarchingCubes>> newChunks)
+    private void LoadChunks(List<Tuple<Vector3, float, MarchingCubes>> newChunks)
     {
         ChunkDataEqualityComparer comparer = new();
 
@@ -111,7 +139,7 @@ public class ChunkLoader : MonoBehaviour
         }
     }
 
-    public MarchingCubes CreateChunk(Vector3 position, float chunkScale)
+    private MarchingCubes CreateChunk(Vector3 position, float chunkScale)
     {
         MarchingCubes chunk = Instantiate(marchingCubeChunkPrefab, position, Quaternion.identity, transform);
         chunk.name = $"Chunk {position}, scale: {chunkScale + 1}";
@@ -122,7 +150,7 @@ public class ChunkLoader : MonoBehaviour
         return chunk;
     }
 
-    public Vector3 GetClosestChunkPosition(Vector3 position, float chunkScale)
+    private Vector3 GetClosestChunkPosition(Vector3 position, float chunkScale)
     {
         float chunkSize = GetChunkSize(chunkScale);
 
@@ -135,7 +163,14 @@ public class ChunkLoader : MonoBehaviour
         return chunkPosition * chunkSize;
     }
 
-    public float GetChunkSize(float chunkScale)
+    private Vector3 GetClosestChunkCenter(Vector3 position, float chunkScale)
+    {
+        Vector3 chunkScaleVector = new(chunkScale, chunkScale, chunkScale);
+        position += chunkScaleVector / 2;
+        return position;
+    }
+
+    private float GetChunkSize(float chunkScale)
     {
         return (float)Math.Pow(2, chunkScale) * chunkCubeCount * marchingCubeChunkPrefab.cubeSize;
     }
