@@ -125,7 +125,6 @@ public class ChunkLoader : MonoBehaviour
         MarchingCubes chunk = Instantiate(marchingCubeChunkPrefab, position, Quaternion.identity, transform);
         chunk.name = $"Chunk {position}, scale: {chunkScale + 1}";
         chunk.cubeSize *= Mathf.Pow(2, chunkScale);
-        chunk.cubeMap = TerrainGenerator.PopulateMap(chunkCubeCount, chunk.cubeSize, position);
         chunk.CreateMeshData();
 
         return chunk;

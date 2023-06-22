@@ -5,11 +5,11 @@ public class FlyCamera : MonoBehaviour
 {
     public float acceleration = 50;
     public float sprintMultiplier = 4;
-    public float lookSensitivity = 1;
+    public float cameraSensitivity = 1;
     public float damping = 5;
     public bool focusOnEnable = true;
 
-    private Vector3 velocity;
+    private Vector3 _velocity;
 
     private static bool Focused
     {
@@ -45,19 +45,19 @@ public class FlyCamera : MonoBehaviour
             Focused = true;
         }
 
-        velocity = Vector3.Lerp(velocity, Vector3.zero, damping * Time.deltaTime);
-        transform.position += velocity * Time.deltaTime;
+        _velocity = Vector3.Lerp(_velocity, Vector3.zero, damping * Time.deltaTime);
+        transform.position += _velocity * Time.deltaTime;
     }
 
     private void UpdateInput()
     {
-        velocity += GetAccelerationVector() * Time.deltaTime;
+        _velocity += GetAccelerationVector() * Time.deltaTime;
 
-        Vector2 mouseDelta = lookSensitivity * new Vector2(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"));
+        Vector2 mouseDelta = cameraSensitivity * new Vector2(Input.GetAxis("Mouse X"), -Input.GetAxis("Mouse Y"));
         Quaternion rotation = transform.rotation;
         Quaternion horizontal = Quaternion.AngleAxis(mouseDelta.x, Vector3.up);
         Quaternion vertical = Quaternion.AngleAxis(mouseDelta.y, Vector3.right);
-        transform.rotation = rotation * horizontal * vertical;
+        transform.rotation = horizontal * rotation * vertical;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -81,15 +81,10 @@ public class FlyCamera : MonoBehaviour
         AddMovement(KeyCode.S, Vector3.back);
         AddMovement(KeyCode.D, Vector3.right);
         AddMovement(KeyCode.A, Vector3.left);
-        AddMovement(KeyCode.Space, Vector3.up);
-        AddMovement(KeyCode.LeftControl, Vector3.down);
+        AddMovement(KeyCode.Space, transform.InverseTransformDirection(Vector3.up));
+        AddMovement(KeyCode.LeftControl, transform.InverseTransformDirection(Vector3.down));
         Vector3 direction = transform.TransformVector(moveInput.normalized);
 
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            return direction * (acceleration * sprintMultiplier);
-        }
-
-        return direction * acceleration;
+        return Input.GetKey(KeyCode.LeftShift) ? direction * (acceleration * sprintMultiplier) : direction * acceleration;
     }
 }

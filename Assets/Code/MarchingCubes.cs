@@ -6,11 +6,12 @@ public class MarchingCubes : MonoBehaviour
 {
     public bool smoothMesh = true;
     public bool smoothShaded = true;
+    public int cubeCount = 8;
     public float cubeSize = 1.0f;
     [Range(0.0f, 1.0f)]
     public float mapSurface = 0.5f;
 
-    public float[,,] cubeMap;
+    private float[,,] _cubeMap;
 
     private MeshFilter _meshFilter;
     private MeshCollider _meshCollider;
@@ -26,15 +27,17 @@ public class MarchingCubes : MonoBehaviour
 
     public void CreateMeshData()
     {
-        if (cubeMap != null)
+        _cubeMap = TerrainGenerator.PopulateMap(cubeCount, cubeSize, transform.position);
+
+        if (_cubeMap != null)
         {
             ClearMeshData();
 
-            for (int x = 0; x < cubeMap.GetLength(0) - 1; x++)
+            for (int x = 0; x < _cubeMap.GetLength(0) - 1; x++)
             {
-                for (int y = 0; y < cubeMap.GetLength(1) - 1; y++)
+                for (int y = 0; y < _cubeMap.GetLength(1) - 1; y++)
                 {
-                    for (int z = 0; z < cubeMap.GetLength(2) - 1; z++)
+                    for (int z = 0; z < _cubeMap.GetLength(2) - 1; z++)
                     {
                         MarchCube(new Vector3Int(x, y, z));
                     }
@@ -128,7 +131,7 @@ public class MarchingCubes : MonoBehaviour
 
     private float SampleMap(Vector3Int point)
     {
-        return cubeMap[point.x, point.y, point.z];
+        return _cubeMap[point.x, point.y, point.z];
     }
 
     private int VertForIndice(Vector3 vert)
@@ -170,7 +173,7 @@ public class MarchingCubes : MonoBehaviour
         Gizmos.color = Color.white;
 
         Vector3 debugCubeSize = new(cubeSize, cubeSize, cubeSize);
-        debugCubeSize *= cubeMap.GetLength(0) - 1;
+        debugCubeSize *= _cubeMap.GetLength(0) - 1;
         Vector3 debugCubePosition = transform.position;
         debugCubePosition += debugCubeSize / 2;
 
@@ -182,7 +185,7 @@ public class MarchingCubes : MonoBehaviour
         Gizmos.color = Color.yellow;
 
         Vector3 debugCubeSize = new(cubeSize, cubeSize, cubeSize);
-        debugCubeSize *= cubeMap.GetLength(0) - 1;
+        debugCubeSize *= _cubeMap.GetLength(0) - 1;
         Vector3 debugCubePosition = transform.position;
         debugCubePosition += debugCubeSize / 2;
 

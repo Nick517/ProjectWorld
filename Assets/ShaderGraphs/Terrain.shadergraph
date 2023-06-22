@@ -981,10 +981,10 @@
     "m_Guid": {
         "m_GuidSerialized": "cf1bed2b-2132-43f2-9d8d-42fccb66189a"
     },
-    "m_Name": "Diffuse Map",
+    "m_Name": "Albedo Map",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Diffuse Map",
-    "m_DefaultReferenceName": "_Diffuse_Map",
+    "m_RefNameGeneratedByDisplayName": "Albedo Map",
+    "m_DefaultReferenceName": "_Albedo_Map",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -1912,7 +1912,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Texture2DMaterialSlot",
     "m_ObjectId": "ce9821fbb681497e8bd7b85e86273c9c",
     "m_Id": 0,
-    "m_DisplayName": "Diffuse Map",
+    "m_DisplayName": "Albedo Map",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
