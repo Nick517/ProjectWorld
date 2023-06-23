@@ -36,6 +36,10 @@ public class FlyCamera : MonoBehaviour
 
     private void Update()
     {
+        Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit);
+        float distance = Vector3.Distance(hit.point, transform.position);
+        Debug.Log($"Distance: {distance} meters");
+
         if (Focused)
         {
             UpdateInput();

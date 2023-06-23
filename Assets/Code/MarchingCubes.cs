@@ -11,10 +11,10 @@ public class MarchingCubes : MonoBehaviour
     [Range(0.0f, 1.0f)]
     public float mapSurface = 0.5f;
 
-    private float[,,] _cubeMap;
-
     private MeshFilter _meshFilter;
     private MeshCollider _meshCollider;
+
+    private float[,,] _cubeMap;
 
     private readonly List<Vector3> _vertices = new();
     private readonly List<int> _triangles = new();
