@@ -1,47 +1,68 @@
+using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
-public static class TerrainGenerator
+namespace Terrain
 {
-    public static float[,,] PopulateMap(int cubeCount, float cubeSize, Vector3 offset)
+    public static class TerrainGenerator
     {
-        cubeCount++;
-        float[,,] map = new float[cubeCount, cubeCount, cubeCount];
-
-        for (int x = 0; x < cubeCount; x++)
+        public static NativeArray<float> PopulateMap(ChunkLoaderSettingsComponent chunkLoaderSettings, float3 chunkPosition, float chunkScale)
         {
-            for (int y = 0; y < cubeCount; y++)
-            {
-                for (int z = 0; z < cubeCount; z++)
-                {
-                    Vector3 position = new(x, y, z);
-                    position *= cubeSize;
+            float cubeSize = ChunkOperations.GetCubeSize(chunkLoaderSettings, chunkScale);
+            int cubeCount = chunkLoaderSettings.cubeCount + 1;
+            float3 offset = chunkPosition;
 
-                    map[x, y, z] = GetSample(position + offset);
+            NativeArray<float> map = new((int)math.pow(cubeCount, 3), Allocator.Temp);
+
+            for (int x = 0; x < cubeCount; x++)
+            {
+                for (int y = 0; y < cubeCount; y++)
+                {
+                    for (int z = 0; z < cubeCount; z++)
+                    {
+                        int3 index3D = new(x, y, z);
+                        float3 position = ((float3)index3D * cubeSize) + offset;
+
+                        int index = GetFlatIndex(cubeCount, index3D);
+                        map[index] = GetSample(position);
+                    }
                 }
             }
+
+            return map;
         }
 
-        return map;
-    }
+        public static float GetCube(NativeArray<float> map, int cubeCount, int3 index3D)
+        {
+            int index = GetFlatIndex(cubeCount + 1, index3D);
 
-    public static float GetSample(Vector3 position)
-    {
-        Vector3 offset = new(0, 800, 0);
-        position += offset;
+            return map[index];
+        }
 
-        float layer1 = NoiseLayer(position, 0.00001f) * 4;
-        float layer2 = NoiseLayer(position, 0.0001f) * 16;
-        float layer3 = NoiseLayer(position, 0.001f) * 64;
+        public static int GetFlatIndex(int cubeCount, int3 index3D)
+        {
+            return index3D.x + (index3D.y * cubeCount) + (index3D.z * cubeCount * cubeCount);
+        }
 
-        return layer1 * layer2 * layer3;
-    }
+        private static float GetSample(float3 position)
+        {
+            float3 offset = new(0, 800, 0);
+            position += offset;
 
-    private static float NoiseLayer(Vector3 position, float scale)
-    {
-        float x = scale * position.x;
-        float y = scale * position.y;
-        float z = scale * position.z;
+            float layer1 = NoiseLayer(position, 0.00001f) * 4;
+            float layer2 = NoiseLayer(position, 0.0001f) * 16;
+            float layer3 = NoiseLayer(position, 0.001f) * 64;
 
-        return y * Mathf.PerlinNoise(x, z);
+            return layer1 * layer2 * layer3;
+        }
+
+        private static float NoiseLayer(float3 position, float scale)
+        {
+            float x = scale * position.x;
+            float y = scale * position.y;
+            float z = scale * position.z;
+
+            return y * Mathf.PerlinNoise(x, z);
+        }
     }
 }
