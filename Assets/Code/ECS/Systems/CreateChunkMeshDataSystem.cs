@@ -38,7 +38,8 @@ namespace Terrain
             _chunkScaleComponentTypeHandle.Update(ref state);
 
             EntityCommandBuffer entityCommandBuffer = new(Allocator.TempJob);
-            ChunkLoaderSettingsComponent chunkLoaderSettings = SystemAPI.GetSingleton<ChunkLoaderSettingsComponent>();
+            TerrainGenerationSettingsComponent terrainGenerationSettings = SystemAPI.GetSingleton<TerrainGenerationSettingsComponent>();
+            WorldDataComponent worldData = SystemAPI.GetSingleton<WorldDataComponent>();
 
             JobHandle createMeshDataJobHandle = new CreateMeshDataJob
             {
@@ -46,7 +47,8 @@ namespace Terrain
                 entityTypeHandle = _entityTypeHandle,
                 localTransformTypeHandle = _localTransformTypeHandle,
                 chunkScaleComponentTypeHandle = _chunkScaleComponentTypeHandle,
-                chunkLoaderSettings = chunkLoaderSettings,
+                terrainGenerationSettings = terrainGenerationSettings,
+                worldData = worldData
             }.ScheduleParallel(_chunkQuery, state.Dependency);
             createMeshDataJobHandle.Complete();
 

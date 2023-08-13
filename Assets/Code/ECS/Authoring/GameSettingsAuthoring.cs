@@ -7,7 +7,7 @@ namespace Terrain
     public class GameSettingsAuthoring : MonoBehaviour
     {
         public GameObject chunkPrefab;
-        public WorldSettings worldSettings;
+        public TerrainGenerationSettings terrainGenerationSettings;
     }
 
     public class ChunkLoaderBaker : Baker<GameSettingsAuthoring>
@@ -15,16 +15,16 @@ namespace Terrain
         public override void Bake(GameSettingsAuthoring authoring)
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent<ChunkLoaderSettingsComponent>(entity, new()
+            AddComponent<TerrainGenerationSettingsComponent>(entity, new()
             {
                 chunkPrefab = GetEntity(authoring.chunkPrefab, TransformUsageFlags.Dynamic),
-                baseCubeSize = authoring.worldSettings.baseCubeSize,
-                cubeCount = authoring.worldSettings.cubeCount,
-                mapSurface = authoring.worldSettings.mapSurface,
-                maxChunkScale = authoring.worldSettings.maxChunkScale,
-                megaChunks = authoring.worldSettings.megaChunks,
-                LOD = authoring.worldSettings.LOD,
-                reloadScale = authoring.worldSettings.reloadScale
+                baseCubeSize = authoring.terrainGenerationSettings.baseCubeSize,
+                cubeCount = authoring.terrainGenerationSettings.cubeCount,
+                mapSurface = authoring.terrainGenerationSettings.mapSurface,
+                maxChunkScale = authoring.terrainGenerationSettings.maxChunkScale,
+                megaChunks = authoring.terrainGenerationSettings.megaChunks,
+                LOD = authoring.terrainGenerationSettings.LOD,
+                reloadScale = authoring.terrainGenerationSettings.reloadScale
             });
         }
     }

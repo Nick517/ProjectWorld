@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Terrain
 {
-    [CreateAssetMenu(fileName = "World Settings", menuName = "ScriptableObjects/World Settings", order = 1)]
-    public class WorldSettings : ScriptableObject
+    [CreateAssetMenu(fileName = "World Settings", menuName = "ScriptableObjects/Terrain Generation Settings", order = 1)]
+    public class TerrainGenerationSettings : ScriptableObject
     {
         public float baseCubeSize = 1.0f;
         public int cubeCount = 8;

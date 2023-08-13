@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2158.2874, g: 2260.4612, b: 3278.2231, a: 1}
+  m_IndirectSpecularColor: {r: 2161.138, g: 2265.2874, b: 3288.52, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -448,93 +448,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
-        type: 3}
-      propertyPath: m_Rigs.Array.data[0]
-      value: 
-      objectReference: {fileID: 1117528470}
-    - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
-        type: 3}
-      propertyPath: m_Rigs.Array.data[1]
-      value: 
-      objectReference: {fileID: 1123174582}
-    - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
-        type: 3}
-      propertyPath: m_Rigs.Array.data[2]
-      value: 
-      objectReference: {fileID: 2024362713}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.FieldOfView
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.FarClipPlane
-      value: 20000
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.m_SensorSize.x
-      value: 36
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.m_SensorSize.y
-      value: 24
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_BindingMode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_FollowOffset.y
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_FollowOffset.z
-      value: -3
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_BindingMode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_FollowOffset.y
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_FollowOffset.z
-      value: -3
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_BindingMode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_FollowOffset.y
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_FollowOffset.z
-      value: -3
-      objectReference: {fileID: 0}
     - target: {fileID: 2020750088226051572, guid: 54bee0fe83bf46a458aa0e809e371675,
         type: 3}
       propertyPath: m_Name
       value: First Person Camera
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.FieldOfView
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.FarClipPlane
-      value: 20000
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.m_SensorSize.x
-      value: 36
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.m_SensorSize.y
-      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 5579097367342090873, guid: 54bee0fe83bf46a458aa0e809e371675,
         type: 3}
@@ -588,27 +505,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
         type: 3}
-      propertyPath: m_Lens.m_SensorSize.x
-      value: 1
-      objectReference: {fileID: 0}
+      propertyPath: m_Rigs.Array.data[0]
+      value: 
+      objectReference: {fileID: 1117528470}
     - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
         type: 3}
-      propertyPath: m_Lens.m_SensorSize.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.FieldOfView
-      value: 60
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: m_Lens.FarClipPlane
-      value: 20000
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
+      propertyPath: m_Rigs.Array.data[1]
+      value: 
+      objectReference: {fileID: 1123174582}
+    - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
+        type: 3}
+      propertyPath: m_Rigs.Array.data[2]
+      value: 
+      objectReference: {fileID: 2024362713}
+    - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
+        type: 3}
       propertyPath: m_Lens.m_SensorSize.x
       value: 36
       objectReference: {fileID: 0}
-    - target: {fileID: 0}
+    - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
+        type: 3}
       propertyPath: m_Lens.m_SensorSize.y
       value: 24
       objectReference: {fileID: 0}

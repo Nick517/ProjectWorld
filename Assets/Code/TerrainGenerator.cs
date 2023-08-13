@@ -6,7 +6,7 @@ namespace Terrain
 {
     public static class TerrainGenerator
     {
-        public static NativeArray<float> PopulateMap(ChunkLoaderSettingsComponent chunkLoaderSettings, float3 chunkPosition, float chunkScale)
+        public static NativeArray<float> PopulateMap(TerrainGenerationSettingsComponent chunkLoaderSettings, WorldDataComponent worldData, float3 chunkPosition, float chunkScale)
         {
             float cubeSize = ChunkOperations.GetCubeSize(chunkLoaderSettings, chunkScale);
             int cubeCount = chunkLoaderSettings.cubeCount + 1;
@@ -24,7 +24,7 @@ namespace Terrain
                         float3 position = ((float3)index3D * cubeSize) + offset;
 
                         int index = GetFlatIndex(cubeCount, index3D);
-                        map[index] = GetSample(position);
+                        map[index] = GetSample(worldData, position);
                     }
                 }
             }
@@ -34,9 +34,7 @@ namespace Terrain
 
         public static float GetCube(NativeArray<float> map, int cubeCount, int3 index3D)
         {
-            int index = GetFlatIndex(cubeCount + 1, index3D);
-
-            return map[index];
+            return map[GetFlatIndex(cubeCount + 1, index3D)];
         }
 
         public static int GetFlatIndex(int cubeCount, int3 index3D)
@@ -44,9 +42,9 @@ namespace Terrain
             return index3D.x + (index3D.y * cubeCount) + (index3D.z * cubeCount * cubeCount);
         }
 
-        private static float GetSample(float3 position)
+        private static float GetSample(WorldDataComponent worldData, float3 position)
         {
-            float3 offset = new(0, 800, 0);
+            float3 offset = new(worldData.seed, 800, worldData.seed * 2);
             position += offset;
 
             float layer1 = NoiseLayer(position, 0.00001f) * 4;

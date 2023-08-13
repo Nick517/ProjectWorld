@@ -18,11 +18,11 @@ namespace Terrain
         public void OnUpdate(ref SystemState state)
         {
             EntityCommandBuffer entityCommandBuffer = new(Allocator.Temp);
-            ChunkLoaderSettingsComponent chunkLoaderSettings = SystemAPI.GetSingleton<ChunkLoaderSettingsComponent>();
+            TerrainGenerationSettingsComponent terrainGenerationSettings = SystemAPI.GetSingleton<TerrainGenerationSettingsComponent>();
 
             foreach (TrackPointAspect trackPoint in SystemAPI.Query<TrackPointAspect>())
             {
-                float3 trackPointChunkPosition = ChunkOperations.GetClosestChunkPosition(chunkLoaderSettings, new(trackPoint.Position, chunkLoaderSettings.reloadScale));
+                float3 trackPointChunkPosition = ChunkOperations.GetClosestChunkPosition(terrainGenerationSettings, new(trackPoint.Position, terrainGenerationSettings.reloadScale));
 
                 if (!trackPointChunkPosition.Equals(trackPoint.ChunkPosition))
                 {
