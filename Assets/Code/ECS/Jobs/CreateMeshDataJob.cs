@@ -14,7 +14,7 @@ namespace Terrain
         [ReadOnly] public EntityTypeHandle entityTypeHandle;
         [ReadOnly] public ComponentTypeHandle<LocalTransform> localTransformTypeHandle;
         [ReadOnly] public ComponentTypeHandle<ChunkScaleComponent> chunkScaleComponentTypeHandle;
-        [ReadOnly] public TerrainGenerationSettingsComponent terrainGenerationSettings;
+        [ReadOnly] public ChunkGenerationSettingsComponent chunkGenerationSettings;
         [ReadOnly] public WorldDataComponent worldData;
 
         public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
@@ -31,19 +31,19 @@ namespace Terrain
                 float chunkScale = chunkScaleComponents[i].chunkScale;
 
                 NativeList<float3> vertices = new(Allocator.Temp);
-                NativeArray<float> cubeMap = new(TerrainGenerator.PopulateMap(terrainGenerationSettings, worldData, position, chunkScale), Allocator.Temp);
+                NativeArray<float> cubeMap = new(TerrainGenerator.PopulateMap(chunkGenerationSettings, worldData, position, chunkScale), Allocator.Temp);
 
                 _ = entityCommandBuffer.AddBuffer<TriangleBufferElement>(i, entity);
                 _ = entityCommandBuffer.AddBuffer<VerticeBufferElement>(i, entity);
 
-                int cubeCount = terrainGenerationSettings.cubeCount;
+                int cubeCount = chunkGenerationSettings.cubeCount;
                 for (int x = 0; x < cubeCount; x++)
                 {
                     for (int y = 0; y < cubeCount; y++)
                     {
                         for (int z = 0; z < cubeCount; z++)
                         {
-                            MarchCube(i, entityCommandBuffer, terrainGenerationSettings, entity, chunkScale, cubeMap, new(x, y, z), ref vertices);
+                            MarchCube(i, entityCommandBuffer, chunkGenerationSettings, entity, chunkScale, cubeMap, new(x, y, z), ref vertices);
                         }
                     }
                 }
@@ -58,7 +58,7 @@ namespace Terrain
             }
         }
 
-        private static void MarchCube(int sortKey, EntityCommandBuffer.ParallelWriter entityCommandBuffer, TerrainGenerationSettingsComponent chunkLoaderSettings, Entity entity, float chunkScale, NativeArray<float> cubeMap, int3 position, ref NativeList<float3> vertices)
+        private static void MarchCube(int sortKey, EntityCommandBuffer.ParallelWriter entityCommandBuffer, ChunkGenerationSettingsComponent chunkLoaderSettings, Entity entity, float chunkScale, NativeArray<float> cubeMap, int3 position, ref NativeList<float3> vertices)
         {
             float cubeSize = ChunkOperations.GetCubeSize(chunkLoaderSettings, chunkScale);
 
@@ -90,12 +90,12 @@ namespace Terrain
             }
         }
 
-        private static float SampleMap(TerrainGenerationSettingsComponent chunkLoaderSettings, NativeArray<float> cubeMap, int3 point)
+        private static float SampleMap(ChunkGenerationSettingsComponent chunkLoaderSettings, NativeArray<float> cubeMap, int3 point)
         {
             return TerrainGenerator.GetCube(cubeMap, chunkLoaderSettings.cubeCount, point);
         }
 
-        private static int GetCubeConfiguration(TerrainGenerationSettingsComponent chunkLoaderSettings, NativeArray<float> cube)
+        private static int GetCubeConfiguration(ChunkGenerationSettingsComponent chunkLoaderSettings, NativeArray<float> cube)
         {
             int configurationIndex = 0;
 
@@ -125,7 +125,7 @@ namespace Terrain
             return vertices.Length - 1;
         }
 
-        private static float3 IndiceForVerticePosition(TerrainGenerationSettingsComponent chunkLoaderSettings, int3 position, ref NativeArray<float> cube, int indice)
+        private static float3 IndiceForVerticePosition(ChunkGenerationSettingsComponent chunkLoaderSettings, int3 position, ref NativeArray<float> cube, int indice)
         {
             float3 vertice1 = position + MarchingCubesTables.Corner(MarchingCubesTables.Edge(indice, 0));
             float3 vertice2 = position + MarchingCubesTables.Corner(MarchingCubesTables.Edge(indice, 1));

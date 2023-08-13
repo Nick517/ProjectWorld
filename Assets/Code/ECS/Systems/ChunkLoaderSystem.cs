@@ -10,7 +10,7 @@ namespace Terrain
     public partial struct ChunkLoaderSystem : ISystem
     {
         private EntityCommandBuffer _entityCommandBuffer;
-        private TerrainGenerationSettingsComponent _terrainGenerationSettings;
+        private ChunkGenerationSettingsComponent _chunkGenerationSettings;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -22,7 +22,7 @@ namespace Terrain
         public void OnUpdate(ref SystemState state)
         {
             _entityCommandBuffer = new(Allocator.Temp);
-            _terrainGenerationSettings = SystemAPI.GetSingleton<TerrainGenerationSettingsComponent>();
+            _chunkGenerationSettings = SystemAPI.GetSingleton<ChunkGenerationSettingsComponent>();
 
             // Gather ChunkData of all existing Chunks not marked for destruction
             NativeHashSet<ChunkAspect.ChunkData> existingChunkData = new(2000, Allocator.Temp);
@@ -59,7 +59,7 @@ namespace Terrain
             // Create Chunks from data in createChunkData
             foreach (ChunkAspect.ChunkData chunkData in createChunkData)
             {
-                ChunkAspect.CreateChunk(_entityCommandBuffer, _terrainGenerationSettings, chunkData);
+                ChunkAspect.CreateChunk(_entityCommandBuffer, _chunkGenerationSettings, chunkData);
             }
 
             _entityCommandBuffer.Playback(state.EntityManager);
@@ -68,13 +68,13 @@ namespace Terrain
 
         private readonly NativeHashSet<ChunkAspect.ChunkData> CreateNewChunkData(float3 origin)
         {
-            int maxChunkScale = _terrainGenerationSettings.maxChunkScale;
-            int megaChunks = _terrainGenerationSettings.megaChunks;
+            int maxChunkScale = _chunkGenerationSettings.maxChunkScale;
+            int megaChunks = _chunkGenerationSettings.megaChunks;
 
             NativeHashSet<ChunkAspect.ChunkData> subChunks = new(10, Allocator.Temp);
 
-            float3 pointPosition = ChunkOperations.GetClosestChunkPosition(_terrainGenerationSettings, new(origin, maxChunkScale - 1));
-            float chunkSize = ChunkOperations.GetChunkSize(_terrainGenerationSettings, maxChunkScale);
+            float3 pointPosition = ChunkOperations.GetClosestChunkPosition(_chunkGenerationSettings, new(origin, maxChunkScale - 1));
+            float chunkSize = ChunkOperations.GetChunkSize(_chunkGenerationSettings, maxChunkScale);
 
             for (int x = -megaChunks; x < megaChunks; x++)
             {
@@ -100,8 +100,8 @@ namespace Terrain
             NativeHashSet<ChunkAspect.ChunkData> subChunks = new(10, Allocator.Temp);
 
             float subChunkScale = chunkData.chunkScale - 1;
-            float subChunkSize = ChunkOperations.GetChunkSize(_terrainGenerationSettings, subChunkScale);
-            float3 originPosition = ChunkOperations.GetClosestChunkPosition(_terrainGenerationSettings, new(origin, subChunkScale));
+            float subChunkSize = ChunkOperations.GetChunkSize(_chunkGenerationSettings, subChunkScale);
+            float3 originPosition = ChunkOperations.GetClosestChunkPosition(_chunkGenerationSettings, new(origin, subChunkScale));
 
             for (int x = 0; x < 2; x++)
             {
@@ -115,11 +115,11 @@ namespace Terrain
 
                         ChunkAspect.ChunkData subChunkData = new(subChunkPosition, subChunkScale);
 
-                        float3 originChunkCenter = ChunkOperations.GetClosestChunkCenter(_terrainGenerationSettings, new(originPosition, subChunkScale));
-                        float3 subChunkCenter = ChunkOperations.GetClosestChunkCenter(_terrainGenerationSettings, subChunkData);
+                        float3 originChunkCenter = ChunkOperations.GetClosestChunkCenter(_chunkGenerationSettings, new(originPosition, subChunkScale));
+                        float3 subChunkCenter = ChunkOperations.GetClosestChunkCenter(_chunkGenerationSettings, subChunkData);
                         float distance = math.distance(originChunkCenter, subChunkCenter);
 
-                        if (distance < subChunkSize * _terrainGenerationSettings.LOD && subChunkScale > 0)
+                        if (distance < subChunkSize * _chunkGenerationSettings.LOD && subChunkScale > 0)
                         {
                             subChunks.UnionWith(CreateSubChunkData(subChunkData, origin));
                         }

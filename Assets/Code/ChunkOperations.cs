@@ -4,19 +4,19 @@ namespace Terrain
 {
     public static class ChunkOperations
     {
-        public static float GetCubeSize(TerrainGenerationSettingsComponent terrainGenerationSettings, float chunkScale)
+        public static float GetCubeSize(ChunkGenerationSettingsComponent chunkGenerationSettings, float chunkScale)
         {
-            return math.pow(2, chunkScale) * terrainGenerationSettings.baseCubeSize;
+            return math.pow(2, chunkScale) * chunkGenerationSettings.baseCubeSize;
         }
 
-        public static float GetChunkSize(TerrainGenerationSettingsComponent terrainGenerationSettings, float chunkScale)
+        public static float GetChunkSize(ChunkGenerationSettingsComponent chunkGenerationSettings, float chunkScale)
         {
-            return GetCubeSize(terrainGenerationSettings, chunkScale) * terrainGenerationSettings.cubeCount;
+            return GetCubeSize(chunkGenerationSettings, chunkScale) * chunkGenerationSettings.cubeCount;
         }
 
-        public static float3 GetClosestChunkPosition(TerrainGenerationSettingsComponent terrainGenerationSettings, ChunkAspect.ChunkData chunkData)
+        public static float3 GetClosestChunkPosition(ChunkGenerationSettingsComponent chunkGenerationSettings, ChunkAspect.ChunkData chunkData)
         {
-            float chunkSize = GetChunkSize(terrainGenerationSettings, chunkData.chunkScale);
+            float chunkSize = GetChunkSize(chunkGenerationSettings, chunkData.chunkScale);
             float3 position = chunkData.position;
 
             float x = math.floor(position.x / chunkSize);
@@ -28,9 +28,9 @@ namespace Terrain
             return chunkPosition * chunkSize;
         }
 
-        public static float3 GetClosestChunkCenter(TerrainGenerationSettingsComponent terrainGenerationSettings, ChunkAspect.ChunkData chunkData)
+        public static float3 GetClosestChunkCenter(ChunkGenerationSettingsComponent chunkGenerationSettings, ChunkAspect.ChunkData chunkData)
         {
-            float chunkSize = GetChunkSize(terrainGenerationSettings, chunkData.chunkScale);
+            float chunkSize = GetChunkSize(chunkGenerationSettings, chunkData.chunkScale);
             float3 chunkSize3D = new(chunkSize, chunkSize, chunkSize);
 
             float3 chunkCenter = chunkData.position + (chunkSize3D / 2);

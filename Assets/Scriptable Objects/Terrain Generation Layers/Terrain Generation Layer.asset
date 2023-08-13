@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53dbd17570e07f3468c51ed2183ff0ae, type: 3}
-  m_Name: Terrain Generation Settings
+  m_Script: {fileID: 11500000, guid: 03d2dff7bebe448469cd388d0eef376d, type: 3}
+  m_Name: Terrain Generation Layer
   m_EditorClassIdentifier: 
-  layers:
-  - {fileID: 11400000, guid: 63f6adbb616b1e94ba32b65e0d238fbd, type: 2}

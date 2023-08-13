@@ -9,8 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53dbd17570e07f3468c51ed2183ff0ae, type: 3}
-  m_Name: Terrain Generation Settings
+  m_Script: {fileID: 11500000, guid: 0b7c2514b106de849a947d39dfb33476, type: 3}
+  m_Name: Chunk Generation Settings
   m_EditorClassIdentifier: 
-  layers:
-  - {fileID: 11400000, guid: 63f6adbb616b1e94ba32b65e0d238fbd, type: 2}
+  baseCubeSize: 1
+  cubeCount: 8
+  mapSurface: 0.5
+  maxChunkScale: 8
+  megaChunks: 2
+  LOD: 2
+  reloadScale: 1

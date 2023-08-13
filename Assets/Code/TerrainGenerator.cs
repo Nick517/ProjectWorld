@@ -6,7 +6,7 @@ namespace Terrain
 {
     public static class TerrainGenerator
     {
-        public static NativeArray<float> PopulateMap(TerrainGenerationSettingsComponent chunkLoaderSettings, WorldDataComponent worldData, float3 chunkPosition, float chunkScale)
+        public static NativeArray<float> PopulateMap(ChunkGenerationSettingsComponent chunkLoaderSettings, WorldDataComponent worldData, float3 chunkPosition, float chunkScale)
         {
             float cubeSize = ChunkOperations.GetCubeSize(chunkLoaderSettings, chunkScale);
             int cubeCount = chunkLoaderSettings.cubeCount + 1;

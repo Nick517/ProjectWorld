@@ -49,9 +49,9 @@ namespace Terrain
             return new(chunkAspect.Position, chunkAspect.ChunkScale);
         }
 
-        public static void CreateChunk(EntityCommandBuffer entityCommandBuffer, TerrainGenerationSettingsComponent chunkLoaderSettings, ChunkData chunkData)
+        public static void CreateChunk(EntityCommandBuffer entityCommandBuffer, ChunkGenerationSettingsComponent chunkGenerationSettings, ChunkData chunkData)
         {
-            Entity chunkEntity = entityCommandBuffer.Instantiate(chunkLoaderSettings.chunkPrefab);
+            Entity chunkEntity = entityCommandBuffer.Instantiate(chunkGenerationSettings.chunkPrefab);
             entityCommandBuffer.SetComponent(chunkEntity, LocalTransform.FromPosition(chunkData.position));
             entityCommandBuffer.AddComponent(chunkEntity, new ChunkScaleComponent() { chunkScale = chunkData.chunkScale });
             entityCommandBuffer.AddComponent<CreateChunkMeshDataTagComponent>(chunkEntity);

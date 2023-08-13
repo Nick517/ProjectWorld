@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace Terrain
 {
-    public struct TerrainGenerationSettingsComponent : IComponentData
+    public struct ChunkGenerationSettingsComponent : IComponentData
     {
         public Entity chunkPrefab;
         public float baseCubeSize;
