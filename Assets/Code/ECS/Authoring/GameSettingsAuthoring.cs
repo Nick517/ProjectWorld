@@ -8,6 +8,7 @@ namespace Terrain
     {
         public GameObject chunkPrefab;
         public ChunkGenerationSettings chunkGenerationSettings;
+        public TerrainGenerationSettings terrainGenerationSettings;
     }
 
     public class ChunkLoaderBaker : Baker<GameSettingsAuthoring>
@@ -26,6 +27,17 @@ namespace Terrain
                 LOD = authoring.chunkGenerationSettings.LOD,
                 reloadScale = authoring.chunkGenerationSettings.reloadScale
             });
+
+            _ = AddBuffer<TerrainGenerationLayerBufferElement>(entity);
+
+            foreach (TerrainGenerationLayer layer in authoring.terrainGenerationSettings.layers)
+            {
+                AppendToBuffer<TerrainGenerationLayerBufferElement>(entity, new()
+                {
+                    amplitude = layer.amplitude,
+                    frequency = layer.frequency
+                });
+            }
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Terrain
         [ReadOnly] public ComponentTypeHandle<ChunkScaleComponent> chunkScaleComponentTypeHandle;
         [ReadOnly] public ChunkGenerationSettingsComponent chunkGenerationSettings;
         [ReadOnly] public WorldDataComponent worldData;
+        [ReadOnly] public NativeArray<TerrainGenerationLayerBufferElement> terrainGenerationLayers;
 
         public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask, in v128 chunkEnabledMask)
         {
@@ -31,7 +32,7 @@ namespace Terrain
                 float chunkScale = chunkScaleComponents[i].chunkScale;
 
                 NativeList<float3> vertices = new(Allocator.Temp);
-                NativeArray<float> cubeMap = new(TerrainGenerator.PopulateMap(chunkGenerationSettings, worldData, position, chunkScale), Allocator.Temp);
+                NativeArray<float> cubeMap = new(TerrainGenerator.PopulateMap(chunkGenerationSettings, worldData, terrainGenerationLayers, position, chunkScale), Allocator.Temp);
 
                 _ = entityCommandBuffer.AddBuffer<TriangleBufferElement>(i, entity);
                 _ = entityCommandBuffer.AddBuffer<VerticeBufferElement>(i, entity);

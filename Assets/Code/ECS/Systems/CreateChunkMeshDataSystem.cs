@@ -11,6 +11,7 @@ namespace Terrain
     public partial struct CreateChunkMeshDataSystem : ISystem
     {
         private EntityQuery _chunkQuery;
+        private BufferLookup<TerrainGenerationLayerBufferElement> _terrainGenerationLayerBufferLookup;
         private EntityTypeHandle _entityTypeHandle;
         private ComponentTypeHandle<LocalTransform> _localTransformTypeHandle;
         private ComponentTypeHandle<ChunkScaleComponent> _chunkScaleComponentTypeHandle;
@@ -25,6 +26,8 @@ namespace Terrain
                 .WithAll<CreateChunkMeshDataTagComponent>()
                 .Build(ref state);
 
+            _terrainGenerationLayerBufferLookup = state.GetBufferLookup<TerrainGenerationLayerBufferElement>();
+
             _entityTypeHandle = state.GetEntityTypeHandle();
             _localTransformTypeHandle = state.GetComponentTypeHandle<LocalTransform>();
             _chunkScaleComponentTypeHandle = state.GetComponentTypeHandle<ChunkScaleComponent>();
@@ -33,6 +36,7 @@ namespace Terrain
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            _terrainGenerationLayerBufferLookup.Update(ref state);
             _entityTypeHandle.Update(ref state);
             _localTransformTypeHandle.Update(ref state);
             _chunkScaleComponentTypeHandle.Update(ref state);
@@ -40,6 +44,7 @@ namespace Terrain
             EntityCommandBuffer entityCommandBuffer = new(Allocator.TempJob);
             ChunkGenerationSettingsComponent chunkGenerationSettings = SystemAPI.GetSingleton<ChunkGenerationSettingsComponent>();
             WorldDataComponent worldData = SystemAPI.GetSingleton<WorldDataComponent>();
+            DynamicBuffer<TerrainGenerationLayerBufferElement> terrainGenerationLayers = _terrainGenerationLayerBufferLookup[SystemAPI.GetSingletonEntity<ChunkGenerationSettingsComponent>()];
 
             JobHandle createMeshDataJobHandle = new CreateMeshDataJob
             {
@@ -48,7 +53,8 @@ namespace Terrain
                 localTransformTypeHandle = _localTransformTypeHandle,
                 chunkScaleComponentTypeHandle = _chunkScaleComponentTypeHandle,
                 chunkGenerationSettings = chunkGenerationSettings,
-                worldData = worldData
+                worldData = worldData,
+                terrainGenerationLayers = terrainGenerationLayers.ToNativeArray(Allocator.TempJob)
             }.ScheduleParallel(_chunkQuery, state.Dependency);
             createMeshDataJobHandle.Complete();
 

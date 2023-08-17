@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03d2dff7bebe448469cd388d0eef376d, type: 3}
-  m_Name: Terrain Generation Layer
+  m_Name: Terrain Generation Layer 1
   m_EditorClassIdentifier: 
-  amplitude: 64
-  frequency: 0.0001
+  amplitude: 16
+  frequency: 0.001

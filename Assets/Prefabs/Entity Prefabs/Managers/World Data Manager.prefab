@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 694369049022146158}
   - component: {fileID: 280010532828643939}
   m_Layer: 0
-  m_Name: World Data
+  m_Name: World Data Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3940441564093856854}
   - component: {fileID: -2392491516850801781}
   m_Layer: 0
-  m_Name: Game Settings
+  m_Name: Game Settings Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,4 +47,6 @@ MonoBehaviour:
   chunkPrefab: {fileID: 5932196773895458033, guid: d519b212ff0182f4aa77bacb6eb4d493,
     type: 3}
   chunkGenerationSettings: {fileID: 11400000, guid: 16d5691514192894ba55140b05650dda,
+    type: 2}
+  terrainGenerationSettings: {fileID: 11400000, guid: aee3755775953ac4eaff03074cabf20d,
     type: 2}
