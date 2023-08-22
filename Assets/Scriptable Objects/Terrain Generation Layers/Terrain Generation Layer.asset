@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03d2dff7bebe448469cd388d0eef376d, type: 3}
   m_Name: Terrain Generation Layer
   m_EditorClassIdentifier: 
-  amplitude: 64
-  frequency: 0.0001
+  amplitude: 100
+  frequency: 0.005

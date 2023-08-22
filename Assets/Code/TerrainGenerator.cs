@@ -42,20 +42,22 @@ namespace Terrain
             return index3D.x + (index3D.y * cubeCount) + (index3D.z * cubeCount * cubeCount);
         }
 
-        // Returns a value between 0 and 1
         private static float GetSample(WorldDataComponent worldData, NativeArray<TerrainGenerationLayerBufferElement> terrainGenerationLayers, float3 position)
         {
-            float3 offset = new(worldData.seed, 0, worldData.seed * 2);
+            float3 offset = new(worldData.seed, 10, worldData.seed * 2);
             position += offset;
 
-            float height = 0;
+            float height = offset.y;
 
             foreach (TerrainGenerationLayerBufferElement terrainGenerationLayer in terrainGenerationLayers)
             {
                 height += NoiseLayer(position, terrainGenerationLayer);
             }
 
-            return position.y > height ? 1 : 0;
+            float difference = 1 - (height - position.y);
+
+            return difference;
+
         }
 
         private static float NoiseLayer(float3 position, TerrainGenerationLayerBufferElement terrainGenerationLayer)
@@ -63,10 +65,7 @@ namespace Terrain
             float x = position.x * terrainGenerationLayer.frequency;
             float z = position.z * terrainGenerationLayer.frequency;
 
-            return terrainGenerationLayer.amplitude * math.clamp(Mathf.PerlinNoise(x, z), 0.0f, 1.0f);
+            return terrainGenerationLayer.amplitude * Mathf.PerlinNoise(x, z);
         }
     }
 }
-/*
-    Terrain generator will add layers from bottom up. then, the z of the position will be checked if it overlaps the sample
- */
