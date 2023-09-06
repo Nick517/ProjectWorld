@@ -3,45 +3,56 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TerrainGraphView : GraphView
+namespace Terrain.Graph
 {
-    public TerrainGraphView()
+    public class TerrainGraphView : GraphView
     {
-        this.AddManipulator(new ContentZoomer());
-        this.AddManipulator(new ContentDragger());
-        this.AddManipulator(new SelectionDragger());
-        this.AddManipulator(new RectangleSelector());
-        style.backgroundColor = new Color(0.125f, 0.125f, 0.125f, 1.0f);
-    }
+        private TerrainSearchWindow _searchWindow;
 
-    public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
-    {
-        Vector2 mousePosition = evt.localMousePosition;
-
-        if (evt.target is GraphView)
+        public TerrainGraphView()
         {
-            evt.menu.AppendAction("Create Node", (e) => { AddElement(CreateTerrainNode(viewTransform.matrix.inverse.MultiplyPoint(mousePosition))); });
-            evt.menu.AppendSeparator();
+            this.AddManipulator(new ContentZoomer());
+            this.AddManipulator(new ContentDragger());
+            this.AddManipulator(new SelectionDragger());
+            this.AddManipulator(new RectangleSelector());
+            AddSearchWindow();
+
+            style.backgroundColor = new Color(0.125f, 0.125f, 0.125f, 1.0f);
         }
 
-        base.BuildContextualMenu(evt);
-    }
-
-    private Port GeneratePort(TerrainNode node, Direction direction, Port.Capacity capacity = Port.Capacity.Single)
-    {
-        return node.InstantiatePort(Orientation.Horizontal, direction, capacity, typeof(float));
-    }
-
-    public TerrainNode CreateTerrainNode(Vector2 nodePosition)
-    {
-        TerrainNode node = new()
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
-            title = "Node",
-            GUID = Guid.NewGuid().ToString(),
-        };
+            Vector2 mousePosition = evt.localMousePosition;
 
-        node.SetPosition(new Rect(nodePosition.x, nodePosition.y, 100, 150));
+            if (evt.target is GraphView)
+            {
+                evt.menu.AppendAction("Create Node", (e) => { _ = SearchWindow.Open(new SearchWindowContext(mousePosition), _searchWindow); });
+            }
 
-        return node;
+            base.BuildContextualMenu(evt);
+        }
+
+        public TerrainNode CreateNode(Vector2 position)
+        {
+            TerrainNode node = new()
+            {
+                title = "Node",
+                GUID = Guid.NewGuid().ToString(),
+            };
+
+            node.SetPosition(new Rect(position.x, position.y, 100, 150));
+
+            return node;
+        }
+
+        private void AddSearchWindow()
+        {
+            if (_searchWindow == null)
+            {
+                _searchWindow = ScriptableObject.CreateInstance<TerrainSearchWindow>();
+
+                _searchWindow.Initialize(this);
+            }
+        }
     }
 }

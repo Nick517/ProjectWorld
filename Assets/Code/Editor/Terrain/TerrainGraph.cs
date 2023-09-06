@@ -2,35 +2,38 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class TerrainGraph : EditorWindow
+namespace Terrain.Graph
 {
-    private TerrainGraphView _graphView;
-
-    [MenuItem("Graph/Terrain Graph")]
-    public static void OpenTerrainGraphWindow()
+    public class TerrainGraph : EditorWindow
     {
-        TerrainGraph window = GetWindow<TerrainGraph>();
-        window.titleContent = new GUIContent("Terrain Graph");
-    }
+        private TerrainGraphView _graphView;
 
-    private void OnEnable()
-    {
-        ConstructGraphView();
-    }
-
-    private void ConstructGraphView()
-    {
-        _graphView = new TerrainGraphView()
+        [MenuItem("Graph/Terrain Graph")]
+        public static void OpenTerrainGraphWindow()
         {
-            name = "Terrain Graph"
-        };
+            TerrainGraph window = GetWindow<TerrainGraph>();
+            window.titleContent = new GUIContent("Terrain Graph");
+        }
 
-        _graphView.StretchToParentSize();
-        rootVisualElement.Add(_graphView);
-    }
+        private void OnEnable()
+        {
+            ConstructGraphView();
+        }
 
-    private void OnDisable()
-    {
-        rootVisualElement.Remove(_graphView);
+        private void ConstructGraphView()
+        {
+            _graphView = new TerrainGraphView()
+            {
+                name = "Terrain Graph"
+            };
+
+            _graphView.StretchToParentSize();
+            rootVisualElement.Add(_graphView);
+        }
+
+        private void OnDisable()
+        {
+            rootVisualElement.Remove(_graphView);
+        }
     }
 }

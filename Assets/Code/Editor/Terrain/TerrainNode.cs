@@ -1,6 +1,9 @@
 using UnityEditor.Experimental.GraphView;
 
-public class TerrainNode : Node
+namespace Terrain.Graph
 {
-    public string GUID;
+    public class TerrainNode : Node
+    {
+        public string GUID;
+    }
 }
