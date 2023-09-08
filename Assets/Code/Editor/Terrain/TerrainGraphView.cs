@@ -1,4 +1,3 @@
-using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -30,19 +29,6 @@ namespace Terrain.Graph
             }
 
             base.BuildContextualMenu(evt);
-        }
-
-        public TerrainNode CreateNode(Vector2 position)
-        {
-            TerrainNode node = new()
-            {
-                title = "Node",
-                GUID = Guid.NewGuid().ToString(),
-            };
-
-            node.SetPosition(new Rect(position.x, position.y, 100, 150));
-
-            return node;
         }
 
         private void AddSearchWindow()

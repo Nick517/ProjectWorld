@@ -1,9 +1,15 @@
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
 namespace Terrain.Graph
 {
-    public class TerrainNode : Node
+    public abstract class TerrainNode : Node
     {
-        public string GUID;
+        public TerrainNode()
+        {
+            // Constructor logic, if needed
+        }
+
+        public abstract void Instantiate(TerrainGraphView graphView, Vector2 position);
     }
 }

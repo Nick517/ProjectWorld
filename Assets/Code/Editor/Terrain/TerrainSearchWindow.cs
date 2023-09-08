@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -18,10 +19,17 @@ namespace Terrain.Graph
             List<SearchTreeEntry> entries = new()
         {
             new SearchTreeGroupEntry(new GUIContent("Create Node")),
-            new SearchTreeGroupEntry(new GUIContent("Basic"), 1),
-            new SearchTreeEntry(new GUIContent("Node"))
+            new SearchTreeGroupEntry(new GUIContent("Input"), 1),
+            new SearchTreeEntry(new GUIContent("Float"))
             {
-                level = 2
+                level = 2,
+                userData = typeof(FloatNode)
+            },
+            new SearchTreeGroupEntry(new GUIContent("Math"), 1),
+            new SearchTreeEntry(new GUIContent("Add"))
+            {
+                level = 2,
+                userData = typeof(AddNode)
             }
         };
 
@@ -30,7 +38,9 @@ namespace Terrain.Graph
 
         public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context)
         {
-            _graphView.AddElement(_graphView.CreateNode(_graphView.viewTransform.matrix.inverse.MultiplyPoint(context.screenMousePosition)));
+            Type nodeType = (Type)entry.userData;
+            TerrainNode node = (TerrainNode)Activator.CreateInstance(nodeType);
+            node.Instantiate(_graphView, context.screenMousePosition);
 
             return true;
         }
