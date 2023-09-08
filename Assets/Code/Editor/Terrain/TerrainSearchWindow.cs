@@ -40,7 +40,7 @@ namespace Terrain.Graph
         {
             Type nodeType = (Type)entry.userData;
             TerrainNode node = (TerrainNode)Activator.CreateInstance(nodeType);
-            node.Instantiate(_graphView, context.screenMousePosition);
+            node.Initialize(_graphView, context.screenMousePosition);
 
             return true;
         }

@@ -5,11 +5,6 @@ namespace Terrain.Graph
 {
     public abstract class TerrainNode : Node
     {
-        public TerrainNode()
-        {
-            // Constructor logic, if needed
-        }
-
-        public abstract void Instantiate(TerrainGraphView graphView, Vector2 position);
+        public abstract void Initialize(TerrainGraphView graphView, Vector2 position);
     }
 }

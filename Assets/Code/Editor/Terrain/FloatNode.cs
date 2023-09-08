@@ -4,12 +4,7 @@ namespace Terrain.Graph
 {
     public class FloatNode : TerrainNode
     {
-        public FloatNode()
-        {
-            // Constructor logic, if needed
-        }
-
-        public override void Instantiate(TerrainGraphView graphView, Vector2 position)
+        public override void Initialize(TerrainGraphView graphView, Vector2 position)
         {
             title = "Float";
 
