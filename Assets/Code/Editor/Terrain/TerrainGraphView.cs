@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -17,6 +18,21 @@ namespace Terrain.Graph
             AddSearchWindow();
 
             style.backgroundColor = new Color(0.125f, 0.125f, 0.125f, 1.0f);
+        }
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            List<Port> compatiblePorts = new();
+
+            ports.ForEach(port =>
+            {
+                if (startPort != port && startPort.node != port.node && startPort.direction != port.direction)
+                {
+                    compatiblePorts.Add(port);
+                }
+            });
+
+            return compatiblePorts;
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
