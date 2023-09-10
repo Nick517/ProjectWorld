@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,7 +5,7 @@ namespace Terrain.Graph
 {
     public class FloatNode : TerrainNode
     {
-        public float value;
+        public float value = 0;
 
         public override void Initialize(TerrainGraphView graphView, Vector2 position)
         {
@@ -23,16 +22,17 @@ namespace Terrain.Graph
         public override void Draw()
         {
             /* OUTPUT CONTAINER */
-            Port outputPort = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(float));
-            outputPort.portName = "Float(1)";
-            outputContainer.Add(outputPort);
+            TerrainGraphElementUtility.AddPort(this, "Out(1)", typeof(float), true);
 
             /* EXTENSIONS CONTAINER */
             VisualElement customDataContainer = new();
-            TextField floatTextField = new()
+            TextField floatTextField = TerrainGraphElementUtility.CreateTextField(value.ToString(), null, callback =>
             {
-                value = value.ToString()
-            };
+                if (float.TryParse(callback.newValue, out float v))
+                {
+                    value = v;
+                }
+            });
 
             customDataContainer.Add(floatTextField);
             extensionContainer.Add(customDataContainer);
