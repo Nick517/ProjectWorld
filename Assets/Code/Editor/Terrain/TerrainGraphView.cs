@@ -18,6 +18,10 @@ namespace Terrain.Graph
             AddSearchWindow();
 
             style.backgroundColor = new Color(0.125f, 0.125f, 0.125f, 1.0f);
+
+            SampleNode sampleNode = new();
+            sampleNode.Initialize(this, new(0, 0));
+            sampleNode.Draw();
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)

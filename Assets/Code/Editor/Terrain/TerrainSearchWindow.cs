@@ -20,6 +20,11 @@ namespace Terrain.Graph
         {
             new SearchTreeGroupEntry(new GUIContent("Create Node")),
             new SearchTreeGroupEntry(new GUIContent("Input"), 1),
+            new SearchTreeEntry(new GUIContent("Position"))
+            {
+                level = 2,
+                userData = typeof(PositionNode)
+            },
             new SearchTreeEntry(new GUIContent("Float"))
             {
                 level = 2,

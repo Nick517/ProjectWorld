@@ -11,6 +11,8 @@ namespace Terrain.Graph
             Vector2 graphPosition = graphView.viewTransform.matrix.inverse.MultiplyPoint(position);
             base.SetPosition(new Rect(graphPosition.x, graphPosition.y, 100, 150));
 
+            GUID = UnityEditor.GUID.Generate();
+
             graphView.AddElement(this);
         }
 
@@ -24,6 +26,16 @@ namespace Terrain.Graph
             TerrainGraphElementUtility.AddPort(this, "Out(1)", typeof(float), true);
 
             RefreshExpandedState();
+        }
+
+        public override TerrainNodeSaveData GetSaveData()
+        {
+            return new AddNodeSaveData(this);
+        }
+
+        public class AddNodeSaveData : TerrainNodeSaveData
+        {
+            public AddNodeSaveData(AddNode addNode) : base(addNode) { }
         }
     }
 }

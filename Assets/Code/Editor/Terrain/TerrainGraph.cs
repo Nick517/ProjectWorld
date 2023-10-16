@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -38,10 +41,11 @@ namespace Terrain.Graph
         {
             Toolbar toolbar = new();
 
-
-            Button saveButton = TerrainGraphElementUtility.CreateButton("Save As");
+            Button saveButton = TerrainGraphElementUtility.CreateButton("Save As", () => { Save(); });
+            Button loadButton = TerrainGraphElementUtility.CreateButton("Load", () => { Load(); });
 
             toolbar.Add(saveButton);
+            toolbar.Add(loadButton);
 
             rootVisualElement.Add(toolbar);
         }
@@ -49,6 +53,36 @@ namespace Terrain.Graph
         private void OnDisable()
         {
             rootVisualElement.Remove(_graphView);
+        }
+
+        private void Save()
+        {
+            string path = EditorUtility.SaveFilePanel("Save Graph As...", "C:", "Graph", "terraingraph");
+
+            SaveManager.Save(_graphView, path);
+        }
+
+        private void Load()
+        {
+            string path = EditorUtility.OpenFilePanel("Open Graph", "C:", "terraingraph");
+
+            List<object> loadedObjects = new();
+
+            StreamReader streamReader = new(path);
+            string line;
+            while ((line = streamReader.ReadLine()) != null)
+            {
+                object loadedObject = JsonUtility.FromJson<object>(line);
+                loadedObjects.Add(loadedObject);
+            }
+
+            foreach (object loadedObject in loadedObjects)
+            {
+                if (loadedObject is TerrainNode)
+                {
+                    
+                }
+            }
         }
     }
 }
