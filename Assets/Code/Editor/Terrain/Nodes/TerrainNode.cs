@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
@@ -13,27 +14,33 @@ namespace Terrain.Graph
 
         public abstract void Draw();
 
-        public abstract TerrainNodeSaveData GetSaveData();
+        #region Save System
+        public abstract SaveData GetSaveData();
 
-        public class TerrainNodeSaveData
+        public class SaveData
         {
             public string GUID;
-
-            public string type;
 
             public float positionX;
             public float positionY;
 
-            public TerrainNodeSaveData(TerrainNode terrainNode)
+            public SaveData() { }
+
+            public SaveData(TerrainNode terrainNode)
             {
                 GUID = terrainNode.GUID.ToString();
-
-                type = terrainNode.GetType().ToString();
 
                 float2 position = terrainNode.GetPosition().position;
                 positionX = position.x;
                 positionY = position.y;
             }
+
+            public void Load(TerrainGraphView graphView)
+            {
+                TerrainNode node = (TerrainNode)Activator.CreateInstance(GetType().DeclaringType);
+                node.Initialize(graphView, new(positionX, positionY));
+            }
         }
+        #endregion
     }
 }

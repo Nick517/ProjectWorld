@@ -25,12 +25,12 @@ namespace Terrain.Graph
             RefreshExpandedState();
         }
 
-        public override TerrainNodeSaveData GetSaveData()
+        public override SaveData GetSaveData()
         {
             return new PositionNodeSaveData(this);
         }
 
-        public class PositionNodeSaveData : TerrainNodeSaveData
+        public class PositionNodeSaveData : SaveData
         {
             public PositionNodeSaveData(PositionNode positionNode) : base(positionNode) { }
         }

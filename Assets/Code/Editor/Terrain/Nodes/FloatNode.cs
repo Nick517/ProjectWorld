@@ -17,6 +17,7 @@ namespace Terrain.Graph
             GUID = UnityEditor.GUID.Generate();
 
             graphView.AddElement(this);
+            Draw();
         }
 
         public override void Draw()
@@ -32,6 +33,8 @@ namespace Terrain.Graph
                 {
                     value = v;
                 }
+
+                Debug.Log(value.ToString());
             });
 
             customDataContainer.Add(floatTextField);
@@ -40,19 +43,23 @@ namespace Terrain.Graph
             RefreshExpandedState();
         }
 
-        public override TerrainNodeSaveData GetSaveData()
+        #region Save System
+        public override SaveData GetSaveData()
         {
             return new FloatNodeSaveData(this);
         }
 
-        public class FloatNodeSaveData : TerrainNodeSaveData
+        public class FloatNodeSaveData : SaveData
         {
             public float value;
+
+            public FloatNodeSaveData() : base() { }
 
             public FloatNodeSaveData(FloatNode floatNode) : base(floatNode)
             {
                 value = floatNode.value;
             }
         }
+        #endregion
     }
 }

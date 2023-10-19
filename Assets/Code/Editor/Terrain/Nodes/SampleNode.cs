@@ -14,6 +14,7 @@ namespace Terrain.Graph
             GUID = UnityEditor.GUID.Generate();
 
             graphView.AddElement(this);
+            Draw();
         }
 
         public override void Draw()
@@ -24,14 +25,18 @@ namespace Terrain.Graph
             RefreshExpandedState();
         }
 
-        public override TerrainNodeSaveData GetSaveData()
+        #region Save System
+        public override SaveData GetSaveData()
         {
             return new SampleNodeSaveData(this);
         }
 
-        public class SampleNodeSaveData : TerrainNodeSaveData
+        public class SampleNodeSaveData : SaveData
         {
+            public SampleNodeSaveData() : base() { }
+
             public SampleNodeSaveData(SampleNode sampleNode) : base(sampleNode) { }
         }
+        #endregion
     }
 }

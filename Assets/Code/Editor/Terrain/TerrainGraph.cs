@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -10,7 +7,6 @@ namespace Terrain.Graph
 {
     public class TerrainGraph : EditorWindow
     {
-        private const string defaultFileName = "TerrainGraph";
         private TerrainGraphView _graphView;
 
         [MenuItem("Window/Terrain Graph")]
@@ -66,23 +62,7 @@ namespace Terrain.Graph
         {
             string path = EditorUtility.OpenFilePanel("Open Graph", "C:", "terraingraph");
 
-            List<object> loadedObjects = new();
-
-            StreamReader streamReader = new(path);
-            string line;
-            while ((line = streamReader.ReadLine()) != null)
-            {
-                object loadedObject = JsonUtility.FromJson<object>(line);
-                loadedObjects.Add(loadedObject);
-            }
-
-            foreach (object loadedObject in loadedObjects)
-            {
-                if (loadedObject is TerrainNode)
-                {
-                    
-                }
-            }
+            SaveManager.Load(_graphView, path);
         }
     }
 }

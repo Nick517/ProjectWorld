@@ -28,12 +28,12 @@ namespace Terrain.Graph
             RefreshExpandedState();
         }
 
-        public override TerrainNodeSaveData GetSaveData()
+        public override SaveData GetSaveData()
         {
             return new AddNodeSaveData(this);
         }
 
-        public class AddNodeSaveData : TerrainNodeSaveData
+        public class AddNodeSaveData : SaveData
         {
             public AddNodeSaveData(AddNode addNode) : base(addNode) { }
         }

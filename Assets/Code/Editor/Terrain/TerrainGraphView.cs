@@ -21,7 +21,6 @@ namespace Terrain.Graph
 
             SampleNode sampleNode = new();
             sampleNode.Initialize(this, new(0, 0));
-            sampleNode.Draw();
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -59,6 +58,11 @@ namespace Terrain.Graph
 
                 _searchWindow.Initialize(this);
             }
+        }
+
+        public void ClearGraphView()
+        {
+            DeleteElements(graphElements.ToList());
         }
     }
 }
