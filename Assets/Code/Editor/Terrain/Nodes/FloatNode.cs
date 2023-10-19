@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -58,6 +59,13 @@ namespace Terrain.Graph
             public FloatNodeSaveData(FloatNode floatNode) : base(floatNode)
             {
                 value = floatNode.value;
+            }
+
+            public override void Load(TerrainGraphView graphView)
+            {
+                FloatNode floatNode = (FloatNode)Activator.CreateInstance(typeof(FloatNode));
+                floatNode.value = value;
+                floatNode.Initialize(graphView, new(positionX, positionY));
             }
         }
         #endregion

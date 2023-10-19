@@ -17,7 +17,7 @@ namespace Terrain.Graph
         #region Save System
         public abstract SaveData GetSaveData();
 
-        public class SaveData
+        public abstract class SaveData
         {
             public string GUID;
 
@@ -35,11 +35,7 @@ namespace Terrain.Graph
                 positionY = position.y;
             }
 
-            public void Load(TerrainGraphView graphView)
-            {
-                TerrainNode node = (TerrainNode)Activator.CreateInstance(GetType().DeclaringType);
-                node.Initialize(graphView, new(positionX, positionY));
-            }
+            public abstract void Load(TerrainGraphView graphView);
         }
         #endregion
     }

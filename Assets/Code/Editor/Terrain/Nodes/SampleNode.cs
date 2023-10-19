@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Terrain.Graph
@@ -36,6 +37,12 @@ namespace Terrain.Graph
             public SampleNodeSaveData() : base() { }
 
             public SampleNodeSaveData(SampleNode sampleNode) : base(sampleNode) { }
+
+            public override void Load(TerrainGraphView graphView)
+            {
+                SampleNode sampleNode = (SampleNode)Activator.CreateInstance(typeof(SampleNode));
+                sampleNode.Initialize(graphView, new(positionX, positionY));
+            }
         }
         #endregion
     }

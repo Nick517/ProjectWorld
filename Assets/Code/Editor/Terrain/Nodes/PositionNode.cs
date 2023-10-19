@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -33,6 +34,12 @@ namespace Terrain.Graph
         public class PositionNodeSaveData : SaveData
         {
             public PositionNodeSaveData(PositionNode positionNode) : base(positionNode) { }
+
+            public override void Load(TerrainGraphView graphView)
+            {
+                PositionNode positionNode = (PositionNode)Activator.CreateInstance(typeof(PositionNode));
+                positionNode.Initialize(graphView, new(positionX, positionY));
+            }
         }
     }
 }
