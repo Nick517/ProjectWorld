@@ -6,22 +6,18 @@ namespace Terrain.Graph
 {
     public class PositionNode : TerrainNode
     {
-        public override void Initialize(TerrainGraphView graphView, Vector2 position)
+        public void Initialize(TerrainGraphView graphView, Vector2 position)
         {
-            title = "Position";
-
-            Vector2 graphPosition = graphView.viewTransform.matrix.inverse.MultiplyPoint(position);
-            base.SetPosition(new Rect(graphPosition.x, graphPosition.y, 100, 150));
-
-            GUID = UnityEditor.GUID.Generate();
-
-            graphView.AddElement(this);
+            base.Initialize(graphView, position);
         }
 
         public override void Draw()
         {
+            title = "Position";
+            SetDimensions(150, 100);
+
             /* OUTPUT CONTAINER */
-            TerrainGraphElementUtility.AddPort(this, "Out(3)", typeof(float3), true);
+            AddOutputPort("Out(3)", typeof(float3));
 
             RefreshExpandedState();
         }
@@ -39,6 +35,11 @@ namespace Terrain.Graph
             {
                 PositionNode positionNode = (PositionNode)Activator.CreateInstance(typeof(PositionNode));
                 positionNode.Initialize(graphView, new(positionX, positionY));
+            }
+
+            public override void LoadConnections(TerrainNode terrainNode, TerrainGraphView graphView)
+            {
+                throw new NotImplementedException();
             }
         }
     }

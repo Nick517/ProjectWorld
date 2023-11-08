@@ -1,5 +1,4 @@
 using System;
-using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Terrain.Graph
@@ -8,34 +7,22 @@ namespace Terrain.Graph
     {
         public float value = 0;
 
-        public override void Initialize(TerrainGraphView graphView, Vector2 position)
-        {
-            title = "Float";
-
-            Vector2 graphPosition = graphView.viewTransform.matrix.inverse.MultiplyPoint(position);
-            base.SetPosition(new Rect(graphPosition.x, graphPosition.y, 100, 150));
-
-            GUID = UnityEditor.GUID.Generate();
-
-            graphView.AddElement(this);
-            Draw();
-        }
-
         public override void Draw()
         {
+            title = "Float";
+            SetDimensions(100, 150);
+
             /* OUTPUT CONTAINER */
-            TerrainGraphElementUtility.AddPort(this, "Out(1)", typeof(float), true);
+            AddOutputPort("Out(1)", typeof(float));
 
             /* EXTENSIONS CONTAINER */
             VisualElement customDataContainer = new();
-            TextField floatTextField = TerrainGraphElementUtility.CreateTextField(value.ToString(), null, callback =>
+            TextField floatTextField = GraphUtil.CreateTextField(value.ToString(), null, callback =>
             {
                 if (float.TryParse(callback.newValue, out float v))
                 {
                     value = v;
                 }
-
-                Debug.Log(value.ToString());
             });
 
             customDataContainer.Add(floatTextField);
@@ -66,6 +53,11 @@ namespace Terrain.Graph
                 FloatNode floatNode = (FloatNode)Activator.CreateInstance(typeof(FloatNode));
                 floatNode.value = value;
                 floatNode.Initialize(graphView, new(positionX, positionY));
+            }
+
+            public override void LoadConnections(TerrainNode terrainNode, TerrainGraphView graphView)
+            {
+                throw new NotImplementedException();
             }
         }
         #endregion

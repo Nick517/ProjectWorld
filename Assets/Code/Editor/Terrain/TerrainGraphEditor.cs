@@ -5,14 +5,14 @@ using UnityEngine.UIElements;
 
 namespace Terrain.Graph
 {
-    public class TerrainGraph : EditorWindow
+    public class TerrainGraphEditor : EditorWindow
     {
         private TerrainGraphView _graphView;
 
         [MenuItem("Window/Terrain Graph")]
         public static void Open()
         {
-            TerrainGraph window = GetWindow<TerrainGraph>();
+            TerrainGraphEditor window = GetWindow<TerrainGraphEditor>();
             window.titleContent = new GUIContent("Terrain Graph");
         }
 
@@ -37,8 +37,8 @@ namespace Terrain.Graph
         {
             Toolbar toolbar = new();
 
-            Button saveButton = TerrainGraphElementUtility.CreateButton("Save As", () => { Save(); });
-            Button loadButton = TerrainGraphElementUtility.CreateButton("Load", () => { Load(); });
+            Button saveButton = GraphUtil.CreateButton("Save As", () => { Save(); });
+            Button loadButton = GraphUtil.CreateButton("Load", () => { Load(); });
 
             toolbar.Add(saveButton);
             toolbar.Add(loadButton);

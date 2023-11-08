@@ -5,26 +5,22 @@ namespace Terrain.Graph
 {
     public class AddNode : TerrainNode
     {
-        public override void Initialize(TerrainGraphView graphView, Vector2 position)
+        public void Initialize(TerrainGraphView graphView, Vector2 position)
         {
-            title = "Add";
-
-            Vector2 graphPosition = graphView.viewTransform.matrix.inverse.MultiplyPoint(position);
-            base.SetPosition(new Rect(graphPosition.x, graphPosition.y, 100, 150));
-
-            GUID = UnityEditor.GUID.Generate();
-
-            graphView.AddElement(this);
+            base.Initialize(graphView, position);
         }
 
         public override void Draw()
         {
+            title = "Add";
+            SetDimensions(150, 100);
+
             /* INPUT CONTAINER */
-            TerrainGraphElementUtility.AddPort(this, "A(1)", typeof(float));
-            TerrainGraphElementUtility.AddPort(this, "B(1)", typeof(float));
+            AddInputPort("A(1)", typeof(float));
+            AddInputPort("B(1)", typeof(float));
 
             /* OUTPUT CONTAINER */
-            TerrainGraphElementUtility.AddPort(this, "Out(1)", typeof(float), true);
+            AddOutputPort("Out(1)", typeof(float));
 
             RefreshExpandedState();
         }
@@ -42,6 +38,11 @@ namespace Terrain.Graph
             {
                 AddNode addNode = (AddNode)Activator.CreateInstance(typeof(AddNode));
                 addNode.Initialize(graphView, new(positionX, positionY));
+            }
+
+            public override void LoadConnections(TerrainNode terrainNode, TerrainGraphView graphView)
+            {
+                throw new NotImplementedException();
             }
         }
     }

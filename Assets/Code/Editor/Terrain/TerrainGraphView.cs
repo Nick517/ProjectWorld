@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -18,7 +19,6 @@ namespace Terrain.Graph
             AddSearchWindow();
 
             style.backgroundColor = new Color(0.125f, 0.125f, 0.125f, 1.0f);
-
             SampleNode sampleNode = new();
             sampleNode.Initialize(this, new(0, 0));
         }
@@ -29,6 +29,7 @@ namespace Terrain.Graph
 
             ports.ForEach(port =>
             {
+                // Checks if port is not startPort, if the port's node is not the same as startPort's, and if port does not go in the same direction as startPort
                 if (startPort != port && startPort.node != port.node && startPort.direction != port.direction)
                 {
                     compatiblePorts.Add(port);
@@ -36,6 +37,19 @@ namespace Terrain.Graph
             });
 
             return compatiblePorts;
+        }
+
+        public NodePort GetPortFromGUID(string GUID)
+        {
+            foreach (NodePort nodePort in from Port port in ports
+                                     let nodePort = (NodePort)port
+                                     where nodePort.GetEdgeGUID() == GUID
+                                     select nodePort)
+            {
+                return nodePort;
+            }
+
+            return null;
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)

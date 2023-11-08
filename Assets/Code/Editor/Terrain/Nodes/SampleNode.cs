@@ -1,29 +1,21 @@
 using System;
-using UnityEngine;
 
 namespace Terrain.Graph
 {
     public class SampleNode : TerrainNode
     {
-        public override void Initialize(TerrainGraphView graphView, Vector2 position)
-        {
-            title = "Sample";
-
-            Vector2 graphPosition = graphView.viewTransform.matrix.inverse.MultiplyPoint(position);
-            base.SetPosition(new Rect(graphPosition.x, graphPosition.y, 100, 150));
-
-            GUID = UnityEditor.GUID.Generate();
-
-            graphView.AddElement(this);
-            Draw();
-        }
+        public NodePort inputPort;
 
         public override void Draw()
         {
+            title = "Sample";
+            SetDimensions(150, 100);
+
             /* INPUT CONTAINER */
-            TerrainGraphElementUtility.AddPort(this, "In(1)", typeof(float));
+            inputPort = AddInputPort("In(1)", typeof(float));
 
             RefreshExpandedState();
+            RefreshPorts();
         }
 
         #region Save System
@@ -34,14 +26,25 @@ namespace Terrain.Graph
 
         public class SampleNodeSaveData : SaveData
         {
+            public string inputPortEdgeGUID;
+
             public SampleNodeSaveData() : base() { }
 
-            public SampleNodeSaveData(SampleNode sampleNode) : base(sampleNode) { }
+            public SampleNodeSaveData(SampleNode sampleNode) : base(sampleNode)
+            {
+                inputPortEdgeGUID = sampleNode.inputPort.GetEdgeGUID().ToString();
+            }
 
             public override void Load(TerrainGraphView graphView)
             {
                 SampleNode sampleNode = (SampleNode)Activator.CreateInstance(typeof(SampleNode));
-                sampleNode.Initialize(graphView, new(positionX, positionY));
+                sampleNode.Initialize(graphView, new(positionX, positionY), GUID);
+            }
+
+            public override void LoadConnections(TerrainNode terrainNode, TerrainGraphView graphView)
+            {
+                SampleNode sampleNode = (SampleNode)terrainNode;
+                sampleNode.inputPort = graphView.GetPortFromGUID(inputPortEdgeGUID);
             }
         }
         #endregion
