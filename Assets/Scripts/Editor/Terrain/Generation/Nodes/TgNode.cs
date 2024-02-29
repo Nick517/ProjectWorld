@@ -8,8 +8,9 @@ namespace Editor.Terrain.Generation.Nodes
     {
         #region Variables
 
-        public string id;
         public TgGraphView graph;
+        
+        public string id;
 
         #endregion
 
@@ -77,7 +78,7 @@ namespace Editor.Terrain.Generation.Nodes
 
         protected TgPort AddInputPort(string portName, Type type)
         {
-            TgPort nodePort = new(this, Orientation.Horizontal, Direction.Input, Port.Capacity.Single, type)
+            TgPort nodePort = new(graph,this, Orientation.Horizontal, Direction.Input, Port.Capacity.Single, type)
                 { port = { portName = portName } };
 
             inputContainer.Add(nodePort.port);
@@ -87,7 +88,7 @@ namespace Editor.Terrain.Generation.Nodes
 
         protected TgPort AddOutputPort(string portName, Type type)
         {
-            TgPort nodePort = new(this, Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, type)
+            TgPort nodePort = new(graph, this, Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, type)
                 { port = { portName = portName } };
 
             outputContainer.Add(nodePort.port);

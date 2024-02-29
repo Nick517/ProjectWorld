@@ -7,7 +7,7 @@ namespace Editor.Terrain.Generation
 {
     public class TgEditorWindow : EditorWindow
     {
-        private TgGraphView _graphView;
+        private TgGraphView _graph;
 
         [MenuItem("Window/Terrain Generation")]
         public static void Open()
@@ -25,13 +25,13 @@ namespace Editor.Terrain.Generation
 
         private void AddGraphView()
         {
-            _graphView = new TgGraphView
+            _graph = new TgGraphView
             {
                 name = "Terrain Generation"
             };
 
-            _graphView.StretchToParentSize();
-            rootVisualElement.Add(_graphView);
+            _graph.StretchToParentSize();
+            rootVisualElement.Add(_graph);
         }
 
         private void AddStyles()
@@ -55,21 +55,21 @@ namespace Editor.Terrain.Generation
 
         private void OnDisable()
         {
-            rootVisualElement.Remove(_graphView);
+            rootVisualElement.Remove(_graph);
         }
 
         private void Save()
         {
             var path = EditorUtility.SaveFilePanel("Save Graph As...", "C:", "Graph", "tg");
 
-            SaveManager.Save(_graphView, path);
+            SaveManager.Save(_graph, path);
         }
 
         private void Load()
         {
             var path = EditorUtility.OpenFilePanel("Open Graph", "C:", "tg");
 
-            SaveManager.Load(_graphView, path);
+            SaveManager.Load(_graph, path);
         }
     }
 }

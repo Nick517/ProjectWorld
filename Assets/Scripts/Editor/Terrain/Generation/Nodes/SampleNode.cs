@@ -22,17 +22,17 @@ namespace Editor.Terrain.Generation.Nodes
         [Serializable]
         public class SampleNodeDto : Dto
         {
-            public TgPort.Dto inputPort;
+            public string inputPortId;
 
             public SampleNodeDto(SampleNode sampleNode) : base(sampleNode)
             {
-                inputPort = sampleNode.inputPort.ToDto();
+                inputPortId = sampleNode.inputPort.id;
             }
 
             public override TgNode Deserialize(TgGraphView graph)
             {
                 var sampleNode = (SampleNode)Create(graph, typeof(SampleNode));
-                sampleNode.inputPort.id = inputPort.id;
+                sampleNode.inputPort.id = inputPortId;
                 sampleNode.id = id;
                 sampleNode.SetPosition(position.AsVector2());
 

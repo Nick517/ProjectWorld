@@ -23,20 +23,20 @@ namespace Editor.Terrain.Generation.Nodes
         [Serializable]
         public class TestNodeDto : Dto
         {
-            public TgPort.Dto inputPort;
-            public TgPort.Dto outputPort;
+            public string inputPortId;
+            public string outputPortId;
 
             public TestNodeDto(TestNode testNode) : base(testNode)
             {
-                inputPort = testNode.inputPort.ToDto();
-                outputPort = testNode.inputPort.ToDto();
+                inputPortId = testNode.inputPort.id;
+                outputPortId = testNode.outputPort.id;
             }
 
             public override TgNode Deserialize(TgGraphView graph)
             {
                 var testNode = (TestNode)Create(graph, typeof(TestNode));
-                testNode.inputPort.id = inputPort.id;
-                testNode.outputPort.id = outputPort.id;
+                testNode.inputPort.id = inputPortId;
+                testNode.outputPort.id = outputPortId;
                 testNode.id = id;
                 testNode.SetPosition(position.AsVector2());
 
