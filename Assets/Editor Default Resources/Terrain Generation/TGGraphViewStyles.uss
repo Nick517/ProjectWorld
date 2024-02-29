@@ -1,0 +1,7 @@
+GridBackground
+{
+	--grid-background-color: var(--tg-colors-grid-light-grey-1);
+	--line-color: var(--tg-colors-grid-light-grey-2);
+	--thick-line-color: var(--tg-colors-grid-light-grey-3);
+	--spacing: var(--tg-metrics-grid-25);
+}
