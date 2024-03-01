@@ -13,18 +13,56 @@ namespace Editor.Terrain.Generation
     {
         private TgSearchWindow _searchWindow;
 
-        public readonly List<TgNode> tgNodes = new();
-        public readonly List<TgPort> tgPorts = new();
-        public readonly List<TgEdge> tgEdges = new();
+        private List<TgNode> TgNodes => nodes.Select(GetTgNode).ToList();
+
+        private List<TgPort> TgPorts
+        {
+            get
+            {
+                List<TgPort> tgPorts = new();
+                foreach (var tgNode in TgNodes) tgPorts.AddRange(tgNode.TgPorts);
+                return tgPorts;
+            }
+        }
         
+        private List<TgEdgeDto> GetAllTgEdgeDto()
+        {
+            List<TgEdgeDto> tgEdges = new();
+
+            foreach (var edge in edges) tgEdges.Add(new TgEdgeDto(this, edge));
+
+            return tgEdges;
+        }
+
+        private TgNode GetTgNode(Node node)
+        {
+            return node as TgNode;
+        }
+
+        public TgPort GetTgPort(Port port)
+        {
+            foreach (var tgPort in TgPorts)
+                if (tgPort.port == port)
+                    return tgPort;
+
+            return null;
+        }
+
+        public TgPort GetTgPort(string id)
+        {
+            foreach (var tgPort in TgPorts)
+                if (tgPort.id == id)
+                    return tgPort;
+
+            return null;
+        }
+
         public TgGraphView()
         {
             AddGridBackground();
             AddStyles();
             AddManipulator();
             AddSearchWindow();
-
-            graphViewChanged += OnGraphChange;
 
             var sampleNode = (SampleNode)TgNode.Create(this, typeof(SampleNode));
             sampleNode.SetPosition(Vector2.zero);
@@ -51,42 +89,6 @@ namespace Editor.Terrain.Generation
             this.AddManipulator(new RectangleSelector());
         }
 
-        private GraphViewChange OnGraphChange(GraphViewChange change)
-        {
-            if (change.edgesToCreate != null)
-                foreach (var edge in change.edgesToCreate)
-                {
-                    var tgEdge = new TgEdge(this, edge);
-                }
-
-            if (change.elementsToRemove != null)
-                foreach (var e in change.elementsToRemove)
-                {
-                    if (e is Edge edge)
-                    {
-                        Debug.Log("removed edge");
-                        var tgEdge = GetTgEdge(edge);
-                        tgEdges.Remove(tgEdge);
-                    }
-                    
-                    if (e is Port port)
-                    {
-                        Debug.Log("removed port");
-                        var tgPort = GetTgPort(port);
-                        tgPorts.Remove(tgPort);
-                    }
-                    
-                    if (e is Node node)
-                    {
-                        Debug.Log("removed node");
-                        var tgNode = GetTgNode(node);
-                        tgNodes.Remove(tgNode);
-                    }
-                }
-
-            return change;
-        }
-
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
             List<Port> compatiblePorts = new();
@@ -100,26 +102,6 @@ namespace Editor.Terrain.Generation
             });
 
             return compatiblePorts;
-        }
-
-        public TgNode GetTgNode(Node node)
-        {
-            return tgNodes.FirstOrDefault(tgNode => tgNode == (TgNode)node);
-        }
-
-        public TgPort GetTgPort(string id)
-        {
-            return tgPorts.FirstOrDefault(tgPort => tgPort.id == id);
-        }
-
-        public TgPort GetTgPort(Port port)
-        {
-            return tgPorts.FirstOrDefault(tgPort => tgPort.port == port);
-        }
-
-        private TgEdge GetTgEdge(Edge edge)
-        {
-            return tgEdges.FirstOrDefault(tgEdge => tgEdge.edge == edge);
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -143,8 +125,6 @@ namespace Editor.Terrain.Generation
         private void ClearGraph()
         {
             DeleteElements(graphElements.ToList());
-            tgNodes.Clear();
-            tgPorts.Clear();
         }
 
         #region Save System
@@ -158,18 +138,22 @@ namespace Editor.Terrain.Generation
         public class Dto
         {
             public List<TgNode.Dto> tgNodeDtoList = new();
-            public List<TgEdge.Dto> tgEdgeDtoList = new();
+            public List<TgEdgeDto> tgEdgeDtoList;
+
+            public Dto()
+            {
+            }
 
             public Dto(TgGraphView graphView)
             {
-                foreach (var tgNode in graphView.tgNodes) tgNodeDtoList.Add(tgNode.ToDto());
-                foreach (var tgEdge in graphView.tgEdges) tgEdgeDtoList.Add(tgEdge.ToDto());
+                foreach (var tgNode in graphView.TgNodes) tgNodeDtoList.Add(tgNode.ToDto());
+                tgEdgeDtoList = graphView.GetAllTgEdgeDto();
             }
 
             public void Deserialize(TgGraphView graph)
             {
                 graph.ClearGraph();
-                foreach (var dto in tgNodeDtoList) graph.tgNodes.Add(dto.Deserialize(graph));
+                foreach (var dto in tgNodeDtoList) graph.TgNodes.Add(dto.Deserialize(graph));
                 foreach (var dto in tgEdgeDtoList) dto.Deserialize(graph);
             }
         }

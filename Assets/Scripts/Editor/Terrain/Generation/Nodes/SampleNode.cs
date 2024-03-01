@@ -1,19 +1,32 @@
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 
 namespace Editor.Terrain.Generation.Nodes
 {
     public class SampleNode : TgNode
     {
-        public TgPort inputPort;
+        
+        #region Fields
+        
+        private TgPort _inputPort;
 
+        public override List<TgPort> TgPorts => new() { _inputPort };
+        
+        #endregion
+        
+        #region Methods
+        
         protected override void SetUp()
         {
             title = "Sample";
 
-            inputPort = AddInputPort("In(1)", typeof(float));
+            _inputPort = AddInputPort("In(1)", typeof(float));
         }
+        
+        #endregion
 
+        #region Serialization
+        
         public override Dto ToDto()
         {
             return new SampleNodeDto(this);
@@ -24,20 +37,26 @@ namespace Editor.Terrain.Generation.Nodes
         {
             public string inputPortId;
 
+            public SampleNodeDto()
+            {
+            }
+
             public SampleNodeDto(SampleNode sampleNode) : base(sampleNode)
             {
-                inputPortId = sampleNode.inputPort.id;
+                inputPortId = sampleNode._inputPort.id;
             }
 
             public override TgNode Deserialize(TgGraphView graph)
             {
                 var sampleNode = (SampleNode)Create(graph, typeof(SampleNode));
-                sampleNode.inputPort.id = inputPortId;
+                sampleNode._inputPort.id = inputPortId;
                 sampleNode.id = id;
-                sampleNode.SetPosition(position.AsVector2());
+                sampleNode.SetPosition(position.Deserialize());
 
                 return sampleNode;
             }
         }
+        
+        #endregion
     }
 }

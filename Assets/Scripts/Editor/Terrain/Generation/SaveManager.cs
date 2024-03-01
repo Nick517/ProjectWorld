@@ -10,7 +10,7 @@ namespace Editor.Terrain.Generation
             var dto = graph.ToDto();
 
             var json = JsonConvert.SerializeObject(dto, SerializerSettings);
-            
+
             File.WriteAllText(path, json);
         }
 
@@ -18,7 +18,9 @@ namespace Editor.Terrain.Generation
         {
             var json = File.ReadAllText(path);
 
-            JsonConvert.DeserializeObject<TgGraphView.Dto>(json, SerializerSettings);
+            var tgGraphViewDto = JsonConvert.DeserializeObject<TgGraphView.Dto>(json, SerializerSettings);
+            
+            tgGraphViewDto.Deserialize(graph);
         }
 
         private static JsonSerializerSettings SerializerSettings =>

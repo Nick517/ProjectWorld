@@ -35,5 +35,7 @@ namespace Editor.Terrain.Generation
 
             return textField;
         }
+
+        public static string NewID => Guid.NewGuid().ToString();
     }
 }

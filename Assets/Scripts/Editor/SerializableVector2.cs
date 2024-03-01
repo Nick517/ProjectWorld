@@ -25,15 +25,9 @@ namespace Editor
             this.y = y;
         }
 
-        public Vector2 AsVector2()
+        public Vector2 Deserialize()
         {
             return new Vector2(x, y);
-        }
-
-        public void WriteTo(Vector2 vector2)
-        {
-            vector2.x = x;
-            vector2.y = y;
         }
     }
 }

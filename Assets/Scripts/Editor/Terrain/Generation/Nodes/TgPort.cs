@@ -1,4 +1,3 @@
-using System;
 using UnityEditor.Experimental.GraphView;
 
 namespace Editor.Terrain.Generation.Nodes
@@ -8,13 +7,10 @@ namespace Editor.Terrain.Generation.Nodes
         public string id;
         public readonly Port port;
 
-        public TgPort(TgGraphView graph, TgNode parentNode, Orientation orientation, Direction direction,
-            Port.Capacity capacity,
-            Type type)
+        public TgPort(Port port)
         {
-            id = Guid.NewGuid().ToString();
-            port = parentNode.InstantiatePort(orientation, direction, capacity, type);
-            graph.tgPorts.Add(this);
+            this.port = port;
+            id = GraphUtil.NewID;
         }
     }
 }

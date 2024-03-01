@@ -1,16 +1,19 @@
 using System;
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Editor.Terrain.Generation.Nodes
 {
-    public class TgNode : Node
+    public abstract class TgNode : Node
     {
-        #region Variables
+        #region Fields
 
-        public TgGraphView graph;
-        
-        public string id;
+        private TgGraphView _graph;
+
+        protected string id;
+
+        public virtual List<TgPort> TgPorts => new();
 
         #endregion
 
@@ -19,57 +22,63 @@ namespace Editor.Terrain.Generation.Nodes
         public static TgNode Create(TgGraphView graph, Type nodeType)
         {
             var node = (TgNode)Activator.CreateInstance(nodeType);
-            node.id = Guid.NewGuid().ToString();
-            node.graph = graph;
+            node.id = GraphUtil.NewID;
+            node._graph = graph;
             node.Initialize();
-            graph.tgNodes.Add(node);
 
             return node;
         }
 
-        public void Initialize()
+        private void Initialize()
         {
-            graph.AddElement(this);
+            _graph.AddElement(this);
             SetUp();
             RefreshPorts();
             RefreshExpandedState();
         }
 
-        protected virtual void SetUp()
-        {
-        }
+        protected abstract void SetUp();
 
         #endregion
 
-        public virtual Dto ToDto()
-        {
-            return new Dto(this);
-        }
-
-
+        #region Serialization
+        
+        public abstract Dto ToDto();
+        
         [Serializable]
-        public class Dto
+        public abstract class Dto
         {
             public string id;
             public SerializableVector2 position;
 
-            public Dto(TgNode tgNode)
+            protected Dto()
+            {
+            }
+
+            protected Dto(TgNode tgNode)
             {
                 id = tgNode.id;
-                position = new SerializableVector2(tgNode.GetPosition().position);
+                position = new SerializableVector2(tgNode.GetPosition());
             }
 
             public virtual TgNode Deserialize(TgGraphView graph)
             {
                 var node = Create(graph, typeof(TgNode));
                 node.id = id;
-                node.SetPosition(position.AsVector2());
+                node.SetPosition(position.Deserialize());
 
                 return node;
             }
         }
+        
+        #endregion
 
         #region Utility
+
+        private new Vector2 GetPosition()
+        {
+            return base.GetPosition().position;
+        }
 
         public void SetPosition(Vector2 position)
         {
@@ -78,22 +87,20 @@ namespace Editor.Terrain.Generation.Nodes
 
         protected TgPort AddInputPort(string portName, Type type)
         {
-            TgPort nodePort = new(graph,this, Orientation.Horizontal, Direction.Input, Port.Capacity.Single, type)
-                { port = { portName = portName } };
+            var port = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, type);
+            port.portName = portName;
+            inputContainer.Add(port);
 
-            inputContainer.Add(nodePort.port);
-
-            return nodePort;
+            return new TgPort(port);
         }
 
         protected TgPort AddOutputPort(string portName, Type type)
         {
-            TgPort nodePort = new(graph, this, Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, type)
-                { port = { portName = portName } };
+            var port = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, type);
+            port.portName = portName;
+            outputContainer.Add(port);
 
-            outputContainer.Add(nodePort.port);
-
-            return nodePort;
+            return new TgPort(port);
         }
 
         #endregion
