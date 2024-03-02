@@ -39,9 +39,18 @@ namespace Editor.Terrain.Generation
 
             if (assetPath.EndsWith(Extension))
             {
+                var windows = Resources.FindObjectsOfTypeAll<TgEditorWindow>();
                 var name = Path.GetFileNameWithoutExtension(assetPath);
 
-                var window = GetWindow<TgEditorWindow>(name, typeof(SceneView));
+                foreach (var graph in windows)
+                    if (graph._graphView.path == assetPath)
+                    {
+                        graph.Focus();
+
+                        return true;
+                    }
+
+                var window = CreateWindow<TgEditorWindow>(name, typeof(SceneView));
                 window._graphView.path = assetPath;
                 window.Load();
 
