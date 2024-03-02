@@ -8,11 +8,11 @@ namespace Editor.Terrain.Generation
 {
     public class TgSearchWindow : ScriptableObject, ISearchWindowProvider
     {
-        private TgGraph _graph;
+        private TgGraphView _graphView;
 
-        public void Initialize(TgGraph graph)
+        public void Initialize(TgGraphView graphView)
         {
-            _graph = graph;
+            _graphView = graphView;
         }
 
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
@@ -55,7 +55,7 @@ namespace Editor.Terrain.Generation
         public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context)
         {
             var nodeType = (Type)entry.userData;
-            var tgNode = TgNode.Create(_graph, nodeType);
+            var tgNode = TgNode.Create(_graphView, nodeType);
             
             tgNode.SetPosition(context.screenMousePosition);
 

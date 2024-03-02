@@ -12,19 +12,25 @@ namespace Editor.Terrain.Generation
         private const string DefaultName = "NewTGGraph";
         private const string Extension = "tgg";
 
-        private TgGraph _graph;
+        private TgGraphView _graphView;
 
         [MenuItem("Assets/Create/Terrain Generation Graph", false, 10)]
         public static void CreateTgGraph()
         {
-            string path = AssetDatabase.GetAssetPath(Selection.activeObject);
-            string fullPath = Path.Combine(path, $"{DefaultName}.{Extension}");
+            var path = AssetDatabase.GetAssetPath(Selection.activeObject);
+            var fullPath = Path.Combine(path, $"{DefaultName}.{Extension}");
 
-            var tgGraph = new TgGraph { path = fullPath };
-            
-            SaveManager.Save(tgGraph);
+            var tgGraph = new TgGraphView { path = fullPath };
+
+            var fileData = File.ReadAllBytes("Assets/Scripts/Editor/Terrain/Icons/TGG.png");
+            var icon = new Texture2D(2, 2);
+            icon.LoadImage(fileData);
+
+            ProjectWindowUtil.CreateAssetWithContent(fullPath, tgGraph.ToJson(), icon);
+
             AssetDatabase.Refresh();
         }
+
 
         [OnOpenAsset(1)]
         public static bool OnOpenAsset(int instanceID, int line)
@@ -36,8 +42,7 @@ namespace Editor.Terrain.Generation
                 var name = Path.GetFileNameWithoutExtension(assetPath);
 
                 var window = GetWindow<TgEditorWindow>(name, typeof(SceneView));
-
-                window._graph.path = assetPath;
+                window._graphView.path = assetPath;
                 window.Load();
 
                 return true;
@@ -55,13 +60,10 @@ namespace Editor.Terrain.Generation
 
         private void AddGraphView()
         {
-            _graph = new TgGraph
-            {
-                name = "Terrain Generation"
-            };
+            _graphView = new TgGraphView();
 
-            _graph.StretchToParentSize();
-            rootVisualElement.Add(_graph);
+            _graphView.StretchToParentSize();
+            rootVisualElement.Add(_graphView);
         }
 
         private void AddStyles()
@@ -83,17 +85,17 @@ namespace Editor.Terrain.Generation
 
         private void OnDisable()
         {
-            rootVisualElement.Remove(_graph);
+            rootVisualElement.Remove(_graphView);
         }
 
         private void Save()
         {
-            SaveManager.Save(_graph);
+            SaveManager.Save(_graphView);
         }
 
         private void Load()
         {
-            SaveManager.Load(_graph);
+            SaveManager.Load(_graphView);
         }
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Editor.Terrain.Generation.Nodes;
+using Newtonsoft.Json;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -9,7 +10,7 @@ using UnityEngine.UIElements;
 
 namespace Editor.Terrain.Generation
 {
-    public class TgGraph : GraphView
+    public class TgGraphView : GraphView
     {
         public string path;
         private TgSearchWindow _searchWindow;
@@ -25,7 +26,7 @@ namespace Editor.Terrain.Generation
                 return tgPorts;
             }
         }
-        
+
         private List<TgEdgeDto> GetAllTgEdgeDto()
         {
             List<TgEdgeDto> tgEdges = new();
@@ -58,15 +59,14 @@ namespace Editor.Terrain.Generation
             return null;
         }
 
-        public TgGraph()
+        public TgGraphView()
         {
             AddGridBackground();
             AddStyles();
             AddManipulator();
             AddSearchWindow();
 
-            var sampleNode = (SampleNode)TgNode.Create(this, typeof(SampleNode));
-            sampleNode.SetPosition(Vector2.zero);
+            TgNode.Create(this, typeof(SampleNode));
         }
 
         private void AddGridBackground()
@@ -111,7 +111,7 @@ namespace Editor.Terrain.Generation
 
             if (evt.target is GraphView)
                 evt.menu.AppendAction("Create Node",
-                    e => { SearchWindow.Open(new SearchWindowContext(mousePosition), _searchWindow); });
+                    _ => { SearchWindow.Open(new SearchWindowContext(mousePosition), _searchWindow); });
 
             base.BuildContextualMenu(evt);
         }
@@ -145,18 +145,23 @@ namespace Editor.Terrain.Generation
             {
             }
 
-            public Dto(TgGraph graph)
+            public Dto(TgGraphView graphView)
             {
-                foreach (var tgNode in graph.TgNodes) tgNodeDtoList.Add(tgNode.ToDto());
-                tgEdgeDtoList = graph.GetAllTgEdgeDto();
+                foreach (var tgNode in graphView.TgNodes) tgNodeDtoList.Add(tgNode.ToDto());
+                tgEdgeDtoList = graphView.GetAllTgEdgeDto();
             }
 
-            public void Deserialize(TgGraph graph)
+            public void Deserialize(TgGraphView graphView)
             {
-                graph.ClearGraph();
-                foreach (var dto in tgNodeDtoList) graph.TgNodes.Add(dto.Deserialize(graph));
-                foreach (var dto in tgEdgeDtoList) dto.Deserialize(graph);
+                graphView.ClearGraph();
+                foreach (var dto in tgNodeDtoList) graphView.TgNodes.Add(dto.Deserialize(graphView));
+                foreach (var dto in tgEdgeDtoList) dto.Deserialize(graphView);
             }
+        }
+
+        public string ToJson()
+        {
+            return JsonConvert.SerializeObject(ToDto(), SaveManager.SerializerSettings);
         }
 
         #endregion

@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraph.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraph.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.tgg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.tgg.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Icons.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Icons/TGG.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Icons/TGG.png.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/TggImporter.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/TggImporter.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/SampleNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/SampleNode.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TestNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TestNode.cs" afterDir="false" />
@@ -17,10 +17,16 @@
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TgNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TgNode.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/SaveManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/SaveManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgEditorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgEditorWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraphView.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraphView.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraphView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraph.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraphView.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgSearchWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgSearchWindow.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerator.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerator.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/NewTGGraph.tgg" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/NewTGGraph.tgg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/NewTGGraph.tgg.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/NewTGGraph.tgg.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.tgg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.tgg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,10 +39,10 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/53ebdc357f4945cfa2cb7ba24705d37f3dc00/b6/56e0e412/IEdgeConnectorListener.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/65927d60dd5f4df5850222879a8ed9a4176800/90/b20e02e6/IMGUIContainer.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/FileHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TestNode.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TgEdgeDto.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/TgFilePostProcessor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgGraphView.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/TggFileIconSetter.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.0.16/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -143,6 +149,7 @@
       <workItem from="1709329360110" duration="174000" />
       <workItem from="1709329602669" duration="10740000" />
       <workItem from="1709344537879" duration="1112000" />
+      <workItem from="1709365646949" duration="4197000" />
     </task>
     <servers />
   </component>

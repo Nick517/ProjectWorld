@@ -9,7 +9,7 @@ namespace Editor.Terrain.Generation.Nodes
     {
         #region Fields
 
-        private TgGraph _graph;
+        private TgGraphView _graphView;
 
         protected string id;
 
@@ -19,11 +19,11 @@ namespace Editor.Terrain.Generation.Nodes
 
         #region Methods
 
-        public static TgNode Create(TgGraph graph, Type nodeType)
+        public static TgNode Create(TgGraphView graphView, Type nodeType)
         {
             var node = (TgNode)Activator.CreateInstance(nodeType);
             node.id = GraphUtil.NewID;
-            node._graph = graph;
+            node._graphView = graphView;
             node.Initialize();
 
             return node;
@@ -31,7 +31,7 @@ namespace Editor.Terrain.Generation.Nodes
 
         private void Initialize()
         {
-            _graph.AddElement(this);
+            _graphView.AddElement(this);
             SetUp();
             RefreshPorts();
             RefreshExpandedState();
@@ -61,9 +61,9 @@ namespace Editor.Terrain.Generation.Nodes
                 position = new SerializableVector2(tgNode.GetPosition());
             }
 
-            public virtual TgNode Deserialize(TgGraph graph)
+            public virtual TgNode Deserialize(TgGraphView graphView)
             {
-                var node = Create(graph, typeof(TgNode));
+                var node = Create(graphView, typeof(TgNode));
                 node.id = id;
                 node.SetPosition(position.Deserialize());
 
