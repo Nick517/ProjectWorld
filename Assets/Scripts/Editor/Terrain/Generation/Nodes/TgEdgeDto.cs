@@ -13,13 +13,13 @@ namespace Editor.Terrain.Generation.Nodes
         {
         }
 
-        public TgEdgeDto(TgGraphView graph, Edge edge)
+        public TgEdgeDto(TgGraph graph, Edge edge)
         {
             inputPortId = graph.GetTgPort(edge.input).id;
             outputPortId = graph.GetTgPort(edge.output).id;
         }
 
-        public void Deserialize(TgGraphView graph)
+        public void Deserialize(TgGraph graph)
         {
             var inputPort = graph.GetTgPort(inputPortId);
             var outputPort = graph.GetTgPort(outputPortId);

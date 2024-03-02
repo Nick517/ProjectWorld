@@ -1,0 +1,43 @@
+{
+  "tgNodeDtoList": [
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.SampleNode+SampleNodeDto, Assembly-CSharp-Editor",
+      "inputPortId": "e6acbae3-7b20-46f3-9486-4cb970c153d3",
+      "id": "38c4111e-9a2a-48bf-9fe5-76dee77ed230",
+      "position": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.TestNode+TestNodeDto, Assembly-CSharp-Editor",
+      "inputPortId": "9cc1c81f-f90c-4d0e-82e9-2ddee9e544c0",
+      "outputPortId": "30cfe64b-89a3-4c74-9ec9-987412959bfb",
+      "id": "4c1d5dd4-a253-4cc7-b837-39ba80e1aac8",
+      "position": {
+        "x": -736.0,
+        "y": 24.0
+      }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.TestNode+TestNodeDto, Assembly-CSharp-Editor",
+      "inputPortId": "c0e9b90c-ba59-46a5-9f80-2bce2bfd04a8",
+      "outputPortId": "cedd1942-0b3a-43cd-9864-3dd0fd6450b2",
+      "id": "1e1fdf36-2177-49bf-9abc-1cfaca7c46db",
+      "position": {
+        "x": -378.4,
+        "y": -178.4
+      }
+    }
+  ],
+  "tgEdgeDtoList": [
+    {
+      "inputPortId": "c0e9b90c-ba59-46a5-9f80-2bce2bfd04a8",
+      "outputPortId": "30cfe64b-89a3-4c74-9ec9-987412959bfb"
+    },
+    {
+      "inputPortId": "e6acbae3-7b20-46f3-9486-4cb970c153d3",
+      "outputPortId": "cedd1942-0b3a-43cd-9864-3dd0fd6450b2"
+    }
+  ]
+}

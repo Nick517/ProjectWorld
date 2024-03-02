@@ -9,8 +9,9 @@ using UnityEngine.UIElements;
 
 namespace Editor.Terrain.Generation
 {
-    public class TgGraphView : GraphView
+    public class TgGraph : GraphView
     {
+        public string path;
         private TgSearchWindow _searchWindow;
 
         private List<TgNode> TgNodes => nodes.Select(GetTgNode).ToList();
@@ -57,7 +58,7 @@ namespace Editor.Terrain.Generation
             return null;
         }
 
-        public TgGraphView()
+        public TgGraph()
         {
             AddGridBackground();
             AddStyles();
@@ -144,13 +145,13 @@ namespace Editor.Terrain.Generation
             {
             }
 
-            public Dto(TgGraphView graphView)
+            public Dto(TgGraph graph)
             {
-                foreach (var tgNode in graphView.TgNodes) tgNodeDtoList.Add(tgNode.ToDto());
-                tgEdgeDtoList = graphView.GetAllTgEdgeDto();
+                foreach (var tgNode in graph.TgNodes) tgNodeDtoList.Add(tgNode.ToDto());
+                tgEdgeDtoList = graph.GetAllTgEdgeDto();
             }
 
-            public void Deserialize(TgGraphView graph)
+            public void Deserialize(TgGraph graph)
             {
                 graph.ClearGraph();
                 foreach (var dto in tgNodeDtoList) graph.TgNodes.Add(dto.Deserialize(graph));

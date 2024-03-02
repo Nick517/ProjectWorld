@@ -8,11 +8,11 @@ namespace Editor.Terrain.Generation
 {
     public class TgSearchWindow : ScriptableObject, ISearchWindowProvider
     {
-        private TgGraphView _graph;
+        private TgGraph _graph;
 
-        public void Initialize(TgGraphView graphView)
+        public void Initialize(TgGraph graph)
         {
-            _graph = graphView;
+            _graph = graph;
         }
 
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)

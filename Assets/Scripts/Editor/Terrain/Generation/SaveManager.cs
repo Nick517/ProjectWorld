@@ -5,21 +5,21 @@ namespace Editor.Terrain.Generation
 {
     public static class SaveManager
     {
-        public static void Save(TgGraphView graph, string path)
+        public static void Save(TgGraph graph)
         {
             var dto = graph.ToDto();
 
             var json = JsonConvert.SerializeObject(dto, SerializerSettings);
 
-            File.WriteAllText(path, json);
+            File.WriteAllText(graph.path, json);
         }
 
-        public static void Load(TgGraphView graph, string path)
+        public static void Load(TgGraph graph)
         {
-            var json = File.ReadAllText(path);
+            var json = File.ReadAllText(graph.path);
 
-            var tgGraphViewDto = JsonConvert.DeserializeObject<TgGraphView.Dto>(json, SerializerSettings);
-            
+            var tgGraphViewDto = JsonConvert.DeserializeObject<TgGraph.Dto>(json, SerializerSettings);
+
             tgGraphViewDto.Deserialize(graph);
         }
 

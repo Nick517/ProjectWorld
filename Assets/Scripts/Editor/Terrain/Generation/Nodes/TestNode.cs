@@ -49,7 +49,7 @@ namespace Editor.Terrain.Generation.Nodes
                 outputPortId = testNode._outputPort.id;
             }
 
-            public override TgNode Deserialize(TgGraphView graph)
+            public override TgNode Deserialize(TgGraph graph)
             {
                 var testNode = (TestNode)Create(graph, typeof(TestNode));
                 testNode._inputPort.id = inputPortId;

@@ -1,4 +1,6 @@
+using System.IO;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -7,13 +9,41 @@ namespace Editor.Terrain.Generation
 {
     public class TgEditorWindow : EditorWindow
     {
-        private TgGraphView _graph;
+        private const string DefaultName = "NewTGGraph";
+        private const string Extension = "tgg";
 
-        [MenuItem("Window/Terrain Generation")]
-        public static void Open()
+        private TgGraph _graph;
+
+        [MenuItem("Assets/Create/Terrain Generation Graph", false, 10)]
+        public static void CreateTgGraph()
         {
-            var window = GetWindow<TgEditorWindow>();
-            window.titleContent = new GUIContent("Terrain Generation");
+            string path = AssetDatabase.GetAssetPath(Selection.activeObject);
+            string fullPath = Path.Combine(path, $"{DefaultName}.{Extension}");
+
+            var tgGraph = new TgGraph { path = fullPath };
+            
+            SaveManager.Save(tgGraph);
+            AssetDatabase.Refresh();
+        }
+
+        [OnOpenAsset(1)]
+        public static bool OnOpenAsset(int instanceID, int line)
+        {
+            var assetPath = AssetDatabase.GetAssetPath(EditorUtility.InstanceIDToObject(instanceID));
+
+            if (assetPath.EndsWith(Extension))
+            {
+                var name = Path.GetFileNameWithoutExtension(assetPath);
+
+                var window = GetWindow<TgEditorWindow>(name, typeof(SceneView));
+
+                window._graph.path = assetPath;
+                window.Load();
+
+                return true;
+            }
+
+            return false;
         }
 
         private void OnEnable()
@@ -25,7 +55,7 @@ namespace Editor.Terrain.Generation
 
         private void AddGraphView()
         {
-            _graph = new TgGraphView
+            _graph = new TgGraph
             {
                 name = "Terrain Generation"
             };
@@ -44,11 +74,9 @@ namespace Editor.Terrain.Generation
         {
             Toolbar toolbar = new();
 
-            var saveButton = GraphUtil.CreateButton("Save As", Save);
-            var loadButton = GraphUtil.CreateButton("Load", Load);
+            var saveButton = GraphUtil.CreateButton("Save", Save);
 
             toolbar.Add(saveButton);
-            toolbar.Add(loadButton);
 
             rootVisualElement.Add(toolbar);
         }
@@ -60,16 +88,12 @@ namespace Editor.Terrain.Generation
 
         private void Save()
         {
-            var path = EditorUtility.SaveFilePanel("Save Graph As...", "C:", "Graph", "tg");
-
-            SaveManager.Save(_graph, path);
+            SaveManager.Save(_graph);
         }
 
         private void Load()
         {
-            var path = EditorUtility.OpenFilePanel("Open Graph", "C:", "tg");
-
-            SaveManager.Load(_graph, path);
+            SaveManager.Load(_graph);
         }
     }
 }
