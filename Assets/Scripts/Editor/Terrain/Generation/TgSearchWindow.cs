@@ -34,7 +34,7 @@ namespace Editor.Terrain.Generation
                 new SearchTreeEntry(new GUIContent("Float"))
                 {
                     level = 2,
-                    userData = typeof(SampleNode)
+                    userData = typeof(FloatNode)
                 },
                 new SearchTreeGroupEntry(new GUIContent("Math"), 1),
                 new SearchTreeEntry(new GUIContent("Add"))

@@ -7,11 +7,7 @@ namespace Editor.Terrain.Generation
     {
         public static void Save(TgGraphView graph)
         {
-            var dto = graph.ToDto();
-
-            var json = graph.ToJson();
-
-            File.WriteAllText(graph.path, json);
+            File.WriteAllText(graph.path, graph.ToJson());
         }
 
         public static void Load(TgGraphView graph)

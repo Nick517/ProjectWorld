@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/FloatNode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/FloatNode.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/NewTGGraph.tgg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/NewTGGraph.tgg.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgEditorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgEditorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/SaveManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/SaveManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgSearchWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgSearchWindow.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.tgg" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.tgg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -130,7 +135,7 @@
       <workItem from="1709329360110" duration="174000" />
       <workItem from="1709329602669" duration="10740000" />
       <workItem from="1709344537879" duration="1112000" />
-      <workItem from="1709365646949" duration="6877000" />
+      <workItem from="1709365646949" duration="9053000" />
     </task>
     <servers />
   </component>

@@ -38,6 +38,16 @@
         "x": -260.0,
         "y": 153.6
       }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.FloatNode+FloatNodeDto, Assembly-CSharp-Editor",
+      "outputPortId": "8d49645a-52da-4011-a93c-7e2d599aa413",
+      "value": 69.0,
+      "id": "c63121b3-3262-4d27-9959-74877bd19a38",
+      "position": {
+        "x": -692.0,
+        "y": -60.0
+      }
     }
   ],
   "tgEdgeDtoList": [
@@ -52,6 +62,10 @@
     {
       "inputPortId": "a1e47c2e-3e6d-4641-b3b2-106126bd7a7f",
       "outputPortId": "702619a1-44cb-4ef1-9d4b-c3f2725069c0"
+    },
+    {
+      "inputPortId": "fcc5ac9c-da0d-4af6-ac69-d1ba9730e10d",
+      "outputPortId": "8d49645a-52da-4011-a93c-7e2d599aa413"
     }
   ]
 }
