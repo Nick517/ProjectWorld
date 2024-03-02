@@ -2,70 +2,57 @@
   "tgNodeDtoList": [
     {
       "$type": "Editor.Terrain.Generation.Nodes.SampleNode+SampleNodeDto, Assembly-CSharp-Editor",
-      "inputPortId": "f650e37d-68b0-479f-85d4-c3d1035e662f",
-      "id": "e681ba72-d5c7-4443-aaea-dcecdc3c6cf3",
+      "inputPortId": "73ebd12c-a6da-4a16-b138-c7b00c6c5262",
+      "id": "3e8e38d2-b871-477e-8aab-d105705a8487",
       "position": {
         "x": 0.0,
         "y": 0.0
       }
     },
     {
-      "$type": "Editor.Terrain.Generation.Nodes.TestNode+TestNodeDto, Assembly-CSharp-Editor",
-      "inputPortId": "fcc5ac9c-da0d-4af6-ac69-d1ba9730e10d",
-      "outputPortId": "702619a1-44cb-4ef1-9d4b-c3f2725069c0",
-      "id": "fb95d8dd-6b48-465b-a45c-28457dd16a34",
+      "$type": "Editor.Terrain.Generation.Nodes.AddNode+AddNodeDto, Assembly-CSharp-Editor",
+      "inputPortAId": "d30a2082-8f82-49c2-a957-d92a0f4e7396",
+      "inputPortBId": "8f891ca7-d5cb-4381-8dc3-efd1bc141ed1",
+      "outputPortId": "a5523d35-0633-4b09-9124-43cdbefb61e2",
+      "id": "adae7e66-7c24-4563-acad-66161e9b56f9",
       "position": {
-        "x": -464.0,
-        "y": 76.8
-      }
-    },
-    {
-      "$type": "Editor.Terrain.Generation.Nodes.TestNode+TestNodeDto, Assembly-CSharp-Editor",
-      "inputPortId": "e9870cf9-9bb3-4c26-a254-d31aaea6baae",
-      "outputPortId": "c0ec6724-bbc9-437b-8ac6-36ea5dfcc023",
-      "id": "1272555c-47ac-43bb-b2d7-103011ec94e1",
-      "position": {
-        "x": -242.400009,
-        "y": -98.3999939
-      }
-    },
-    {
-      "$type": "Editor.Terrain.Generation.Nodes.TestNode+TestNodeDto, Assembly-CSharp-Editor",
-      "inputPortId": "a1e47c2e-3e6d-4641-b3b2-106126bd7a7f",
-      "outputPortId": "f01c95aa-cdb2-4181-9d88-02c5676363ad",
-      "id": "2899e719-55a8-499e-8ab8-5c71af553020",
-      "position": {
-        "x": -260.0,
-        "y": 153.6
+        "x": -269.599976,
+        "y": 0.0
       }
     },
     {
       "$type": "Editor.Terrain.Generation.Nodes.FloatNode+FloatNodeDto, Assembly-CSharp-Editor",
-      "outputPortId": "8d49645a-52da-4011-a93c-7e2d599aa413",
-      "value": 69.0,
-      "id": "c63121b3-3262-4d27-9959-74877bd19a38",
+      "outputPortId": "aa94c0d5-301b-44ef-b6d8-2973301ddd53",
+      "value": 2.0,
+      "id": "80bddf96-1b96-41e8-966f-58e916106bb2",
       "position": {
-        "x": -692.0,
-        "y": -60.0
+        "x": -540.8,
+        "y": -72.0
+      }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.FloatNode+FloatNodeDto, Assembly-CSharp-Editor",
+      "outputPortId": "4a9f5fbb-f507-4687-90e1-de8356a02415",
+      "value": 3.0,
+      "id": "ad5b1470-6823-4847-b1e2-f985d439edd2",
+      "position": {
+        "x": -540.8,
+        "y": 124.0
       }
     }
   ],
   "tgEdgeDtoList": [
     {
-      "inputPortId": "e9870cf9-9bb3-4c26-a254-d31aaea6baae",
-      "outputPortId": "702619a1-44cb-4ef1-9d4b-c3f2725069c0"
+      "inputPortId": "73ebd12c-a6da-4a16-b138-c7b00c6c5262",
+      "outputPortId": "a5523d35-0633-4b09-9124-43cdbefb61e2"
     },
     {
-      "inputPortId": "f650e37d-68b0-479f-85d4-c3d1035e662f",
-      "outputPortId": "c0ec6724-bbc9-437b-8ac6-36ea5dfcc023"
+      "inputPortId": "d30a2082-8f82-49c2-a957-d92a0f4e7396",
+      "outputPortId": "aa94c0d5-301b-44ef-b6d8-2973301ddd53"
     },
     {
-      "inputPortId": "a1e47c2e-3e6d-4641-b3b2-106126bd7a7f",
-      "outputPortId": "702619a1-44cb-4ef1-9d4b-c3f2725069c0"
-    },
-    {
-      "inputPortId": "fcc5ac9c-da0d-4af6-ac69-d1ba9730e10d",
-      "outputPortId": "8d49645a-52da-4011-a93c-7e2d599aa413"
+      "inputPortId": "8f891ca7-d5cb-4381-8dc3-efd1bc141ed1",
+      "outputPortId": "4a9f5fbb-f507-4687-90e1-de8356a02415"
     }
   ]
 }

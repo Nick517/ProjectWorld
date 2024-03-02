@@ -21,6 +21,8 @@ namespace Editor.Terrain.Generation.Nodes
             title = "Sample";
 
             _inputPort = AddInputPort("In(1)", typeof(float));
+            
+            
         }
         
         #endregion

@@ -40,7 +40,7 @@ namespace Editor.Terrain.Generation
                 new SearchTreeEntry(new GUIContent("Add"))
                 {
                     level = 2,
-                    userData = typeof(SampleNode)
+                    userData = typeof(AddNode)
                 },
                 new SearchTreeEntry(new GUIContent("Multiply"))
                 {
