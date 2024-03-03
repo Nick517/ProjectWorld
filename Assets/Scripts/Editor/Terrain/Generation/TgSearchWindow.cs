@@ -8,9 +8,9 @@ namespace Editor.Terrain.Generation
 {
     public class TgSearchWindow : ScriptableObject, ISearchWindowProvider
     {
-        private TgGraphView _graphView;
+        private TerrainGenGraphView _graphView;
 
-        public void Initialize(TgGraphView graphView)
+        public void Initialize(TerrainGenGraphView graphView)
         {
             _graphView = graphView;
         }
@@ -20,17 +20,7 @@ namespace Editor.Terrain.Generation
             List<SearchTreeEntry> entries = new()
             {
                 new SearchTreeGroupEntry(new GUIContent("Create Node")),
-                new SearchTreeEntry(new GUIContent("Test"))
-                {
-                    level = 1,
-                    userData = typeof(TestNode)
-                },
                 new SearchTreeGroupEntry(new GUIContent("Input"), 1),
-                new SearchTreeEntry(new GUIContent("Position"))
-                {
-                    level = 2,
-                    userData = typeof(SampleNode)
-                },
                 new SearchTreeEntry(new GUIContent("Float"))
                 {
                     level = 2,
@@ -42,11 +32,6 @@ namespace Editor.Terrain.Generation
                     level = 2,
                     userData = typeof(AddNode)
                 },
-                new SearchTreeEntry(new GUIContent("Multiply"))
-                {
-                    level = 2,
-                    userData = typeof(SampleNode)
-                }
             };
 
             return entries;
@@ -55,8 +40,8 @@ namespace Editor.Terrain.Generation
         public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context)
         {
             var nodeType = (Type)entry.userData;
-            var tgNode = TgNode.Create(_graphView, nodeType);
-            
+            var tgNode = TggNode.Create(_graphView, nodeType);
+
             tgNode.SetPosition(context.screenMousePosition);
 
             return true;

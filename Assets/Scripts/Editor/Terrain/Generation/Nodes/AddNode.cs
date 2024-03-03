@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Editor.Terrain.Generation.Nodes
 {
-    public class AddNode : TgNode
+    public class AddNode : TggNode
     {
         #region Fields
 
-        private TgPort _inputPortA;
-        private TgPort _inputPortB;
-        private TgPort _outputPort;
+        private TggPort _inputPortA;
+        private TggPort _inputPortB;
+        private TggPort _outputPort;
 
-        public override List<TgPort> TgPorts => new() { _inputPortA, _inputPortB, _outputPort };
+        public override List<TggPort> TggPorts => new() { _inputPortA, _inputPortB, _outputPort };
 
         #endregion
 
@@ -24,6 +24,32 @@ namespace Editor.Terrain.Generation.Nodes
             _inputPortA = AddInputPort("A(1)", typeof(float));
             _inputPortB = AddInputPort("B(1)", typeof(float));
             _outputPort = AddOutputPort("Out(1)", typeof(float));
+        }
+        
+        #endregion
+        
+        #region Terrain Genereration Tree
+
+        public override TgtNode ToTgtNode()
+        {
+            return new AddTgtNode(this);
+        }
+
+        private class AddTgtNode : TgtNode
+        {
+            private readonly TgtNode _inputNodeA;
+            private readonly TgtNode _inputNodeB;
+
+            public AddTgtNode(AddNode addNode)
+            {
+                _inputNodeA = addNode._inputPortA.GetConnectedTgtNode();
+                _inputNodeB = addNode._inputPortB.GetConnectedTgtNode();
+            }
+
+            public override float Traverse()
+            {
+                return _inputNodeA.Traverse() + _inputNodeB.Traverse();
+            }
         }
 
         #endregion
@@ -53,7 +79,7 @@ namespace Editor.Terrain.Generation.Nodes
                 outputPortId = addNode._outputPort.id;
             }
 
-            public override TgNode Deserialize(TgGraphView graphView)
+            public override TggNode Deserialize(TerrainGenGraphView graphView)
             {
                 var addNode = (AddNode)Create(graphView, typeof(AddNode));
                 addNode._inputPortA.id = inputPortAId;

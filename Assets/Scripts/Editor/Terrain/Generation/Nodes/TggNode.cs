@@ -5,25 +5,25 @@ using UnityEngine;
 
 namespace Editor.Terrain.Generation.Nodes
 {
-    public abstract class TgNode : Node
+    public abstract class TggNode : Node
     {
         #region Fields
 
-        private TgGraphView _graphView;
+        private TerrainGenGraphView _graph;
 
         protected string id;
 
-        public virtual List<TgPort> TgPorts => new();
+        public virtual List<TggPort> TggPorts => new();
 
         #endregion
 
         #region Methods
 
-        public static TgNode Create(TgGraphView graphView, Type nodeType)
+        public static TggNode Create(TerrainGenGraphView graphView, Type nodeType)
         {
-            var node = (TgNode)Activator.CreateInstance(nodeType);
+            var node = (TggNode)Activator.CreateInstance(nodeType);
             node.id = GraphUtil.NewID;
-            node._graphView = graphView;
+            node._graph = graphView;
             node.Initialize();
 
             return node;
@@ -31,13 +31,20 @@ namespace Editor.Terrain.Generation.Nodes
 
         private void Initialize()
         {
-            _graphView.AddElement(this);
+            _graph.AddElement(this);
             SetUp();
             RefreshPorts();
             RefreshExpandedState();
         }
 
         protected abstract void SetUp();
+
+        public abstract TgtNode ToTgtNode();
+        
+        public abstract class TgtNode
+        {
+            public abstract float Traverse();
+        }
 
         #endregion
 
@@ -55,15 +62,15 @@ namespace Editor.Terrain.Generation.Nodes
             {
             }
 
-            protected Dto(TgNode tgNode)
+            protected Dto(TggNode tggNode)
             {
-                id = tgNode.id;
-                position = new SerializableVector2(tgNode.GetPosition());
+                id = tggNode.id;
+                position = new SerializableVector2(tggNode.GetPosition());
             }
 
-            public virtual TgNode Deserialize(TgGraphView graphView)
+            public virtual TggNode Deserialize(TerrainGenGraphView graphView)
             {
-                var node = Create(graphView, typeof(TgNode));
+                var node = Create(graphView, typeof(TggNode));
                 node.id = id;
                 node.SetPosition(position.Deserialize());
 
@@ -85,22 +92,22 @@ namespace Editor.Terrain.Generation.Nodes
             base.SetPosition(new Rect(position, Vector2.zero));
         }
 
-        protected TgPort AddInputPort(string portName, Type type)
+        protected TggPort AddInputPort(string portName, Type type)
         {
             var port = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, type);
             port.portName = portName;
             inputContainer.Add(port);
 
-            return new TgPort(port);
+            return new TggPort(_graph, port);
         }
 
-        protected TgPort AddOutputPort(string portName, Type type)
+        protected TggPort AddOutputPort(string portName, Type type)
         {
             var port = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, type);
             port.portName = portName;
             outputContainer.Add(port);
 
-            return new TgPort(port);
+            return new TggPort(_graph, port);
         }
 
         #endregion

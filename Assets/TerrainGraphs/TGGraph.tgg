@@ -10,34 +10,76 @@
       }
     },
     {
-      "$type": "Editor.Terrain.Generation.Nodes.AddNode+AddNodeDto, Assembly-CSharp-Editor",
-      "inputPortAId": "d30a2082-8f82-49c2-a957-d92a0f4e7396",
-      "inputPortBId": "8f891ca7-d5cb-4381-8dc3-efd1bc141ed1",
-      "outputPortId": "a5523d35-0633-4b09-9124-43cdbefb61e2",
-      "id": "adae7e66-7c24-4563-acad-66161e9b56f9",
-      "position": {
-        "x": -269.599976,
-        "y": 0.0
-      }
-    },
-    {
       "$type": "Editor.Terrain.Generation.Nodes.FloatNode+FloatNodeDto, Assembly-CSharp-Editor",
       "outputPortId": "aa94c0d5-301b-44ef-b6d8-2973301ddd53",
       "value": 2.0,
       "id": "80bddf96-1b96-41e8-966f-58e916106bb2",
       "position": {
         "x": -540.8,
-        "y": -72.0
+        "y": -95.2
+      }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.AddNode+AddNodeDto, Assembly-CSharp-Editor",
+      "inputPortAId": "d30a2082-8f82-49c2-a957-d92a0f4e7396",
+      "inputPortBId": "8f891ca7-d5cb-4381-8dc3-efd1bc141ed1",
+      "outputPortId": "a5523d35-0633-4b09-9124-43cdbefb61e2",
+      "id": "adae7e66-7c24-4563-acad-66161e9b56f9",
+      "position": {
+        "x": -251.2,
+        "y": 0.0
+      }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.AddNode+AddNodeDto, Assembly-CSharp-Editor",
+      "inputPortAId": "9da58fa2-b3bd-453e-9bdb-7f24442514e0",
+      "inputPortBId": "90802ee3-4ce7-4920-a86f-4c84c01d0953",
+      "outputPortId": "8abebc79-8938-4939-a069-342e1b863466",
+      "id": "26952f37-5d0e-46d8-8ff2-43d123b56a4d",
+      "position": {
+        "x": -527.2,
+        "y": 100.8
       }
     },
     {
       "$type": "Editor.Terrain.Generation.Nodes.FloatNode+FloatNodeDto, Assembly-CSharp-Editor",
-      "outputPortId": "4a9f5fbb-f507-4687-90e1-de8356a02415",
-      "value": 3.0,
-      "id": "ad5b1470-6823-4847-b1e2-f985d439edd2",
+      "outputPortId": "9b94270e-b6cc-4f94-b43d-c3256c5297e3",
+      "value": 4.0,
+      "id": "97b3d66a-f095-43e9-9f7a-785045a85892",
       "position": {
-        "x": -540.8,
-        "y": 124.0
+        "x": -832.0,
+        "y": 100.8
+      }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.AddNode+AddNodeDto, Assembly-CSharp-Editor",
+      "inputPortAId": "af13d204-ca01-4d3d-a0a0-b667ac3d8d7b",
+      "inputPortBId": "1ffc90ee-a2a5-47f1-af24-6a95d815b169",
+      "outputPortId": "b13fc150-313b-4cb6-bb27-2de138aaf9ed",
+      "id": "9b8fcb33-b64e-4f12-9cf4-8518ff1bbddf",
+      "position": {
+        "x": -756.0,
+        "y": 291.199982
+      }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.FloatNode+FloatNodeDto, Assembly-CSharp-Editor",
+      "outputPortId": "539fa3b1-30e3-4b03-8ee5-620e718dd6ec",
+      "value": 4.0,
+      "id": "8ed06b56-f6f9-46eb-9821-0c67eebb2ccb",
+      "position": {
+        "x": -946.399963,
+        "y": 243.2
+      }
+    },
+    {
+      "$type": "Editor.Terrain.Generation.Nodes.FloatNode+FloatNodeDto, Assembly-CSharp-Editor",
+      "outputPortId": "1d71d07e-da68-458f-9a5a-61e38588fc94",
+      "value": 6.0,
+      "id": "615d7365-c308-42fb-ac5b-3146a4f0facf",
+      "position": {
+        "x": -946.399963,
+        "y": 450.4
       }
     }
   ],
@@ -52,7 +94,23 @@
     },
     {
       "inputPortId": "8f891ca7-d5cb-4381-8dc3-efd1bc141ed1",
-      "outputPortId": "4a9f5fbb-f507-4687-90e1-de8356a02415"
+      "outputPortId": "8abebc79-8938-4939-a069-342e1b863466"
+    },
+    {
+      "inputPortId": "9da58fa2-b3bd-453e-9bdb-7f24442514e0",
+      "outputPortId": "9b94270e-b6cc-4f94-b43d-c3256c5297e3"
+    },
+    {
+      "inputPortId": "90802ee3-4ce7-4920-a86f-4c84c01d0953",
+      "outputPortId": "b13fc150-313b-4cb6-bb27-2de138aaf9ed"
+    },
+    {
+      "inputPortId": "1ffc90ee-a2a5-47f1-af24-6a95d815b169",
+      "outputPortId": "1d71d07e-da68-458f-9a5a-61e38588fc94"
+    },
+    {
+      "inputPortId": "af13d204-ca01-4d3d-a0a0-b667ac3d8d7b",
+      "outputPortId": "539fa3b1-30e3-4b03-8ee5-620e718dd6ec"
     }
   ]
 }

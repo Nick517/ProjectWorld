@@ -1,4 +1,5 @@
 using System.IO;
+using Editor.Terrain.Generation.Nodes;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
@@ -7,12 +8,12 @@ using UnityEngine.UIElements;
 
 namespace Editor.Terrain.Generation
 {
-    public class TgEditorWindow : EditorWindow
+    public class TggEditorWindow : EditorWindow
     {
         private const string DefaultName = "NewTGGraph";
         private const string Extension = "tgg";
 
-        private TgGraphView _graphView;
+        private TerrainGenGraphView _graph;
 
         [MenuItem("Assets/Create/Terrain Generation Graph", false, 10)]
         public static void CreateTgGraph()
@@ -20,7 +21,7 @@ namespace Editor.Terrain.Generation
             var path = AssetDatabase.GetAssetPath(Selection.activeObject);
             var fullPath = Path.Combine(path, $"{DefaultName}.{Extension}");
 
-            var tgGraph = new TgGraphView { path = fullPath };
+            var tgGraph = new TerrainGenGraphView { path = fullPath };
 
             var fileData = File.ReadAllBytes("Assets/Scripts/Editor/Terrain/Icons/TGG.png");
             var icon = new Texture2D(2, 2);
@@ -39,19 +40,19 @@ namespace Editor.Terrain.Generation
 
             if (assetPath.EndsWith(Extension))
             {
-                var windows = Resources.FindObjectsOfTypeAll<TgEditorWindow>();
+                var windows = Resources.FindObjectsOfTypeAll<TggEditorWindow>();
                 var name = Path.GetFileNameWithoutExtension(assetPath);
 
                 foreach (var graph in windows)
-                    if (graph._graphView.path == assetPath)
+                    if (graph._graph.path == assetPath)
                     {
                         graph.Focus();
 
                         return true;
                     }
 
-                var window = CreateWindow<TgEditorWindow>(name, typeof(SceneView));
-                window._graphView.path = assetPath;
+                var window = CreateWindow<TggEditorWindow>(name, typeof(SceneView));
+                window._graph.path = assetPath;
                 window.Load();
 
                 return true;
@@ -69,10 +70,10 @@ namespace Editor.Terrain.Generation
 
         private void AddGraphView()
         {
-            _graphView = new TgGraphView();
+            _graph = new TerrainGenGraphView();
 
-            _graphView.StretchToParentSize();
-            rootVisualElement.Add(_graphView);
+            _graph.StretchToParentSize();
+            rootVisualElement.Add(_graph);
         }
 
         private void AddStyles()
@@ -86,25 +87,43 @@ namespace Editor.Terrain.Generation
             Toolbar toolbar = new();
 
             var saveButton = GraphUtil.CreateButton("Save", Save);
+            var traverseButton = GraphUtil.CreateButton("Traverse", Traverse);
 
             toolbar.Add(saveButton);
+            toolbar.Add(traverseButton);
 
             rootVisualElement.Add(toolbar);
         }
 
         private void OnDisable()
         {
-            rootVisualElement.Remove(_graphView);
+            rootVisualElement.Remove(_graph);
         }
 
         private void Save()
         {
-            SaveManager.Save(_graphView);
+            SaveManager.Save(_graph);
         }
 
         private void Load()
         {
-            SaveManager.Load(_graphView);
+            SaveManager.Load(_graph);
+        }
+
+        private void Traverse()
+        {
+            var value = GetSampleNode().ToTgtNode().Traverse();
+
+            Debug.Log($"Return of traversal: {value}");
+        }
+
+        private SampleNode GetSampleNode()
+        {
+            foreach (var tgNode in _graph.TggNodes)
+                if (tgNode is SampleNode sampleNode)
+                    return sampleNode;
+
+            return null;
         }
     }
 }

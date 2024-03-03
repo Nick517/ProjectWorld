@@ -10,63 +10,63 @@ using UnityEngine.UIElements;
 
 namespace Editor.Terrain.Generation
 {
-    public class TgGraphView : GraphView
+    public class TerrainGenGraphView : GraphView
     {
         public string path;
         private TgSearchWindow _searchWindow;
 
-        private List<TgNode> TgNodes => nodes.Select(GetTgNode).ToList();
+        public List<TggNode> TggNodes => nodes.Select(GetTggNode).ToList();
 
-        private List<TgPort> TgPorts
+        public List<TggPort> TggPorts
         {
             get
             {
-                List<TgPort> tgPorts = new();
-                foreach (var tgNode in TgNodes) tgPorts.AddRange(tgNode.TgPorts);
-                return tgPorts;
+                List<TggPort> tggPorts = new();
+                foreach (var tggNode in TggNodes) tggPorts.AddRange(tggNode.TggPorts);
+                return tggPorts;
             }
         }
 
-        private List<TgEdgeDto> GetAllTgEdgeDto()
+        public List<TggEdgeDto> GetAllTggEdgeDto()
         {
-            List<TgEdgeDto> tgEdges = new();
+            List<TggEdgeDto> tggEdges = new();
 
-            foreach (var edge in edges) tgEdges.Add(new TgEdgeDto(this, edge));
+            foreach (var edge in edges) tggEdges.Add(new TggEdgeDto(this, edge));
 
-            return tgEdges;
+            return tggEdges;
         }
 
-        private TgNode GetTgNode(Node node)
+        private TggNode GetTggNode(Node node)
         {
-            return node as TgNode;
+            return node as TggNode;
         }
 
-        public TgPort GetTgPort(Port port)
+        public TggPort GetTggPort(Port port)
         {
-            foreach (var tgPort in TgPorts)
-                if (tgPort.port == port)
-                    return tgPort;
+            foreach (var tggPort in TggPorts)
+                if (tggPort.port == port)
+                    return tggPort;
 
             return null;
         }
 
-        public TgPort GetTgPort(string id)
+        public TggPort GetTggPort(string id)
         {
-            foreach (var tgPort in TgPorts)
-                if (tgPort.id == id)
-                    return tgPort;
+            foreach (var tggPort in TggPorts)
+                if (tggPort.id == id)
+                    return tggPort;
 
             return null;
         }
 
-        public TgGraphView()
+        public TerrainGenGraphView()
         {
             AddGridBackground();
             AddStyles();
             AddManipulator();
             AddSearchWindow();
 
-            TgNode.Create(this, typeof(SampleNode));
+            TggNode.Create(this, typeof(SampleNode));
         }
 
         private void AddGridBackground()
@@ -130,7 +130,7 @@ namespace Editor.Terrain.Generation
 
         #region Save System
 
-        public Dto ToDto()
+        private Dto ToDto()
         {
             return new Dto(this);
         }
@@ -138,24 +138,24 @@ namespace Editor.Terrain.Generation
         [Serializable]
         public class Dto
         {
-            public List<TgNode.Dto> tgNodeDtoList = new();
-            public List<TgEdgeDto> tgEdgeDtoList;
+            public List<TggNode.Dto> tgNodeDtoList = new();
+            public List<TggEdgeDto> tgEdgeDtoList;
 
             public Dto()
             {
             }
 
-            public Dto(TgGraphView graphView)
+            public Dto(TerrainGenGraphView graph)
             {
-                foreach (var tgNode in graphView.TgNodes) tgNodeDtoList.Add(tgNode.ToDto());
-                tgEdgeDtoList = graphView.GetAllTgEdgeDto();
+                foreach (var tgNode in graph.TggNodes) tgNodeDtoList.Add(tgNode.ToDto());
+                tgEdgeDtoList = graph.GetAllTggEdgeDto();
             }
 
-            public void Deserialize(TgGraphView graphView)
+            public void Deserialize(TerrainGenGraphView graph)
             {
-                graphView.ClearGraph();
-                foreach (var dto in tgNodeDtoList) graphView.TgNodes.Add(dto.Deserialize(graphView));
-                foreach (var dto in tgEdgeDtoList) dto.Deserialize(graphView);
+                graph.ClearGraph();
+                foreach (var dto in tgNodeDtoList) graph.TggNodes.Add(dto.Deserialize(graph));
+                foreach (var dto in tgEdgeDtoList) dto.Deserialize(graph);
             }
         }
 

@@ -4,14 +4,14 @@ using UnityEngine.UIElements;
 
 namespace Editor.Terrain.Generation.Nodes
 {
-    public class FloatNode : TgNode
+    public class FloatNode : TggNode
     {
         #region Fields
-        
-        private TgPort _outputPort;
+
+        private TggPort _outputPort;
         private FloatField _floatField;
 
-        public override List<TgPort> TgPorts => new() { _outputPort };
+        public override List<TggPort> TggPorts => new() { _outputPort };
 
         #endregion
 
@@ -25,6 +25,30 @@ namespace Editor.Terrain.Generation.Nodes
 
             _floatField = new FloatField();
             extensionContainer.Add(_floatField);
+        }
+        
+        #endregion
+        
+        #region Terrain Genereration Tree
+
+        public override TgtNode ToTgtNode()
+        {
+            return new FloatTgtNode(this);
+        }
+
+        private class FloatTgtNode : TgtNode
+        {
+            private readonly float _value;
+
+            public FloatTgtNode(FloatNode floatNode)
+            {
+                _value = floatNode._floatField.value;
+            }
+
+            public override float Traverse()
+            {
+                return _value;
+            }
         }
 
         #endregion
@@ -52,7 +76,7 @@ namespace Editor.Terrain.Generation.Nodes
                 value = floatNode._floatField.value;
             }
 
-            public override TgNode Deserialize(TgGraphView graphView)
+            public override TggNode Deserialize(TerrainGenGraphView graphView)
             {
                 var floatNode = (FloatNode)Create(graphView, typeof(FloatNode));
                 floatNode._outputPort.id = outputPortId;
