@@ -23,31 +23,28 @@ namespace Editor.TerrainGenerationGraph
         {
             var tgGraph = EditorUtility.InstanceIDToObject(instanceID) as TgGraph;
 
-            if (tgGraph != null)
-            {
-                var windows = Resources.FindObjectsOfTypeAll<TggEditorWindow>();
-                var name = tgGraph.name;
+            if (tgGraph == null) return false;
 
-                foreach (var window in windows)
-                    if (window._graphView.tgGraph == tgGraph)
-                    {
-                        window.Focus();
+            var windows = Resources.FindObjectsOfTypeAll<TggEditorWindow>();
+            var name = tgGraph.name;
 
-                        return true;
-                    }
+            foreach (var window in windows)
+                if (window._graphView.tgGraph == tgGraph)
+                {
+                    window.Focus();
 
-                var newWindow = CreateWindow<TggEditorWindow>(name, typeof(SceneView));
+                    return true;
+                }
 
-                if (string.IsNullOrEmpty(tgGraph.serializedGraphData)) InitializeTgGraph(ref tgGraph);
+            var newWindow = CreateWindow<TggEditorWindow>(name, typeof(SceneView));
 
-                newWindow._graphView.tgGraph = tgGraph;
+            if (string.IsNullOrEmpty(tgGraph.serializedGraphData)) InitializeTgGraph(ref tgGraph);
 
-                newWindow.Load();
+            newWindow._graphView.tgGraph = tgGraph;
 
-                return true;
-            }
+            newWindow.Load();
 
-            return false;
+            return true;
         }
 
         private static void InitializeTgGraph(ref TgGraph tgGraph)

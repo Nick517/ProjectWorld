@@ -5,101 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Editor Default Resources/TGGraph.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Editor Default Resources/TGGraph/TgGraphVariables.uss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Editor Default Resources/TGGraph/TgGraphVariables.uss.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Editor Default Resources/TGGraph/TgGraphViewStyles.uss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Editor Default Resources/TGGraph/TgGraphViewStyles.uss.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Scene/TGGraph Test.unity" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Scene/TGGraph Test.unity.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/GraphUtil.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/GraphUtil.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/AddNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/AddNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/FloatNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/FloatNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggEdgeDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggEdgeDto.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggPort.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggPort.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/SampleNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/SampleNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/SerializableVector2.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/SerializableVector2.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TerrainGenGraphView.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TerrainGenGraphView.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggEditorWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggEditorWindow.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggSearchWindow.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggSearchWindow.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/JsonSettings.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/JsonSettings.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/AddTgtNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/AddTgtNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/FloatTgtNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/FloatTgtNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/SampleTgtNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/SampleTgtNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/TgtNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/TgtNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/TgGraph.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/TgGraph.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/TggHolder.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/TggHolder.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.asset.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Icons.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Icons/TggIcon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Icons/TggIcon.png.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/DefaultValueNode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/DefaultValueNode.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/TgtDefaultValue.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/TgtDefaultValue.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/New Shader Graph.shadergraph" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/New Shader Graph.shadergraph.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/NewTGGraph.asset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/TerrainGraphs/NewTGGraph.asset.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor Default Resources/Terrain Generation.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor Default Resources/Terrain Generation/TGGraphViewStyles.uss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor Default Resources/Terrain Generation/TGGraphViewStyles.uss.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor Default Resources/Terrain Generation/TGVariables.uss" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Editor Default Resources/Terrain Generation/TGVariables.uss.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/SerializableVector2.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/SerializableVector2.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/GraphUtil.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/GraphUtil.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/AddNode.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/AddNode.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/FloatNode.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/FloatNode.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/SampleNode.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/SampleNode.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TggEdgeDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TggEdgeDto.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TggNode.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TggNode.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TggPort.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/Nodes/TggPort.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/SaveManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/SaveManager.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TerrainGenGraphView.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TerrainGenGraphView.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgSearchWindow.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TgSearchWindow.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TggEditorWindow.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Generation/TggEditorWindow.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Icons.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Icons/TGG.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/Icons/TGG.png.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/TggImporter.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/Terrain/TggImporter.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/HDRenderPipelineGlobalSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.tgg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.tgg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/AddNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/AddNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/FloatNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/FloatNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggPort.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggPort.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/SampleNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/SampleNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TerrainGenGraphView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TerrainGenGraphView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggEditorWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggEditorWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggSearchWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggSearchWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/AddTgtNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/AddTgtNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/FloatTgtNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/FloatTgtNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/SampleTgtNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/Nodes/SampleTgtNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/TgGraph.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/TgGraph.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGraphs/TGGraph.asset.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,13 +40,18 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/392960c6b8924ad4aa464eaf3552f4303dc00/60/24864af4/Node.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/53ebdc357f4945cfa2cb7ba24705d37f3dc00/b6/56e0e412/IEdgeConnectorListener.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/65927d60dd5f4df5850222879a8ed9a4176800/90/b20e02e6/IMGUIContainer.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/TgGraph.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.0.16/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.shadergraph@14.0.10/Editor/Data/Util/PooledList.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="QODANA_PROBLEMS_VIEW_TAB" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
@@ -220,7 +155,15 @@
       <workItem from="1709329602669" duration="10740000" />
       <workItem from="1709344537879" duration="1112000" />
       <workItem from="1709365646949" duration="9891000" />
-      <workItem from="1709454687865" duration="30159000" />
+      <workItem from="1709454687865" duration="43735000" />
+      <workItem from="1709629611775" duration="10112000" />
+      <workItem from="1709696174847" duration="1272000" />
+      <workItem from="1709758474339" duration="27892000" />
+      <workItem from="1709924663561" duration="11530000" />
+      <workItem from="1710023522894" duration="23117000" />
+      <workItem from="1710180924473" duration="3177000" />
+      <workItem from="1710201371495" duration="2447000" />
+      <workItem from="1710232205909" duration="1221000" />
     </task>
     <servers />
   </component>

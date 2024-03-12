@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TerrainGenerationGraph.Scripts
 {
-    [CreateAssetMenu(fileName = "NewTGGraph", menuName = "TGGraph", order = 1)]
+    [CreateAssetMenu(fileName = "New TGGraph", menuName = "TGGraph", order = 1)]
     public class TgGraph : ScriptableObject
     {
         [HideInInspector] public string serializedTreeData;

@@ -32,7 +32,7 @@ namespace Editor.TerrainGenerationGraph
                 {
                     level = 2,
                     userData = typeof(AddNode)
-                },
+                }
             };
 
             return entries;
@@ -42,8 +42,9 @@ namespace Editor.TerrainGenerationGraph
         {
             var nodeType = (Type)entry.userData;
             var tggNode = TggNode.Create(_graphView, nodeType);
-
-            tggNode.SetPosition(context.screenMousePosition);
+            _graphView.OnChange();
+            
+            tggNode.Position = context.screenMousePosition;
 
             return true;
         }

@@ -3,13 +3,13 @@ using System;
 namespace TerrainGenerationGraph.Scripts.Nodes
 {
     [Serializable]
-    public class FloatTgtNode : TgtNode
+    public class TgtDefaultValue : TgtNode
     {
-        public TgtNode nextNode;
-
+        public float value;
+        
         public override float Traverse()
         {
-            return nextNode.Traverse();
+            return value;
         }
     }
 }

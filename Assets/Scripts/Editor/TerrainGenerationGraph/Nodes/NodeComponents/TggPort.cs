@@ -1,5 +1,10 @@
+using System.Collections.Generic;
+using System.Linq;
 using TerrainGenerationGraph.Scripts.Nodes;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {
@@ -9,6 +14,13 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         public string id;
         public readonly Port port;
+        private DefaultValueNode _defaultValueNode;
+
+        public bool IsInput => port.direction == Direction.Input;
+
+        public bool HasConnection => port.connections.Any();
+
+        private Vector2 Position => _graphView.contentViewContainer.WorldToLocal(port.GetGlobalCenter());
 
         public TggPort(TerrainGenGraphView graphView, Port port)
         {
@@ -17,43 +29,89 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             id = GraphUtil.NewID;
         }
 
-        private TggPort GetConnectedTggPort()
+        private Edge ConnectTo(TggPort tggPort)
         {
-            var tggPorts = _graphView.TggPorts;
+            var edge = port.ConnectTo(tggPort.port);
+            _graphView.AddElement(edge);
+            return edge;
+        }
 
-            foreach (var tggEdge in _graphView.GetAllTggEdgeDto())
+        public void Disconnect()
+        {
+            List<Port> ports = new();
+
+            foreach (var edge in port.connections)
             {
-                if (tggEdge.inputPortId == id)
-                    foreach (var tggPort in tggPorts)
-                        if (tggPort.id == tggEdge.outputPortId)
-                            return tggPort;
-
-                if (tggEdge.outputPortId == id)
-                    foreach (var tggPort in tggPorts)
-                        if (tggPort.id == tggEdge.inputPortId)
-                            return tggPort;
+                ports.Add(edge.input);
+                ports.Add(edge.output);
+                _graphView.RemoveElement(edge);
             }
 
-            return null;
+            ports.ForEach(p => p.DisconnectAll());
         }
 
-        private TggNode GetParentTggNode()
+        public void AddDefaultValue()
         {
-            foreach (var tggNode in _graphView.TggNodes)
-                if (tggNode.TggPorts.Contains(this))
-                    return tggNode;
+            _defaultValueNode = (DefaultValueNode)TggNode.Create(_graphView, typeof(DefaultValueNode));
+            ParentTggNode.Add(_defaultValueNode);
+            var edge = ConnectTo(_defaultValueNode.outputPort);
+            edge.capabilities = 0;
 
-            return null;
+            EditorApplication.update += RepositionDefaultValue;
         }
 
-        private TggNode GetConnectedTggNode()
+        private void RepositionDefaultValue()
         {
-            return GetConnectedTggPort()?.GetParentTggNode();
+            EditorApplication.update -= RepositionDefaultValue;
+
+            var offsetX = -15;
+
+            var newPos = Position - ParentTggNode.Position;
+            var defaultValueSize = _defaultValueNode.GetPosition().size;
+            var offset = new Vector2(defaultValueSize.x, defaultValueSize.y / 2);
+            offset.x -= offsetX;
+            newPos -= offset;
+
+            _defaultValueNode.SetPosition(new Rect(newPos, Vector2.zero));
         }
 
-        public TgtNode GetConnectedTgtNode()
+        public TggPort ConnectedTggPort
         {
-            return GetConnectedTggNode()?.ToTgtNode();
+            get
+            {
+                var tggPorts = _graphView.TggPorts;
+
+                foreach (var tggEdge in _graphView.GetAllTggEdgeDto())
+                {
+                    if (tggEdge.inputPortId == id)
+                        foreach (var tggPort in tggPorts)
+                            if (tggPort.id == tggEdge.outputPortId)
+                                return tggPort;
+
+                    if (tggEdge.outputPortId == id)
+                        foreach (var tggPort in tggPorts)
+                            if (tggPort.id == tggEdge.inputPortId)
+                                return tggPort;
+                }
+
+                return null;
+            }
         }
+
+        private TggNode ParentTggNode
+        {
+            get
+            {
+                foreach (var tggNode in _graphView.TggNodes)
+                    if (tggNode.TggPorts.Contains(this))
+                        return tggNode;
+
+                return null;
+            }
+        }
+
+        public TggNode ConnectedTggNode => ConnectedTggPort?.ParentTggNode;
+
+        public TgtNode ConnectedTgtNode => ConnectedTggNode?.ToTgtNode();
     }
 }

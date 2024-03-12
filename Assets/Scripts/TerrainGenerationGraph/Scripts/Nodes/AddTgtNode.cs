@@ -5,12 +5,12 @@ namespace TerrainGenerationGraph.Scripts.Nodes
     [Serializable]
     public class AddTgtNode : TgtNode
     {
-        public TgtNode inputNodeA;
-        public TgtNode inputNodeB;
+        public TgtNode nextNodeA;
+        public TgtNode nextNodeB;
 
         public override float Traverse()
         {
-            return inputNodeA.Traverse() + inputNodeB.Traverse();
+            return nextNodeA.Traverse() + nextNodeB.Traverse();
         }
     }
 }

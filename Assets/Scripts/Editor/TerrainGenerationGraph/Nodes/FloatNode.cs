@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using TerrainGenerationGraph.Scripts.Nodes;
-using UnityEngine.UIElements;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -10,10 +9,10 @@ namespace Editor.TerrainGenerationGraph.Nodes
     {
         #region Fields
 
+        private TggPort _inputPort;
         private TggPort _outputPort;
-        private FloatField _floatField;
 
-        public override List<TggPort> TggPorts => new() { _outputPort };
+        public override List<TggPort> TggPorts => new() { _inputPort, _outputPort };
 
         #endregion
 
@@ -23,9 +22,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
         {
             title = "Float";
 
+            _inputPort = AddInputPort("In(1)", typeof(float));
             _outputPort = AddOutputPort("Out(1)", typeof(float));
-
-            _floatField = AddFloatField();
         }
 
         #endregion
@@ -36,7 +34,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
         {
             return new FloatTgtNode
             {
-                value = _floatField.value
+                nextNode = _inputPort.ConnectedTgtNode
             };
         }
 
@@ -52,8 +50,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
         [Serializable]
         public class FloatNodeDto : Dto
         {
+            public string inputPortId;
             public string outputPortId;
-            public float value;
 
             public FloatNodeDto()
             {
@@ -61,17 +59,17 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
             public FloatNodeDto(FloatNode floatNode) : base(floatNode)
             {
+                inputPortId = floatNode._inputPort.id;
                 outputPortId = floatNode._outputPort.id;
-                value = floatNode._floatField.value;
             }
 
             public override TggNode Deserialize(TerrainGenGraphView graphView)
             {
                 var floatNode = (FloatNode)Create(graphView, typeof(FloatNode));
+                floatNode._inputPort.id = inputPortId;
                 floatNode._outputPort.id = outputPortId;
-                floatNode._floatField.value = value;
                 floatNode.id = id;
-                floatNode.SetPosition(position.Deserialize());
+                floatNode.Position = position.Deserialize();
 
                 return floatNode;
             }

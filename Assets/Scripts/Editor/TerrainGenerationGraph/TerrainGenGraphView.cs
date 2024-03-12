@@ -14,30 +14,31 @@ namespace Editor.TerrainGenerationGraph
 {
     public class TerrainGenGraphView : GraphView
     {
-        
         #region Fields
-        
+
         public TgGraph tgGraph;
         private TggSearchWindow _searchWindow;
 
         #endregion
-        
+
         #region Constructors
-        
+
         public TerrainGenGraphView()
         {
             AddGridBackground();
             AddStyles();
             AddManipulator();
             AddSearchWindow();
+            graphViewChanged += OnGraphViewChanged;
 
             TggNode.Create(this, typeof(SampleNode));
+            OnChange();
         }
-        
+
         #endregion
 
         #region Methods
-        
+
         private void AddGridBackground()
         {
             GridBackground gridBackground = new();
@@ -81,7 +82,39 @@ namespace Editor.TerrainGenerationGraph
         {
             DeleteElements(graphElements.ToList());
         }
-        
+
+        private GraphViewChange OnGraphViewChanged(GraphViewChange change)
+        {
+            OnChange();
+
+            return change;
+        }
+
+        public void OnChange()
+        {
+            EditorApplication.update += CheckEmptyInputPorts;
+            EditorApplication.update += RemoveDefaultValues;
+        }
+
+        private void CheckEmptyInputPorts()
+        {
+            EditorApplication.update -= CheckEmptyInputPorts;
+
+            var emptyInputPorts = TggPorts.Where(tggPort => tggPort.IsInput && !tggPort.HasConnection);
+
+            foreach (var tggPort in emptyInputPorts) tggPort.AddDefaultValue();
+        }
+
+        private void RemoveDefaultValues()
+        {
+            EditorApplication.update -= RemoveDefaultValues;
+
+            var disconnectedDefaultValues = TggNodes.Where(tggNode =>
+                tggNode is DefaultValueNode defaultValue && !defaultValue.outputPort.HasConnection);
+
+            foreach (var defaultValue in disconnectedDefaultValues) defaultValue.Delete();
+        }
+
         #endregion
 
         #region Save System
@@ -91,7 +124,7 @@ namespace Editor.TerrainGenerationGraph
             tgGraph.serializedTreeData = SerializeTree();
             tgGraph.serializedGraphData = SerializeGraph();
         }
-        
+
         public string SerializeGraph()
         {
             return JsonConvert.SerializeObject(ToDto(), JsonSettings.Formatted);
@@ -120,7 +153,7 @@ namespace Editor.TerrainGenerationGraph
 
             public Dto(TerrainGenGraphView graph)
             {
-                foreach (var tgNode in graph.TggNodes) tgNodeDtoList.Add(tgNode.ToDto());
+                foreach (var tggNode in graph.TggNodes) tgNodeDtoList.Add(tggNode.ToDto());
                 tgEdgeDtoList = graph.GetAllTggEdgeDto();
             }
 
@@ -129,6 +162,10 @@ namespace Editor.TerrainGenerationGraph
                 graph.ClearGraph();
                 foreach (var dto in tgNodeDtoList) graph.TggNodes.Add(dto.Deserialize(graph));
                 foreach (var dto in tgEdgeDtoList) dto.Deserialize(graph);
+
+                foreach (var tggNode in graph.TggNodes)
+                    if (tggNode is DefaultValueNode defaultValueNode)
+                        defaultValueNode.outputPort.ConnectedTggNode.Add(defaultValueNode);
             }
         }
 
@@ -188,7 +225,7 @@ namespace Editor.TerrainGenerationGraph
 
             return null;
         }
-        
+
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
         {
             List<Port> compatiblePorts = new();

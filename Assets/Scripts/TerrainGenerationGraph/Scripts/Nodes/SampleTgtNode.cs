@@ -5,11 +5,11 @@ namespace TerrainGenerationGraph.Scripts.Nodes
     [Serializable]
     public class SampleTgtNode : TgtNode
     {
-        public TgtNode inputNode;
+        public TgtNode nextNode;
 
         public override float Traverse()
         {
-            return inputNode.Traverse();
+            return nextNode.Traverse();
         }
     }
 }

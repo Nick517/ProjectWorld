@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using TerrainGenerationGraph.Scripts.Nodes;
+using UnityEditor.Experimental.GraphView;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -22,13 +23,15 @@ namespace Editor.TerrainGenerationGraph.Nodes
             title = "Sample";
 
             _inputPort = AddInputPort("In(1)", typeof(float));
+
+            capabilities &= ~Capabilities.Deletable;
         }
 
         public override TgtNode ToTgtNode()
         {
             return new SampleTgtNode
             {
-                inputNode = _inputPort.GetConnectedTgtNode()
+                nextNode = _inputPort.ConnectedTgtNode
             };
         }
 
@@ -60,7 +63,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                 var sampleNode = (SampleNode)Create(graphView, typeof(SampleNode));
                 sampleNode._inputPort.id = inputPortId;
                 sampleNode.id = id;
-                sampleNode.SetPosition(position.Deserialize());
+                sampleNode.Position = position.Deserialize();
 
                 return sampleNode;
             }

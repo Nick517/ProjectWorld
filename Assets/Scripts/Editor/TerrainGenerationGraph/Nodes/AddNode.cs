@@ -32,8 +32,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
         {
             return new AddTgtNode
             {
-                inputNodeA = _inputPortA.GetConnectedTgtNode(),
-                inputNodeB = _inputPortB.GetConnectedTgtNode()
+                nextNodeA = _inputPortA.ConnectedTgtNode,
+                nextNodeB = _inputPortB.ConnectedTgtNode
             };
         }
 
@@ -71,7 +71,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                 addNode._inputPortB.id = inputPortBId;
                 addNode._outputPort.id = outputPortId;
                 addNode.id = id;
-                addNode.SetPosition(position.Deserialize());
+                addNode.Position = position.Deserialize();
 
                 return addNode;
             }

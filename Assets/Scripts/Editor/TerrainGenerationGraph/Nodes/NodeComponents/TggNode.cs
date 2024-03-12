@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TerrainGenerationGraph.Scripts.Nodes;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -11,11 +12,13 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
     {
         #region Fields
 
-        private TerrainGenGraphView _graphView;
+        protected TerrainGenGraphView graphView;
 
         protected string id;
 
         public virtual List<TggPort> TggPorts => new();
+
+        private List<TggPort> InputTggPorts => TggPorts.Where(t => t.IsInput).ToList();
 
         #endregion
 
@@ -25,21 +28,43 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         {
             var node = (TggNode)Activator.CreateInstance(nodeType);
             node.id = GraphUtil.NewID;
-            node._graphView = graphView;
+            node.graphView = graphView;
             node.Initialize();
-
             return node;
         }
 
         private void Initialize()
         {
-            _graphView.AddElement(this);
+            graphView.AddElement(this);
             SetUp();
             RefreshPorts();
             RefreshExpandedState();
         }
 
+        public void Delete()
+        {
+            DisconnectAllPorts();
+            graphView.RemoveElement(this);
+            graphView.OnChange();
+        }
+
+        private void DisconnectAllPorts()
+        {
+            foreach (var tggPort in TggPorts) tggPort.Disconnect();
+        }
+
+        public void AddDefaultValues()
+        {
+            foreach (var tggPort in InputTggPorts) tggPort.AddDefaultValue();
+        }
+
         protected abstract void SetUp();
+
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            evt.menu.AppendAction("Delete", _ => Delete(), DropdownMenuAction.AlwaysEnabled);
+            base.BuildContextualMenu(evt);
+        }
 
         public abstract TgtNode ToTgtNode();
 
@@ -62,14 +87,14 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             protected Dto(TggNode tggNode)
             {
                 id = tggNode.id;
-                position = new SerializableVector2(tggNode.GetPosition());
+                position = new SerializableVector2(tggNode.Position);
             }
 
             public virtual TggNode Deserialize(TerrainGenGraphView graphView)
             {
                 var node = Create(graphView, typeof(TggNode));
                 node.id = id;
-                node.SetPosition(position.Deserialize());
+                node.Position = position.Deserialize();
 
                 return node;
             }
@@ -79,14 +104,11 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Utility
 
-        private new Vector2 GetPosition()
+        public Vector2 Position
         {
-            return base.GetPosition().position;
-        }
+            get => base.GetPosition().position;
 
-        public void SetPosition(Vector2 position)
-        {
-            base.SetPosition(new Rect(position, Vector2.zero));
+            set => base.SetPosition(new Rect(value, Vector2.zero));
         }
 
         protected TggPort AddInputPort(string portName, Type type)
@@ -95,7 +117,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             port.portName = portName;
             inputContainer.Add(port);
 
-            return new TggPort(_graphView, port);
+            return new TggPort(graphView, port);
         }
 
         protected TggPort AddOutputPort(string portName, Type type)
@@ -104,15 +126,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             port.portName = portName;
             outputContainer.Add(port);
 
-            return new TggPort(_graphView, port);
-        }
-
-        protected FloatField AddFloatField()
-        {
-            var floatField = new FloatField();
-            extensionContainer.Add(floatField);
-
-            return floatField;
+            return new TggPort(graphView, port);
         }
 
         #endregion
