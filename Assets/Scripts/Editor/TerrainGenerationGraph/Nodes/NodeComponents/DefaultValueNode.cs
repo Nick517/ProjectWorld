@@ -1,19 +1,24 @@
 using System;
-using System.Collections.Generic;
+using Serializable;
 using TerrainGenerationGraph.Scripts.Nodes;
-using UnityEditor.Experimental.GraphView;
+using UnityEditor;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {
-    public class DefaultValueNode : TggNode
+    public sealed class DefaultValueNode : TggNode
     {
         #region Fields
 
-        public TggPort outputPort;
-        private FloatField _floatField;
+        public OutputPort OutputPort;
+        public InputPort ParentingInputPort;
+        public int Dimensions;
 
-        public override List<TggPort> TggPorts => new() { outputPort };
+        private FloatField _floatFieldX;
+        private FloatField _floatFieldY;
+        private FloatField _floatFieldZ;
+        private FloatField _floatFieldW;
 
         #endregion
 
@@ -24,66 +29,118 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             titleContainer.RemoveFromHierarchy();
             mainContainer.style.flexDirection = FlexDirection.Row;
 
-            var label = new Label("X");
-            mainContainer.Add(label);
+            _floatFieldX = CreateFloatField();
+            _floatFieldY = CreateFloatField();
+            _floatFieldZ = CreateFloatField();
+            _floatFieldW = CreateFloatField();
 
-            _floatField = new FloatField();
-            mainContainer.Add(_floatField);
-
-            var port = InstantiatePort(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(float));
-            outputPort = new TggPort(graphView, port);
-
-            port.portName = null;
-            mainContainer.Add(port);
+            OutputPort = AddOutputPort(null);
 
             capabilities = 0;
         }
 
-        protected TggNode ParentTggNode => outputPort.ConnectedTggNode;
-
-        public override TgtNode ToTgtNode()
+        public override void Update()
         {
-            return new TgtDefaultValue
+            Dimensions = ParentingInputPort.Dimensions;
+
+            mainContainer.Add(new Label("X"));
+            mainContainer.Add(_floatFieldX);
+
+            if (Dimensions > 1)
             {
-                value = _floatField.value
-            };
+                mainContainer.Add(new Label("Y"));
+                mainContainer.Add(_floatFieldY);
+            }
+
+            if (Dimensions > 2)
+            {
+                mainContainer.Add(new Label("Z"));
+                mainContainer.Add(_floatFieldZ);
+            }
+
+            if (Dimensions > 3)
+            {
+                mainContainer.Add(new Label("W"));
+                mainContainer.Add(_floatFieldW);
+            }
+
+            OutputPort.SetDimensions(Dimensions);
+            mainContainer.Add(OutputPort);
+
+            _ = new TggEdge(GraphView, this, ParentingInputPort);
+
+            ParentingTggNode.Add(this);
+
+            EditorApplication.update += Reposition;
         }
+
+        public override void Destroy()
+        {
+            OutputPort.AllConnectedEdges.ForEach(tggEdge => GraphView.RemoveElement(tggEdge));
+            GraphView.RemoveElement(this);
+        }
+
+        private const float OffsetX = -15;
+
+        private void Reposition()
+        {
+            EditorApplication.update -= Reposition;
+
+            if (float.IsNaN(GetPosition().width))
+            {
+                EditorApplication.update += Reposition;
+                return;
+            }
+
+            var newPosition = ParentingInputPort.Position - ParentingTggNode.Position;
+            var size = GetPosition().size;
+            var offset = new Vector2(size.x, size.y / 2);
+            offset.x -= OffsetX;
+            newPosition -= offset;
+
+            Position = newPosition;
+        }
+
+        private FloatField CreateFloatField()
+        {
+            FloatField floatField = new();
+            floatField.RegisterValueChangedCallback(_ => { ParentingInputPort.DefaultValue = Value; });
+
+            return floatField;
+        }
+
+        public Vector4 Value
+        {
+            get
+            {
+                var x = _floatFieldX.value;
+                var y = _floatFieldY.value;
+                var z = _floatFieldZ.value;
+                var w = _floatFieldW.value;
+
+                return new Vector4(x, y, z, w);
+            }
+            set
+            {
+                _floatFieldX.value = value.x;
+                _floatFieldY.value = value.y;
+                _floatFieldZ.value = value.z;
+                _floatFieldW.value = value.w;
+            }
+        }
+
+        private TggNode ParentingTggNode => ParentingInputPort.ParentTggNode;
 
         #endregion
 
-        #region Serialization
+        #region Terrain Generation Tree
 
-        public override Dto ToDto()
+        public override TgtNode ToTgtNode()
         {
-            return new DefaultValueDto(this);
-        }
-
-        [Serializable]
-        public class DefaultValueDto : Dto
-        {
-            public float value;
-            public string outputPortId;
-
-            public DefaultValueDto()
+            return new DefaultValueTgtNode
             {
-            }
-
-            public DefaultValueDto(DefaultValueNode defaultValueNode) : base(defaultValueNode)
-            {
-                value = defaultValueNode._floatField.value;
-                outputPortId = defaultValueNode.outputPort.id;
-            }
-
-            public override TggNode Deserialize(TerrainGenGraphView graphView)
-            {
-                var defaultValue = (DefaultValueNode)Create(graphView, typeof(DefaultValueNode));
-                defaultValue._floatField.value = value;
-                defaultValue.outputPort.id = outputPortId;
-                defaultValue.id = id;
-                defaultValue.Position = position.Deserialize();
-                
-                return defaultValue;
-            }
+                value = new SerializableVector4(Value)
+            };
         }
 
         #endregion

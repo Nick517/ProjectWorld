@@ -1,0 +1,122 @@
+using System;
+using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
+
+namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
+{
+    public class TggEdge : Edge
+    {
+        #region Fields
+
+        public TerrainGenerationGraphView GraphView;
+
+        public readonly bool IsDvnEdge;
+
+        public List<TggPort> TggPorts => new() { OutputPort, InputPort };
+
+        #endregion
+
+        public TggEdge()
+        {
+        }
+
+        #region Constructors
+
+        public TggEdge(TerrainGenerationGraphView graphView, Edge edge)
+        {
+            GraphView = graphView;
+            output = edge.output;
+            input = edge.input;
+
+            graphView.AddElement(this);
+            InputPort?.Update();
+        }
+
+        public TggEdge(TerrainGenerationGraphView graphView, DefaultValueNode defaultValueNode,
+            InputPort parentingInputPort)
+        {
+            GraphView = graphView;
+            output = defaultValueNode.OutputPort;
+            input = parentingInputPort;
+            IsDvnEdge = true;
+
+            graphView.AddElement(this);
+        }
+
+        private TggEdge(TerrainGenerationGraphView graphView, OutputPort outputPort, InputPort parentingInputPort,
+            bool isDvnEdge = false)
+        {
+            GraphView = graphView;
+            output = outputPort;
+            input = parentingInputPort;
+            IsDvnEdge = isDvnEdge;
+
+            graphView.AddElement(this);
+            parentingInputPort.Update();
+        }
+
+        #endregion
+
+        #region Methods
+
+        public void Destroy()
+        {
+            if (!IsDvnEdge)
+            {
+                GraphView.RemoveElement(this);
+                InputPort?.Update();
+            }
+            else
+            {
+                InputPort.ParentTggNode.Destroy();
+                GraphView.RemoveElement(this);
+            }
+        }
+
+        private OutputPort OutputPort => output as OutputPort;
+
+        public InputPort InputPort => input as InputPort;
+
+        public TggPort PortOfType(Type type)
+        {
+            return type == typeof(OutputPort) ? OutputPort : InputPort;
+        }
+
+        #endregion
+
+        #region Serialization
+
+        public Dto ToDto()
+        {
+            return new Dto(this);
+        }
+
+        [Serializable]
+        public class Dto
+        {
+            public string outputPortId;
+            public string inputPortId;
+            public bool isDvnEdge;
+
+            public Dto()
+            {
+            }
+
+            public Dto(TggEdge tggEdge)
+            {
+                outputPortId = tggEdge.OutputPort.ID;
+                inputPortId = tggEdge.InputPort.ID;
+                isDvnEdge = tggEdge.IsDvnEdge;
+            }
+
+            public virtual void Deserialize(TerrainGenerationGraphView graphView)
+            {
+                var outputPort = graphView.GetTggPort(outputPortId) as OutputPort;
+                var inputPort = graphView.GetTggPort(inputPortId) as InputPort;
+                _ = new TggEdge(graphView, outputPort, inputPort, isDvnEdge);
+            }
+        }
+
+        #endregion
+    }
+}

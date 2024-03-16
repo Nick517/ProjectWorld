@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace TerrainGenerationGraph.Scripts
 {
-    [CreateAssetMenu(fileName = "New TGGraph", menuName = "TGGraph", order = 1)]
+    [CreateAssetMenu(fileName = "New Terrain Generation Graph", menuName = "Terrain Generation Graph", order = 1)]
     public class TgGraph : ScriptableObject
     {
         [HideInInspector] public string serializedTreeData;
@@ -17,7 +17,7 @@ namespace TerrainGenerationGraph.Scripts
             _rootTgtNode = JsonConvert.DeserializeObject<SampleTgtNode>(serializedTreeData, JsonSettings.Formatted);
         }
 
-        public float GetSample()
+        public Vector4 GetSample()
         {
             return _rootTgtNode.Traverse();
         }

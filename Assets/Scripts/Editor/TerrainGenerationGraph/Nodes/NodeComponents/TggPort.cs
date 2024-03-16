@@ -1,117 +1,101 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using TerrainGenerationGraph.Scripts.Nodes;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {
-    public class TggPort
+    public abstract class TggPort : Port
     {
-        private readonly TerrainGenGraphView _graphView;
+        #region Fields
 
-        public string id;
-        public readonly Port port;
-        private DefaultValueNode _defaultValueNode;
+        protected readonly TerrainGenerationGraphView GraphView;
 
-        public bool IsInput => port.direction == Direction.Input;
+        public readonly TggNode ParentTggNode;
+        public string ID;
+        private readonly string _defaultName;
 
-        public bool HasConnection => port.connections.Any();
+        #endregion
 
-        private Vector2 Position => _graphView.contentViewContainer.WorldToLocal(port.GetGlobalCenter());
+        #region Constructors
 
-        public TggPort(TerrainGenGraphView graphView, Port port)
+        protected TggPort(TerrainGenerationGraphView graphView, TggNode parentTggNode, string defaultName,
+            Direction direction, Capacity capacity, Type type)
+            : base(Orientation.Horizontal, direction, capacity, type)
         {
-            _graphView = graphView;
-            this.port = port;
-            id = GraphUtil.NewID;
+            GraphView = graphView;
+            ParentTggNode = parentTggNode;
+            ID = GraphUtil.NewID;
+            _defaultName = defaultName;
+            SetDimensions(DimensionsFromType(type));
+
+            this.AddManipulator(new EdgeConnector<TggEdge>(new TggEdgeConnectorListener(graphView)));
         }
 
-        private Edge ConnectTo(TggPort tggPort)
+        #endregion
+
+        #region Methods
+
+        public void SetDimensions(int dimensions)
         {
-            var edge = port.ConnectTo(tggPort.port);
-            _graphView.AddElement(edge);
-            return edge;
+            portType = PortTypes.ElementAt(dimensions - 1);
+            portName = _defaultName != null ? $"{_defaultName}({dimensions})" : "";
+            ConnectedTggPorts.OfType<InputPort>().ToList().ForEach(inputPort => inputPort.ParentTggNode.Update());
         }
 
         public void Disconnect()
         {
-            List<Port> ports = new();
-
-            foreach (var edge in port.connections)
-            {
-                ports.Add(edge.input);
-                ports.Add(edge.output);
-                _graphView.RemoveElement(edge);
-            }
-
-            ports.ForEach(p => p.DisconnectAll());
+            ConnectedTggEdges.ForEach(tggEdge => tggEdge.Destroy());
         }
 
-        public void AddDefaultValue()
+        public List<TggPort> ConnectedTggPorts =>
+            ConnectedTggEdges
+                .Select(tggEdge => tggEdge.PortOfType(OppositePortDirection)).ToList();
+
+        protected List<TggPort> AllConnectedPorts =>
+            AllConnectedEdges
+                .Select(tggEdge => tggEdge.PortOfType(OppositePortDirection)).ToList();
+
+        public List<TggEdge> ConnectedTggEdges =>
+            GraphView.TggEdges
+                .Where(tggEdge => !tggEdge.IsDvnEdge && tggEdge.TggPorts.Contains(this))
+                .ToList();
+
+        public List<TggEdge> AllConnectedEdges =>
+            GraphView.TggEdges
+                .Where(tggEdge => tggEdge.TggPorts.Contains(this))
+                .ToList();
+
+        private Type OppositePortDirection => this is OutputPort ? typeof(InputPort) : typeof(OutputPort);
+
+        public int Dimensions => DimensionsFromType(portType);
+
+        public Vector2 Position => GraphView.contentViewContainer.WorldToLocal(GetGlobalCenter());
+
+        public static int GetLowestDimension(List<TggPort> tggPorts)
         {
-            _defaultValueNode = (DefaultValueNode)TggNode.Create(_graphView, typeof(DefaultValueNode));
-            ParentTggNode.Add(_defaultValueNode);
-            var edge = ConnectTo(_defaultValueNode.outputPort);
-            edge.capabilities = 0;
-
-            EditorApplication.update += RepositionDefaultValue;
+            return tggPorts == null || tggPorts.Count == 0
+                ? 1
+                : tggPorts.Select(tggPort => DimensionsFromType(tggPort.portType)).Prepend(4).Min();
         }
 
-        private void RepositionDefaultValue()
+        public static Type TypeFromDimensions(int dimensions)
         {
-            EditorApplication.update -= RepositionDefaultValue;
-
-            var offsetX = -15;
-
-            var newPos = Position - ParentTggNode.Position;
-            var defaultValueSize = _defaultValueNode.GetPosition().size;
-            var offset = new Vector2(defaultValueSize.x, defaultValueSize.y / 2);
-            offset.x -= offsetX;
-            newPos -= offset;
-
-            _defaultValueNode.SetPosition(new Rect(newPos, Vector2.zero));
+            return PortTypes.ElementAt(dimensions - 1);
         }
 
-        public TggPort ConnectedTggPort
+        private static int DimensionsFromType(Type type)
         {
-            get
-            {
-                var tggPorts = _graphView.TggPorts;
-
-                foreach (var tggEdge in _graphView.GetAllTggEdgeDto())
-                {
-                    if (tggEdge.inputPortId == id)
-                        foreach (var tggPort in tggPorts)
-                            if (tggPort.id == tggEdge.outputPortId)
-                                return tggPort;
-
-                    if (tggEdge.outputPortId == id)
-                        foreach (var tggPort in tggPorts)
-                            if (tggPort.id == tggEdge.inputPortId)
-                                return tggPort;
-                }
-
-                return null;
-            }
+            return PortTypes.IndexOf(type) + 1;
         }
 
-        private TggNode ParentTggNode
+        private static readonly List<Type> PortTypes = new()
         {
-            get
-            {
-                foreach (var tggNode in _graphView.TggNodes)
-                    if (tggNode.TggPorts.Contains(this))
-                        return tggNode;
+            typeof(float), typeof(Vector2), typeof(Vector3), typeof(Vector4)
+        };
 
-                return null;
-            }
-        }
-
-        public TggNode ConnectedTggNode => ConnectedTggPort?.ParentTggNode;
-
-        public TgtNode ConnectedTgtNode => ConnectedTggNode?.ToTgtNode();
+        #endregion
     }
 }

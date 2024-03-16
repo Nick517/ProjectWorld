@@ -12,7 +12,7 @@ namespace Editor.TerrainGenerationGraph
     {
         #region Fields
 
-        private TerrainGenGraphView _graphView;
+        private TerrainGenerationGraphView _graphView;
 
         #endregion
 
@@ -23,25 +23,28 @@ namespace Editor.TerrainGenerationGraph
         {
             var tgGraph = EditorUtility.InstanceIDToObject(instanceID) as TgGraph;
 
+            // Does not do anything if the clicked object is not a TerrainGenerationGraph
             if (tgGraph == null) return false;
 
             var windows = Resources.FindObjectsOfTypeAll<TggEditorWindow>();
             var name = tgGraph.name;
 
+            // If an editor window with a reference to the TerrainGenerationGraph is already open, focuses on that window
             foreach (var window in windows)
-                if (window._graphView.tgGraph == tgGraph)
+                if (window._graphView.TgGraph == tgGraph)
                 {
                     window.Focus();
 
                     return true;
                 }
 
+            // Creates a new editor window with the clicked TerrainGenerationGraph
             var newWindow = CreateWindow<TggEditorWindow>(name, typeof(SceneView));
 
+            // If the opened TerrainGenerationGraph does not have any saved data, add default data
             if (string.IsNullOrEmpty(tgGraph.serializedGraphData)) InitializeTgGraph(ref tgGraph);
 
-            newWindow._graphView.tgGraph = tgGraph;
-
+            newWindow._graphView.TgGraph = tgGraph;
             newWindow.Load();
 
             return true;
@@ -49,10 +52,9 @@ namespace Editor.TerrainGenerationGraph
 
         private static void InitializeTgGraph(ref TgGraph tgGraph)
         {
-            var tgGraphView = new TerrainGenGraphView { tgGraph = tgGraph };
+            var tgGraphView = new TerrainGenerationGraphView { TgGraph = tgGraph };
 
-            tgGraph.serializedTreeData = tgGraphView.SerializeTree();
-            tgGraph.serializedGraphData = tgGraphView.SerializeGraph();
+            tgGraphView.SerializeToTgGraph();
         }
 
         private void OnEnable()
@@ -69,7 +71,7 @@ namespace Editor.TerrainGenerationGraph
 
         private void AddGraphView()
         {
-            _graphView = new TerrainGenGraphView();
+            _graphView = new TerrainGenerationGraphView();
 
             _graphView.StretchToParentSize();
             rootVisualElement.Add(_graphView);
@@ -77,7 +79,7 @@ namespace Editor.TerrainGenerationGraph
 
         private void AddStyles()
         {
-            var styleSheet = (StyleSheet)EditorGUIUtility.Load("TGGraph/TgGraphVariables.uss");
+            var styleSheet = (StyleSheet)EditorGUIUtility.Load("TerrainGenerationGraph/TgGraphVariables.uss");
             rootVisualElement.styleSheets.Add(styleSheet);
         }
 
@@ -99,9 +101,9 @@ namespace Editor.TerrainGenerationGraph
 
         private void Load()
         {
-            var tgGraphJson = _graphView.tgGraph.serializedGraphData;
+            var tgGraphJson = _graphView.TgGraph.serializedGraphData;
             var tgGraphViewDto =
-                JsonConvert.DeserializeObject<TerrainGenGraphView.Dto>(tgGraphJson, JsonSettings.Formatted);
+                JsonConvert.DeserializeObject<TerrainGenerationGraphView.Dto>(tgGraphJson, JsonSettings.Formatted);
             tgGraphViewDto.Deserialize(_graphView);
         }
 

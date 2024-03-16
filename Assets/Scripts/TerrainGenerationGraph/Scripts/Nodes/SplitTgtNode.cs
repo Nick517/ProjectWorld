@@ -4,14 +4,13 @@ using UnityEngine;
 namespace TerrainGenerationGraph.Scripts.Nodes
 {
     [Serializable]
-    public class AddTgtNode : TgtNode
+    public class SplitTgtNode : TgtNode
     {
-        public TgtNode nextNodeA;
-        public TgtNode nextNodeB;
+        public TgtNode nextNode;
 
         public override Vector4 Traverse()
         {
-            return nextNodeA.Traverse() + nextNodeB.Traverse();
+            return nextNode.Traverse();
         }
     }
 }

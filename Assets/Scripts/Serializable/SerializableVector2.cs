@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Editor.TerrainGenerationGraph
+namespace Serializable
 {
     [Serializable]
     public class SerializableVector2

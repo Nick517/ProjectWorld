@@ -7,9 +7,7 @@ namespace Editor.TerrainGenerationGraph
     {
         public static Button CreateButton(string text, Action onClick = null)
         {
-            Button button = new(onClick) { text = text };
-
-            return button;
+            return new Button(onClick) { text = text };
         }
 
         public static string NewID => Guid.NewGuid().ToString();

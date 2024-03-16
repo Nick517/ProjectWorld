@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace TerrainGenerationGraph.Scripts.Nodes
 {
@@ -7,7 +8,7 @@ namespace TerrainGenerationGraph.Scripts.Nodes
     {
         public TgtNode nextNode;
 
-        public override float Traverse()
+        public override Vector4 Traverse()
         {
             return nextNode.Traverse();
         }

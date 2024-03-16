@@ -1,18 +1,15 @@
 using System;
-using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using TerrainGenerationGraph.Scripts.Nodes;
 using UnityEditor.Experimental.GraphView;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
-    public class SampleNode : TggNode
+    public class SampleNode : TggNode, ITggNodeSerializable
     {
         #region Fields
 
-        private TggPort _inputPort;
-
-        public override List<TggPort> TggPorts => new() { _inputPort };
+        private InputPort _inputPort;
 
         #endregion
 
@@ -22,16 +19,20 @@ namespace Editor.TerrainGenerationGraph.Nodes
         {
             title = "Sample";
 
-            _inputPort = AddInputPort("In(1)", typeof(float));
+            _inputPort = AddInputPort();
 
             capabilities &= ~Capabilities.Deletable;
         }
+
+        #endregion
+
+        #region Terrain Generation Tree
 
         public override TgtNode ToTgtNode()
         {
             return new SampleTgtNode
             {
-                nextNode = _inputPort.ConnectedTgtNode
+                nextNode = _inputPort.NextTgtNode
             };
         }
 
@@ -39,7 +40,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Serialization
 
-        public override Dto ToDto()
+        public Dto ToDto()
         {
             return new SampleNodeDto(this);
         }
@@ -47,7 +48,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
         [Serializable]
         public class SampleNodeDto : Dto
         {
-            public string inputPortId;
+            public InputPort.Dto inputPortDto;
 
             public SampleNodeDto()
             {
@@ -55,15 +56,15 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
             public SampleNodeDto(SampleNode sampleNode) : base(sampleNode)
             {
-                inputPortId = sampleNode._inputPort.id;
+                inputPortDto = sampleNode._inputPort.ToDto();
             }
 
-            public override TggNode Deserialize(TerrainGenGraphView graphView)
+            public override TggNode Deserialize(TerrainGenerationGraphView graphView)
             {
                 var sampleNode = (SampleNode)Create(graphView, typeof(SampleNode));
-                sampleNode._inputPort.id = inputPortId;
-                sampleNode.id = id;
-                sampleNode.Position = position.Deserialize();
+
+                DeserializeTo(sampleNode);
+                inputPortDto.DeserializeTo(sampleNode._inputPort);
 
                 return sampleNode;
             }
