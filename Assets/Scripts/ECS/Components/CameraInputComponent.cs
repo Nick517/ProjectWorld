@@ -1,10 +1,10 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace PlayerInput
+namespace ECS.Components
 {
     public struct CameraInputComponent : IComponentData
     {
-        public float2 lookDelta;
+        public float2 LookDelta;
     }
 }

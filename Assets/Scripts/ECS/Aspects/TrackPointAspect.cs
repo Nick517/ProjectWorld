@@ -1,12 +1,13 @@
+using ECS.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace Terrain
+namespace ECS.Aspects
 {
     public readonly partial struct TrackPointAspect : IAspect
     {
-        public readonly Entity entity;
+        public readonly Entity Entity;
 
         private readonly RefRO<LocalTransform> _localTransform;
         private readonly RefRW<ChunkPositionComponent> _chunkPosition;
@@ -15,14 +16,14 @@ namespace Terrain
 
         public float3 ChunkPosition
         {
-            get => _chunkPosition.ValueRO.position;
-            set => _chunkPosition.ValueRW.position = value;
+            get => _chunkPosition.ValueRO.Position;
+            private set => _chunkPosition.ValueRW.Position = value;
         }
 
         public void UpdateChunkPosition(EntityCommandBuffer entityCommandBuffer, float3 newChunkPosition)
         {
             ChunkPosition = newChunkPosition;
-            entityCommandBuffer.AddComponent<LoadChunksPointTagComponent>(entity);
+            entityCommandBuffer.AddComponent<LoadChunksPointTagComponent>(Entity);
         }
     }
 }

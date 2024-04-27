@@ -1,9 +1,9 @@
 using Unity.Entities;
 
-namespace Terrain
+namespace ECS.Components
 {
     public struct ChunkScaleComponent : IComponentData
     {
-        public float chunkScale;
+        public float ChunkScale;
     }
 }

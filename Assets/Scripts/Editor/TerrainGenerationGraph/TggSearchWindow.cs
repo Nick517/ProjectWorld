@@ -10,13 +10,13 @@ namespace Editor.TerrainGenerationGraph
     {
         #region Fields
 
-        private TerrainGenerationGraphView _graphView;
+        private TerrainGenGraphView _graphView;
 
         #endregion
 
         #region Methods
 
-        public void Initialize(TerrainGenerationGraphView graphView)
+        public void Initialize(TerrainGenGraphView graphView)
         {
             _graphView = graphView;
         }
@@ -54,13 +54,29 @@ namespace Editor.TerrainGenerationGraph
                     level = 3,
                     userData = typeof(Vector4Node)
                 },
+                new SearchTreeEntry(new GUIContent("Perlin 4D"))
+                {
+                    level = 3,
+                    userData = typeof(Perlin4DNode)
+                },
+                new SearchTreeGroupEntry(new GUIContent("World"), 2),
+                new SearchTreeEntry(new GUIContent("Position"))
+                {
+                    level = 3,
+                    userData = typeof(PositionNode)
+                },
                 new SearchTreeGroupEntry(new GUIContent("Math"), 1),
                 new SearchTreeGroupEntry(new GUIContent("Basic"), 2),
                 new SearchTreeEntry(new GUIContent("Add"))
                 {
                     level = 3,
                     userData = typeof(AddNode)
-                }
+                },
+                new SearchTreeEntry(new GUIContent("Multiply"))
+                {
+                level = 3,
+                userData = typeof(MultiplyNode)
+            }
             };
 
             return entries;

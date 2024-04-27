@@ -1,39 +1,42 @@
-using PlayerInput;
+using ECS.Aspects;
+using ECS.Components;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace FlyCamera
+namespace ECS.Systems
 {
     [BurstCompile]
     public partial struct FlyCameraMovementSystem : ISystem
     {
         private FlyCameraAspect _flyCameraAspect;
         private FlyCameraInputComponent _flyCameraInput;
-        private float3 velocity;
+        private float3 _velocity;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<FlyCameraSettingsComponent>();
             state.RequireForUpdate<FlyCameraInputComponent>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            _flyCameraAspect = SystemAPI.GetAspect<FlyCameraAspect>(SystemAPI.GetSingletonEntity<FlyCameraSettingsComponent>());
+            _flyCameraAspect =
+                SystemAPI.GetAspect<FlyCameraAspect>(SystemAPI.GetSingletonEntity<FlyCameraSettingsComponent>());
             _flyCameraInput = SystemAPI.GetSingleton<FlyCameraInputComponent>();
-            float deltaTime = SystemAPI.Time.DeltaTime;
+            var deltaTime = SystemAPI.Time.DeltaTime;
 
-            velocity += AccelerationVector;
-            velocity = math.lerp(velocity, float3.zero, _flyCameraAspect.Damping * deltaTime);
-            _flyCameraAspect.Position += _flyCameraAspect.LocalTransform.Right() * velocity.x * deltaTime;
-            _flyCameraAspect.Position += _flyCameraAspect.LocalTransform.Up() * velocity.y * deltaTime;
-            _flyCameraAspect.Position += _flyCameraAspect.LocalTransform.Forward() * velocity.z * deltaTime;
+            _velocity += AccelerationVector;
+            _velocity = math.lerp(_velocity, float3.zero, _flyCameraAspect.Damping * deltaTime);
+            _flyCameraAspect.Position += _flyCameraAspect.LocalTransform.Right() * _velocity.x * deltaTime;
+            _flyCameraAspect.Position += _flyCameraAspect.LocalTransform.Up() * _velocity.y * deltaTime;
+            _flyCameraAspect.Position += _flyCameraAspect.LocalTransform.Forward() * _velocity.z * deltaTime;
         }
 
-        private readonly float3 AccelerationVector => _flyCameraInput.sprint
-                ? _flyCameraInput.movement * _flyCameraAspect.Acceleration * _flyCameraAspect.SprintMultiplier
-                : _flyCameraInput.movement * _flyCameraAspect.Acceleration;
+        private readonly float3 AccelerationVector => _flyCameraInput.Sprint
+            ? _flyCameraInput.Movement * _flyCameraAspect.Acceleration * _flyCameraAspect.SprintMultiplier
+            : _flyCameraInput.Movement * _flyCameraAspect.Acceleration;
     }
 }

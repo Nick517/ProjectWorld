@@ -1,6 +1,8 @@
 using Unity.Entities;
 
-namespace Terrain
+namespace ECS.Components
 {
-    public struct DestroyChunkTagComponent : IComponentData { }
+    public struct DestroyChunkTagComponent : IComponentData
+    {
+    }
 }

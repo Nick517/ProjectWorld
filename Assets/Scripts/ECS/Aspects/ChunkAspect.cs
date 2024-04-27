@@ -1,59 +1,63 @@
 using System;
+using ECS.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
-namespace Terrain
+namespace ECS.Aspects
 {
     public readonly partial struct ChunkAspect : IAspect
     {
-        public readonly Entity entity;
+        public readonly Entity Entity;
 
         private readonly RefRO<LocalTransform> _localTransform;
         private readonly RefRO<ChunkScaleComponent> _chunkScale;
-        public float3 Position => _localTransform.ValueRO.Position;
+        private float3 Position => _localTransform.ValueRO.Position;
 
-        public readonly float ChunkScale => _chunkScale.ValueRO.chunkScale;
+        private float ChunkScale => _chunkScale.ValueRO.ChunkScale;
 
 
-        public struct ChunkData : IEquatable<ChunkData>
+        public struct Data : IEquatable<Data>
         {
-            public float3 position;
-            public float chunkScale;
+            public float3 Position;
+            public readonly float ChunkScale;
 
-            public ChunkData(float3 position, float chunkScale) : this()
+            public Data(float3 position, float chunkScale) : this()
             {
-                this.position = position;
-                this.chunkScale = chunkScale;
+                Position = position;
+                ChunkScale = chunkScale;
             }
 
-            public bool Equals(ChunkData chunkData)
+            public bool Equals(Data data)
             {
-                return position.Equals(chunkData.position) && chunkScale == chunkData.chunkScale;
+                return Position.Equals(data.Position) && Mathf.Approximately(ChunkScale, data.ChunkScale);
             }
 
-            public override readonly int GetHashCode()
+            public readonly override int GetHashCode()
             {
-                int hash = 0;
-                hash += (int)position.x;
-                hash += (int)position.y * 10;
-                hash += (int)position.z * 100;
-                hash += (int)chunkScale * 1000;
+                var hash = 0;
+                hash += (int)Position.x;
+                hash += (int)Position.y * 10;
+                hash += (int)Position.z * 100;
+                hash += (int)ChunkScale * 1000;
 
                 return hash;
             }
         }
 
-        public static ChunkData ChunkAspectToChunkData(ChunkAspect chunkAspect)
+        public static Data ChunkAspectToChunkData(ChunkAspect chunkAspect)
         {
-            return new(chunkAspect.Position, chunkAspect.ChunkScale);
+            return new Data(chunkAspect.Position, chunkAspect.ChunkScale);
         }
 
-        public static void CreateChunk(EntityCommandBuffer entityCommandBuffer, ChunkGenerationSettingsComponent chunkGenerationSettings, ChunkData chunkData)
+        public static void CreateChunk(EntityCommandBuffer entityCommandBuffer,
+            ChunkGenerationSettingsComponent chunkGenerationSettings, Data data)
         {
-            Entity chunkEntity = entityCommandBuffer.Instantiate(chunkGenerationSettings.chunkPrefab);
-            entityCommandBuffer.SetComponent(chunkEntity, LocalTransform.FromPosition(chunkData.position));
-            entityCommandBuffer.AddComponent(chunkEntity, new ChunkScaleComponent() { chunkScale = chunkData.chunkScale });
+            var chunkEntity = entityCommandBuffer.Instantiate(chunkGenerationSettings.ChunkPrefab);
+            entityCommandBuffer.SetComponent(chunkEntity, LocalTransform.FromPosition(data.Position));
+            entityCommandBuffer.AddComponent(chunkEntity,
+                new ChunkScaleComponent { ChunkScale = data.ChunkScale });
             entityCommandBuffer.AddComponent<CreateChunkMeshDataTagComponent>(chunkEntity);
         }
     }

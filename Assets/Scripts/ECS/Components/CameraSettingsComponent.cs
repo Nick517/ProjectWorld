@@ -1,10 +1,10 @@
 using Unity.Entities;
 
-namespace PlayerInput
+namespace ECS.Components
 {
     public struct CameraSettingsComponent : IComponentData
     {
-        public float cameraSensitivity;
-        public float maxVerticalCameraAngle;
+        public float CameraSensitivity;
+        public float MaxVerticalCameraAngle;
     }
 }

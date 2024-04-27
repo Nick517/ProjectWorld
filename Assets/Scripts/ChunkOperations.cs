@@ -1,41 +1,42 @@
+using ECS.Aspects;
+using ECS.Components;
 using Unity.Mathematics;
 
-namespace Terrain
+public static class ChunkOperations
 {
-    public static class ChunkOperations
+    public static float GetCubeSize(ChunkGenerationSettingsComponent chunkGenerationSettings, float chunkScale)
     {
-        public static float GetCubeSize(ChunkGenerationSettingsComponent chunkGenerationSettings, float chunkScale)
-        {
-            return math.pow(2, chunkScale) * chunkGenerationSettings.baseCubeSize;
-        }
+        return math.pow(2, chunkScale) * chunkGenerationSettings.BaseCubeSize;
+    }
 
-        public static float GetChunkSize(ChunkGenerationSettingsComponent chunkGenerationSettings, float chunkScale)
-        {
-            return GetCubeSize(chunkGenerationSettings, chunkScale) * chunkGenerationSettings.cubeCount;
-        }
+    public static float GetChunkSize(ChunkGenerationSettingsComponent chunkGenerationSettings, float chunkScale)
+    {
+        return GetCubeSize(chunkGenerationSettings, chunkScale) * chunkGenerationSettings.CubeCount;
+    }
 
-        public static float3 GetClosestChunkPosition(ChunkGenerationSettingsComponent chunkGenerationSettings, ChunkAspect.ChunkData chunkData)
-        {
-            float chunkSize = GetChunkSize(chunkGenerationSettings, chunkData.chunkScale);
-            float3 position = chunkData.position;
+    public static float3 GetClosestChunkPosition(ChunkGenerationSettingsComponent chunkGenerationSettings,
+        ChunkAspect.Data data)
+    {
+        var chunkSize = GetChunkSize(chunkGenerationSettings, data.ChunkScale);
+        var position = data.Position;
 
-            float x = math.floor(position.x / chunkSize);
-            float y = math.floor(position.y / chunkSize);
-            float z = math.floor(position.z / chunkSize);
+        var x = math.floor(position.x / chunkSize);
+        var y = math.floor(position.y / chunkSize);
+        var z = math.floor(position.z / chunkSize);
 
-            float3 chunkPosition = new(x, y, z);
+        var chunkPosition = new float3(x, y, z);
 
-            return chunkPosition * chunkSize;
-        }
+        return chunkPosition * chunkSize;
+    }
 
-        public static float3 GetClosestChunkCenter(ChunkGenerationSettingsComponent chunkGenerationSettings, ChunkAspect.ChunkData chunkData)
-        {
-            float chunkSize = GetChunkSize(chunkGenerationSettings, chunkData.chunkScale);
-            float3 chunkSize3D = new(chunkSize, chunkSize, chunkSize);
+    public static float3 GetClosestChunkCenter(ChunkGenerationSettingsComponent chunkGenerationSettings,
+        ChunkAspect.Data data)
+    {
+        var chunkSize = GetChunkSize(chunkGenerationSettings, data.ChunkScale);
+        var chunkSize3D = new float3(chunkSize, chunkSize, chunkSize);
 
-            float3 chunkCenter = chunkData.position + (chunkSize3D / 2);
+        var chunkCenter = data.Position + chunkSize3D / 2;
 
-            return chunkCenter;
-        }
+        return chunkCenter;
     }
 }

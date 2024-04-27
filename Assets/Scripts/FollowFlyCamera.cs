@@ -1,4 +1,5 @@
 using System.Linq;
+using ECS.Components;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace FlyCamera
 
             foreach (Entity entity in entities.Where(entity => _entityManager.HasComponent<FlyCameraSettingsComponent>(entity)))
             {
-                FlyCameraAspect flyCameraAspect = _entityManager.GetAspect<FlyCameraAspect>(entity);
+                ECS.Aspects.FlyCameraAspect flyCameraAspect = _entityManager.GetAspect<ECS.Aspects.FlyCameraAspect>(entity);
                 gameObject.transform.SetPositionAndRotation(flyCameraAspect.LocalTransform.Position, flyCameraAspect.LocalTransform.Rotation);
                 break;
             }

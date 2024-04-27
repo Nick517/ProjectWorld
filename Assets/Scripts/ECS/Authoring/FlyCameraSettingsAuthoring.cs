@@ -1,8 +1,8 @@
-using PlayerInput;
+using ECS.Components;
 using Unity.Entities;
 using UnityEngine;
 
-namespace FlyCamera
+namespace ECS.Authoring
 {
     [AddComponentMenu("Custom Authoring/Fly Camera Authoring")]
     public class FlyCameraSettingsAuthoring : MonoBehaviour
@@ -16,13 +16,13 @@ namespace FlyCamera
     {
         public override void Bake(FlyCameraSettingsAuthoring authoring)
         {
-            Entity entity = GetEntity(TransformUsageFlags.Dynamic);
+            var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent<FirstPersonCameraTagComponent>(entity);
-            AddComponent<FlyCameraSettingsComponent>(entity, new()
+            AddComponent(entity, new FlyCameraSettingsComponent
             {
-                acceleration = authoring.acceleration,
-                sprintMultiplier = authoring.sprintMultiplier,
-                damping = authoring.damping
+                Acceleration = authoring.acceleration,
+                SprintMultiplier = authoring.sprintMultiplier,
+                Damping = authoring.damping
             });
         }
     }

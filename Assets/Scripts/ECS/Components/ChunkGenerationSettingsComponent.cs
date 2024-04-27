@@ -1,16 +1,16 @@
 using Unity.Entities;
 
-namespace Terrain
+namespace ECS.Components
 {
     public struct ChunkGenerationSettingsComponent : IComponentData
     {
-        public Entity chunkPrefab;
-        public float baseCubeSize;
-        public int cubeCount;
-        public float mapSurface;
-        public int maxChunkScale;
-        public int megaChunks;
+        public Entity ChunkPrefab;
+        public float BaseCubeSize;
+        public int CubeCount;
+        public float MapSurface;
+        public int MaxChunkScale;
+        public int MegaChunks;
         public float LOD;
-        public float reloadScale;
+        public float ReloadScale;
     }
 }

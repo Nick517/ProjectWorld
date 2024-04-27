@@ -12,7 +12,7 @@ namespace Editor.TerrainGenerationGraph
     {
         #region Fields
 
-        private TerrainGenerationGraphView _graphView;
+        private TerrainGenGraphView _graphView;
 
         #endregion
 
@@ -52,7 +52,7 @@ namespace Editor.TerrainGenerationGraph
 
         private static void InitializeTgGraph(ref TgGraph tgGraph)
         {
-            var tgGraphView = new TerrainGenerationGraphView { TgGraph = tgGraph };
+            var tgGraphView = new TerrainGenGraphView { TgGraph = tgGraph };
 
             tgGraphView.SerializeToTgGraph();
         }
@@ -71,7 +71,7 @@ namespace Editor.TerrainGenerationGraph
 
         private void AddGraphView()
         {
-            _graphView = new TerrainGenerationGraphView();
+            _graphView = new TerrainGenGraphView();
 
             _graphView.StretchToParentSize();
             rootVisualElement.Add(_graphView);
@@ -103,7 +103,7 @@ namespace Editor.TerrainGenerationGraph
         {
             var tgGraphJson = _graphView.TgGraph.serializedGraphData;
             var tgGraphViewDto =
-                JsonConvert.DeserializeObject<TerrainGenerationGraphView.Dto>(tgGraphJson, JsonSettings.Formatted);
+                JsonConvert.DeserializeObject<TerrainGenGraphView.Dto>(tgGraphJson, JsonSettings.Formatted);
             tgGraphViewDto.Deserialize(_graphView);
         }
 

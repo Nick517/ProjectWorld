@@ -1,6 +1,7 @@
 using System;
+using ECS.Components;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts.Nodes;
+using TerrainGenerationGraph.Scripts;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -31,14 +32,22 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Genereration Tree
 
-        public override TgtNode ToTgtNode()
+        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
         {
-            return new Vector3TgtNode
-            {
-                nextNodeX = _inputPortX.NextTgtNode,
-                nextNodeY = _inputPortX.NextTgtNode,
-                nextNodeZ = _inputPortZ.NextTgtNode
-            };
+            var dto = new TgtNodeDto(TgGraphData.NodeType.Float3);
+
+            tgTreeDto.nodes.Add(dto);
+
+            dto.nextIndexes.x = tgTreeDto.nodes.Count;
+            tgTreeDto = _inputPortX.GetNextTgtNodeDto(tgTreeDto);
+
+            dto.nextIndexes.y = tgTreeDto.nodes.Count;
+            tgTreeDto = _inputPortY.GetNextTgtNodeDto(tgTreeDto);
+
+            dto.nextIndexes.z = tgTreeDto.nodes.Count;
+            tgTreeDto = _inputPortZ.GetNextTgtNodeDto(tgTreeDto);
+
+            return tgTreeDto;
         }
 
         #endregion
@@ -70,7 +79,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                 outputPortDto = vector3Node._outputPort.ToDto();
             }
 
-            public override TggNode Deserialize(TerrainGenerationGraphView graphView)
+            public override TggNode Deserialize(TerrainGenGraphView graphView)
             {
                 var vector3Node = (Vector3Node)Create(graphView, typeof(Vector3Node));
 

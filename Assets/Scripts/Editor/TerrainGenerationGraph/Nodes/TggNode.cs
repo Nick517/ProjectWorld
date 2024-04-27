@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using Serializable;
-using TerrainGenerationGraph.Scripts.Nodes;
+using TerrainGenerationGraph.Scripts;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,18 +14,18 @@ namespace Editor.TerrainGenerationGraph.Nodes
     {
         #region Fields
 
-        protected TerrainGenerationGraphView GraphView;
+        protected TerrainGenGraphView GraphView;
         private readonly List<TggPort> _tggPorts = new();
-        public string ID;
+        private string _id;
 
         #endregion
 
         #region Methods
 
-        public static TggNode Create(TerrainGenerationGraphView graphView, Type nodeType)
+        public static TggNode Create(TerrainGenGraphView graphView, Type nodeType)
         {
             var node = (TggNode)Activator.CreateInstance(nodeType);
-            node.ID = GraphUtil.NewID;
+            node._id = GraphUtil.NewID;
             node.GraphView = graphView;
             node.Initialize();
 
@@ -116,7 +116,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public abstract TgtNode ToTgtNode();
+        public abstract TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto);
 
         #endregion
 
@@ -134,15 +134,15 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
             protected Dto(TggNode tggNode)
             {
-                id = tggNode.ID;
+                id = tggNode._id;
                 position = new SerializableVector2(tggNode.Position);
             }
 
-            public abstract TggNode Deserialize(TerrainGenerationGraphView graphView);
+            public abstract TggNode Deserialize(TerrainGenGraphView graphView);
 
             public void DeserializeTo(TggNode tggNode)
             {
-                tggNode.ID = id;
+                tggNode._id = id;
                 tggNode.Position = position.Deserialize();
             }
         }

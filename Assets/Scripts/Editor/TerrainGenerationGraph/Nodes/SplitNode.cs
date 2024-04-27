@@ -1,6 +1,6 @@
 using System;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts.Nodes;
+using TerrainGenerationGraph.Scripts;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -33,12 +33,9 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Genereration Tree
 
-        public override TgtNode ToTgtNode()
+        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
         {
-            return new SplitTgtNode
-            {
-                nextNode = _inputPort.NextTgtNode
-            };
+            return _inputPort.GetNextTgtNodeDto(tgTreeDto);
         }
 
         #endregion
@@ -72,7 +69,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                 outputPortWDto = splitNode._outputPortW.ToDto();
             }
 
-            public override TggNode Deserialize(TerrainGenerationGraphView graphView)
+            public override TggNode Deserialize(TerrainGenGraphView graphView)
             {
                 var splitNode = (SplitNode)Create(graphView, typeof(SplitNode));
 

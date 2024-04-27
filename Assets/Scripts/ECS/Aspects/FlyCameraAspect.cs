@@ -1,13 +1,12 @@
+using ECS.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace FlyCamera
+namespace ECS.Aspects
 {
     public readonly partial struct FlyCameraAspect : IAspect
     {
-        public readonly Entity entity;
-
         private readonly RefRW<LocalTransform> _localTransform;
         private readonly RefRO<FlyCameraSettingsComponent> _flyCameraSettings;
 
@@ -19,10 +18,10 @@ namespace FlyCamera
             set => _localTransform.ValueRW.Position = value;
         }
 
-        public float Acceleration => _flyCameraSettings.ValueRO.acceleration;
+        public float Acceleration => _flyCameraSettings.ValueRO.Acceleration;
 
-        public float SprintMultiplier => _flyCameraSettings.ValueRO.sprintMultiplier;
+        public float SprintMultiplier => _flyCameraSettings.ValueRO.SprintMultiplier;
 
-        public float Damping => _flyCameraSettings.ValueRO.damping;
+        public float Damping => _flyCameraSettings.ValueRO.Damping;
     }
 }

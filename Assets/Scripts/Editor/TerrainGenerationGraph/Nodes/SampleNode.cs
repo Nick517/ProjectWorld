@@ -1,6 +1,6 @@
 using System;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts.Nodes;
+using TerrainGenerationGraph.Scripts;
 using UnityEditor.Experimental.GraphView;
 
 namespace Editor.TerrainGenerationGraph.Nodes
@@ -28,12 +28,9 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public override TgtNode ToTgtNode()
+        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
         {
-            return new SampleTgtNode
-            {
-                nextNode = _inputPort.NextTgtNode
-            };
+            return _inputPort.GetNextTgtNodeDto(tgTreeDto);
         }
 
         #endregion
@@ -59,7 +56,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                 inputPortDto = sampleNode._inputPort.ToDto();
             }
 
-            public override TggNode Deserialize(TerrainGenerationGraphView graphView)
+            public override TggNode Deserialize(TerrainGenGraphView graphView)
             {
                 var sampleNode = (SampleNode)Create(graphView, typeof(SampleNode));
 

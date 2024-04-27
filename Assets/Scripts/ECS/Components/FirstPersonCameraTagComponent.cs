@@ -1,6 +1,8 @@
 using Unity.Entities;
 
-namespace PlayerInput
+namespace ECS.Components
 {
-    public struct FirstPersonCameraTagComponent : IComponentData { }
+    public struct FirstPersonCameraTagComponent : IComponentData
+    {
+    }
 }

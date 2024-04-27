@@ -7,7 +7,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
     {
         #region Constructors
 
-        public OutputPort(TerrainGenerationGraphView graphView, TggNode parentTggNode, string defaultName, Type type) :
+        public OutputPort(TerrainGenGraphView graphView, TggNode parentTggNode, string defaultName, Type type) :
             base(graphView, parentTggNode, defaultName, Direction.Output, Capacity.Multi, type)
         {
         }

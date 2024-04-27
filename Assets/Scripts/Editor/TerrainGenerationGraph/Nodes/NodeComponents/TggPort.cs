@@ -11,7 +11,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
     {
         #region Fields
 
-        protected readonly TerrainGenerationGraphView GraphView;
+        protected readonly TerrainGenGraphView GraphView;
 
         public readonly TggNode ParentTggNode;
         public string ID;
@@ -21,7 +21,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Constructors
 
-        protected TggPort(TerrainGenerationGraphView graphView, TggNode parentTggNode, string defaultName,
+        protected TggPort(TerrainGenGraphView graphView, TggNode parentTggNode, string defaultName,
             Direction direction, Capacity capacity, Type type)
             : base(Orientation.Horizontal, direction, capacity, type)
         {

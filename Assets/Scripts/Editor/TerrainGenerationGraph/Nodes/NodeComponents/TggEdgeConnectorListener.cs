@@ -9,7 +9,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
     {
         #region Fields
 
-        private readonly TerrainGenerationGraphView _graphView;
+        private readonly TerrainGenGraphView _graphView;
         private readonly GraphViewChange _graphViewChange;
         private readonly List<Edge> _edgesToCreate;
         private readonly List<Edge> _edgesToDelete;
@@ -18,7 +18,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Constructors
 
-        public TggEdgeConnectorListener(TerrainGenerationGraphView graphView)
+        public TggEdgeConnectorListener(TerrainGenGraphView graphView)
         {
             _graphView = graphView;
             _edgesToCreate = new List<Edge>();

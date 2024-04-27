@@ -1,11 +1,11 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace PlayerInput
+namespace ECS.Components
 {
     public struct FlyCameraInputComponent : IComponentData
     {
-        public float3 movement;
-        public bool sprint;
+        public float3 Movement;
+        public bool Sprint;
     }
 }

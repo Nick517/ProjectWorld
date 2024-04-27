@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using Serializable;
-using TerrainGenerationGraph.Scripts.Nodes;
+using TerrainGenerationGraph.Scripts;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -18,7 +18,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Constructors
 
-        public InputPort(TerrainGenerationGraphView graphView, TggNode parentTggNode, string defaultName, Type type) :
+        public InputPort(TerrainGenGraphView graphView, TggNode parentTggNode, string defaultName, Type type) :
             base(graphView, parentTggNode, defaultName, Direction.Input, Capacity.Single, type)
         {
         }
@@ -77,7 +77,10 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Terrain Generation Tree
 
-        public TgtNode NextTgtNode => AllConnectedPorts.First().ParentTggNode.ToTgtNode();
+        public TgGraph.TgTreeDto GetNextTgtNodeDto(TgGraph.TgTreeDto tgTreeDto)
+        {
+            return AllConnectedPorts.First().ParentTggNode.ToTgtNode(tgTreeDto);
+        }
 
         #endregion
 

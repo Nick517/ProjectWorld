@@ -1,17 +1,18 @@
+using ECS.Aspects;
+using ECS.Components;
+using ECS.Jobs;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Transforms;
 
-namespace Terrain
+namespace ECS.Systems
 {
     [UpdateAfter(typeof(ChunkLoaderSystem))]
     [BurstCompile]
     public partial struct CreateChunkMeshDataSystem : ISystem
     {
         private EntityQuery _chunkQuery;
-        private BufferLookup<TerrainGenerationLayerBufferElement> _terrainGenerationLayerBufferLookup;
         private EntityTypeHandle _entityTypeHandle;
         private ComponentTypeHandle<LocalTransform> _localTransformTypeHandle;
         private ComponentTypeHandle<ChunkScaleComponent> _chunkScaleComponentTypeHandle;
@@ -19,14 +20,14 @@ namespace Terrain
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<TgGraphComponent>();
+            state.RequireForUpdate<ChunkGenerationSettingsComponent>();
             state.RequireForUpdate<CreateChunkMeshDataTagComponent>();
 
             _chunkQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAspect<ChunkAspect>()
                 .WithAll<CreateChunkMeshDataTagComponent>()
                 .Build(ref state);
-
-            _terrainGenerationLayerBufferLookup = state.GetBufferLookup<TerrainGenerationLayerBufferElement>();
 
             _entityTypeHandle = state.GetEntityTypeHandle();
             _localTransformTypeHandle = state.GetComponentTypeHandle<LocalTransform>();
@@ -36,25 +37,22 @@ namespace Terrain
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            _terrainGenerationLayerBufferLookup.Update(ref state);
             _entityTypeHandle.Update(ref state);
             _localTransformTypeHandle.Update(ref state);
             _chunkScaleComponentTypeHandle.Update(ref state);
 
-            EntityCommandBuffer entityCommandBuffer = new(Allocator.TempJob);
-            ChunkGenerationSettingsComponent chunkGenerationSettings = SystemAPI.GetSingleton<ChunkGenerationSettingsComponent>();
-            WorldDataComponent worldData = SystemAPI.GetSingleton<WorldDataComponent>();
-            DynamicBuffer<TerrainGenerationLayerBufferElement> terrainGenerationLayers = _terrainGenerationLayerBufferLookup[SystemAPI.GetSingletonEntity<ChunkGenerationSettingsComponent>()];
+            var entityCommandBuffer = new EntityCommandBuffer(Allocator.TempJob);
+            var chunkGenerationSettings = SystemAPI.GetSingleton<ChunkGenerationSettingsComponent>();
+            var tgGraph = SystemAPI.GetSingleton<TgGraphComponent>();
 
-            JobHandle createMeshDataJobHandle = new CreateMeshDataJob
+            var createMeshDataJobHandle = new CreateMeshDataJob
             {
-                entityCommandBuffer = entityCommandBuffer.AsParallelWriter(),
-                entityTypeHandle = _entityTypeHandle,
-                localTransformTypeHandle = _localTransformTypeHandle,
-                chunkScaleComponentTypeHandle = _chunkScaleComponentTypeHandle,
-                chunkGenerationSettings = chunkGenerationSettings,
-                worldData = worldData,
-                terrainGenerationLayers = terrainGenerationLayers.ToNativeArray(Allocator.TempJob)
+                EntityCommandBuffer = entityCommandBuffer.AsParallelWriter(),
+                EntityTypeHandle = _entityTypeHandle,
+                LocalTransformTypeHandle = _localTransformTypeHandle,
+                ChunkScaleComponentTypeHandle = _chunkScaleComponentTypeHandle,
+                ChunkGenerationSettings = chunkGenerationSettings,
+                TgGraph = tgGraph
             }.ScheduleParallel(_chunkQuery, state.Dependency);
             createMeshDataJobHandle.Complete();
 

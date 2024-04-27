@@ -1,5 +1,7 @@
+using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
-using TerrainGenerationGraph.Scripts.Nodes;
+using Serializable;
 using UnityEngine;
 
 namespace TerrainGenerationGraph.Scripts
@@ -7,19 +9,19 @@ namespace TerrainGenerationGraph.Scripts
     [CreateAssetMenu(fileName = "New Terrain Generation Graph", menuName = "Terrain Generation Graph", order = 1)]
     public class TgGraph : ScriptableObject
     {
-        [HideInInspector] public string serializedTreeData;
-        [HideInInspector] public string serializedGraphData;
+        public string serializedTreeData;
+        public string serializedGraphData;
 
-        private SampleTgtNode _rootTgtNode;
-
-        public void Initialize()
+        public TgTreeDto DeserializeTree()
         {
-            _rootTgtNode = JsonConvert.DeserializeObject<SampleTgtNode>(serializedTreeData, JsonSettings.Formatted);
+            return JsonConvert.DeserializeObject<TgTreeDto>(serializedTreeData, JsonSettings.Formatted);
         }
 
-        public Vector4 GetSample()
+        [Serializable]
+        public class TgTreeDto
         {
-            return _rootTgtNode.Traverse();
+            public List<TgtNodeDto> nodes = new();
+            public List<SerializableFloat4> values = new();
         }
     }
 }

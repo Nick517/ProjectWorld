@@ -1,9 +1,11 @@
+using ECS.Aspects;
+using ECS.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Terrain
+namespace ECS.Systems
 {
     [UpdateAfter(typeof(TrackPointSystem))]
     [BurstCompile]
@@ -15,120 +17,107 @@ namespace Terrain
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<TrackPointTagComponent>();
+            state.RequireForUpdate<ChunkGenerationSettingsComponent>();
             state.RequireForUpdate<LoadChunksPointTagComponent>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            _entityCommandBuffer = new(Allocator.Temp);
+            _entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
             _chunkGenerationSettings = SystemAPI.GetSingleton<ChunkGenerationSettingsComponent>();
 
-            // Gather ChunkData of all existing Chunks not marked for destruction
-            NativeHashSet<ChunkAspect.ChunkData> existingChunkData = new(2000, Allocator.Temp);
-            foreach (ChunkAspect chunkAspect in SystemAPI.Query<ChunkAspect>().WithAbsent<DestroyChunkTagComponent>())
-            {
+            // Gather Data of all existing Chunks not marked for destruction
+            var existingChunkData = new NativeHashSet<ChunkAspect.Data>(2000, Allocator.Temp);
+            foreach (var chunkAspect in SystemAPI.Query<ChunkAspect>().WithAbsent<DestroyChunkTagComponent>())
                 _ = existingChunkData.Add(ChunkAspect.ChunkAspectToChunkData(chunkAspect));
-            }
 
-            // Create ChunkData for all Chunks that need to be created around the TrackPoint
-            TrackPointAspect trackPointAspect = SystemAPI.GetAspect<TrackPointAspect>(SystemAPI.GetSingletonEntity<TrackPointTagComponent>());
-            NativeHashSet<ChunkAspect.ChunkData> newChunkData = new(200, Allocator.Temp);
+            // Create Data for all Chunks that need to be created around the TrackPoint
+            var trackPointAspect =
+                SystemAPI.GetAspect<TrackPointAspect>(SystemAPI.GetSingletonEntity<TrackPointTagComponent>());
+            var newChunkData = new NativeHashSet<ChunkAspect.Data> (200, Allocator.Temp);
             newChunkData.UnionWith(CreateNewChunkData(trackPointAspect.ChunkPosition));
-            _entityCommandBuffer.RemoveComponent<LoadChunksPointTagComponent>(trackPointAspect.entity);
+            _entityCommandBuffer.RemoveComponent<LoadChunksPointTagComponent>(trackPointAspect.Entity);
 
-            // Gather ChunkData from existingChunkData that are not in newChunkData
-            NativeHashSet<ChunkAspect.ChunkData> destroyChunkData = new(200, Allocator.Temp);
+            // Gather Data from existingChunkData that are not in newChunkData
+            var destroyChunkData = new NativeHashSet<ChunkAspect.Data>(200, Allocator.Temp);
             destroyChunkData.UnionWith(existingChunkData);
             destroyChunkData.ExceptWith(newChunkData);
 
-            // Gather ChunkData from newChunkData that are not in existingChunkData
-            NativeHashSet<ChunkAspect.ChunkData> createChunkData = new(200, Allocator.Temp);
+            // Gather Data from newChunkData that are not in existingChunkData
+            var createChunkData = new NativeHashSet<ChunkAspect.Data>(200, Allocator.Temp);
             createChunkData.UnionWith(newChunkData);
             createChunkData.ExceptWith(existingChunkData);
 
             // Mark existing Chunks whose data is in destroyChunkData for destruction
-            foreach (ChunkAspect chunkAspect in SystemAPI.Query<ChunkAspect>())
-            {
+            foreach (var chunkAspect in SystemAPI.Query<ChunkAspect>())
                 if (destroyChunkData.Contains(ChunkAspect.ChunkAspectToChunkData(chunkAspect)))
-                {
-                    _entityCommandBuffer.AddComponent<DestroyChunkTagComponent>(chunkAspect.entity);
-                }
-            }
+                    _entityCommandBuffer.AddComponent<DestroyChunkTagComponent>(chunkAspect.Entity);
 
             // Create Chunks from data in createChunkData
-            foreach (ChunkAspect.ChunkData chunkData in createChunkData)
-            {
+            foreach (var chunkData in createChunkData)
                 ChunkAspect.CreateChunk(_entityCommandBuffer, _chunkGenerationSettings, chunkData);
-            }
 
             _entityCommandBuffer.Playback(state.EntityManager);
             _entityCommandBuffer.Dispose();
         }
 
-        private readonly NativeHashSet<ChunkAspect.ChunkData> CreateNewChunkData(float3 origin)
+        private readonly NativeHashSet<ChunkAspect.Data> CreateNewChunkData(float3 origin)
         {
-            int maxChunkScale = _chunkGenerationSettings.maxChunkScale;
-            int megaChunks = _chunkGenerationSettings.megaChunks;
+            var maxChunkScale = _chunkGenerationSettings.MaxChunkScale;
+            var megaChunks = _chunkGenerationSettings.MegaChunks;
 
-            NativeHashSet<ChunkAspect.ChunkData> subChunks = new(10, Allocator.Temp);
+            var subChunks = new NativeHashSet<ChunkAspect.Data>(10, Allocator.Temp);
 
-            float3 pointPosition = ChunkOperations.GetClosestChunkPosition(_chunkGenerationSettings, new(origin, maxChunkScale - 1));
-            float chunkSize = ChunkOperations.GetChunkSize(_chunkGenerationSettings, maxChunkScale);
+            var pointPosition = ChunkOperations.GetClosestChunkPosition(_chunkGenerationSettings,
+                new ChunkAspect.Data(origin, maxChunkScale - 1));
+            var chunkSize = ChunkOperations.GetChunkSize(_chunkGenerationSettings, maxChunkScale);
 
-            for (int x = -megaChunks; x < megaChunks; x++)
+            for (var x = -megaChunks; x < megaChunks; x++)
+            for (var y = -megaChunks; y < megaChunks; y++)
+            for (var z = -megaChunks; z < megaChunks; z++)
             {
-                for (int y = -megaChunks; y < megaChunks; y++)
-                {
-                    for (int z = -megaChunks; z < megaChunks; z++)
-                    {
-                        float3 position = new(x, y, z);
-                        position *= chunkSize;
-                        position += pointPosition;
+                var position = new float3(x, y, z);
+                position *= chunkSize;
+                position += pointPosition;
 
-                        ChunkAspect.ChunkData subChunkData = new(position, maxChunkScale);
-                        subChunks.UnionWith(CreateSubChunkData(subChunkData, origin));
-                    }
-                }
+                var subData = new ChunkAspect.Data(position, maxChunkScale);
+                subChunks.UnionWith(CreateSubChunkData(subData, origin));
             }
 
             return subChunks;
         }
 
-        private readonly NativeHashSet<ChunkAspect.ChunkData> CreateSubChunkData(ChunkAspect.ChunkData chunkData, float3 origin)
+        private readonly NativeHashSet<ChunkAspect.Data> CreateSubChunkData(ChunkAspect.Data data,
+            float3 origin)
         {
-            NativeHashSet<ChunkAspect.ChunkData> subChunks = new(10, Allocator.Temp);
+            var subChunks = new NativeHashSet<ChunkAspect.Data>(10, Allocator.Temp);
 
-            float subChunkScale = chunkData.chunkScale - 1;
-            float subChunkSize = ChunkOperations.GetChunkSize(_chunkGenerationSettings, subChunkScale);
-            float3 originPosition = ChunkOperations.GetClosestChunkPosition(_chunkGenerationSettings, new(origin, subChunkScale));
+            var subChunkScale = data.ChunkScale - 1;
+            var subChunkSize = ChunkOperations.GetChunkSize(_chunkGenerationSettings, subChunkScale);
+            var originPosition = ChunkOperations.GetClosestChunkPosition(_chunkGenerationSettings,
+                new ChunkAspect.Data(origin, subChunkScale));
 
-            for (int x = 0; x < 2; x++)
+            for (var x = 0; x < 2; x++)
+            for (var y = 0; y < 2; y++)
+            for (var z = 0; z < 2; z++)
             {
-                for (int y = 0; y < 2; y++)
-                {
-                    for (int z = 0; z < 2; z++)
-                    {
-                        float3 subChunkPosition = new(x, y, z);
-                        subChunkPosition *= subChunkSize;
-                        subChunkPosition += chunkData.position;
+                var subChunkPosition = new float3(x, y, z);
+                subChunkPosition *= subChunkSize;
+                subChunkPosition += data.Position;
 
-                        ChunkAspect.ChunkData subChunkData = new(subChunkPosition, subChunkScale);
+                var subChunkData = new ChunkAspect.Data(subChunkPosition, subChunkScale);
 
-                        float3 originChunkCenter = ChunkOperations.GetClosestChunkCenter(_chunkGenerationSettings, new(originPosition, subChunkScale));
-                        float3 subChunkCenter = ChunkOperations.GetClosestChunkCenter(_chunkGenerationSettings, subChunkData);
-                        float distance = math.distance(originChunkCenter, subChunkCenter);
+                var originChunkCenter = ChunkOperations.GetClosestChunkCenter(_chunkGenerationSettings,
+                    new ChunkAspect.Data(originPosition, subChunkScale));
+                var subChunkCenter = ChunkOperations.GetClosestChunkCenter(_chunkGenerationSettings, subChunkData);
+                var distance = math.distance(originChunkCenter, subChunkCenter);
 
-                        if (distance < subChunkSize * _chunkGenerationSettings.LOD && subChunkScale > 0)
-                        {
-                            subChunks.UnionWith(CreateSubChunkData(subChunkData, origin));
-                        }
-                        else
-                        {
-                            _ = subChunks.Add(subChunkData);
-                        }
-                    }
-                }
+                if (distance < subChunkSize * _chunkGenerationSettings.LOD && subChunkScale > 0)
+                    subChunks.UnionWith(CreateSubChunkData(subChunkData, origin));
+                else
+                    _ = subChunks.Add(subChunkData);
             }
 
             return subChunks;

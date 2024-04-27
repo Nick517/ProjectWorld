@@ -1,10 +1,10 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace Terrain
+namespace ECS.Components
 {
     public struct ChunkPositionComponent : IComponentData
     {
-        public float3 position;
+        public float3 Position;
     }
 }

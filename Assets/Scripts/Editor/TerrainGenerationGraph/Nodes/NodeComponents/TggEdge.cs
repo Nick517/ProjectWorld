@@ -8,7 +8,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
     {
         #region Fields
 
-        public TerrainGenerationGraphView GraphView;
+        public TerrainGenGraphView GraphView;
 
         public readonly bool IsDvnEdge;
 
@@ -22,7 +22,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Constructors
 
-        public TggEdge(TerrainGenerationGraphView graphView, Edge edge)
+        public TggEdge(TerrainGenGraphView graphView, Edge edge)
         {
             GraphView = graphView;
             output = edge.output;
@@ -32,7 +32,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             InputPort?.Update();
         }
 
-        public TggEdge(TerrainGenerationGraphView graphView, DefaultValueNode defaultValueNode,
+        public TggEdge(TerrainGenGraphView graphView, DefaultValueNode defaultValueNode,
             InputPort parentingInputPort)
         {
             GraphView = graphView;
@@ -43,7 +43,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             graphView.AddElement(this);
         }
 
-        private TggEdge(TerrainGenerationGraphView graphView, OutputPort outputPort, InputPort parentingInputPort,
+        private TggEdge(TerrainGenGraphView graphView, OutputPort outputPort, InputPort parentingInputPort,
             bool isDvnEdge = false)
         {
             GraphView = graphView;
@@ -109,7 +109,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
                 isDvnEdge = tggEdge.IsDvnEdge;
             }
 
-            public virtual void Deserialize(TerrainGenerationGraphView graphView)
+            public virtual void Deserialize(TerrainGenGraphView graphView)
             {
                 var outputPort = graphView.GetTggPort(outputPortId) as OutputPort;
                 var inputPort = graphView.GetTggPort(inputPortId) as InputPort;

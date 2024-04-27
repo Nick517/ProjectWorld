@@ -1,33 +1,30 @@
+using ECS.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace PlayerInput
+namespace ECS.Aspects
 {
     public readonly partial struct InputManagerAspect : IAspect
     {
-        public readonly Entity entity;
-
         private readonly RefRW<FlyCameraInputComponent> _flyCameraInput;
-        private readonly RefRW<CameraInputComponent> _cameraControlInput;
+        private readonly RefRW<CameraInputComponent> _cameraInput;
         private readonly RefRO<CameraSettingsComponent> _cameraSettings;
 
         public float3 Movement
         {
-            get => _flyCameraInput.ValueRO.movement;
-            set => _flyCameraInput.ValueRW.movement = value;
+            set => _flyCameraInput.ValueRW.Movement = value;
         }
 
         public bool Sprint
         {
-            get => _flyCameraInput.ValueRO.sprint;
-            set => _flyCameraInput.ValueRW.sprint = value;
+            set => _flyCameraInput.ValueRW.Sprint = value;
         }
 
         public float2 LookDelta
         {
-            get => _cameraControlInput.ValueRO.lookDelta;
-            set => _cameraControlInput.ValueRW.lookDelta = value;
+            set => _cameraInput.ValueRW.LookDelta = value;
         }
-        public readonly float CameraSensitivity => _cameraSettings.ValueRO.cameraSensitivity;
+
+        public float CameraSensitivity => _cameraSettings.ValueRO.CameraSensitivity;
     }
 }

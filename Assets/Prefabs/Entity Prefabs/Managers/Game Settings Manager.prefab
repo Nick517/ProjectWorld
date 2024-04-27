@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3940441564093856854}
   - component: {fileID: -2392491516850801781}
+  - component: {fileID: 4742380398921452179}
   m_Layer: 0
   m_Name: Game Settings Manager
   m_TagString: Untagged
@@ -48,5 +49,16 @@ MonoBehaviour:
     type: 3}
   chunkGenerationSettings: {fileID: 11400000, guid: 16d5691514192894ba55140b05650dda,
     type: 2}
-  terrainGenerationSettings: {fileID: 11400000, guid: aee3755775953ac4eaff03074cabf20d,
-    type: 2}
+--- !u!114 &4742380398921452179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5812077677126750501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff3b254d1d248c4aff657612ac99710, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tgGraph: {fileID: 0}
