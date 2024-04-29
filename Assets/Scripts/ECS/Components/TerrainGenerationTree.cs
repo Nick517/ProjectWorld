@@ -3,9 +3,9 @@ using Unity.Mathematics;
 
 namespace ECS.Components
 {
-    public struct TgGraphComponent : IComponentData
+    public struct TerrainGenerationTree : IComponentData
     {
-        public BlobAssetReference<TgGraphData> Blob;
+        public BlobAssetReference<TgTreeData> Blob;
 
         public float Traverse(float3 position)
         {
@@ -13,7 +13,7 @@ namespace ECS.Components
         }
     }
 
-    public struct TgGraphData
+    public struct TgTreeData
     {
         public BlobArray<Node> Nodes;
         public BlobArray<float4> Values;
@@ -34,10 +34,9 @@ namespace ECS.Components
             Subtract,
             Multiply,
             Divide,
-            Perlin4D,
+            Perlin3D,
             Position
         }
-
 
         public float TraverseTree(float3 position)
         {
@@ -92,11 +91,17 @@ namespace ECS.Components
                     return Traverse(node.Next.x, position) /
                            Traverse(node.Next.y, position);
 
-                case NodeType.Perlin4D:
-                    return noise.cnoise(1 / position);
+                case NodeType.Perlin3D:
+                    return noise.cnoise(
+                        Traverse(node.Next.x, position) /
+                        Traverse(node.Next.y, position).x);
 
                 case NodeType.Position:
-                    return new float4(position.x, position.y, position.z, 0);
+                    return new float4(
+                        position.x,
+                        position.y,
+                        position.z,
+                        0);
 
                 default:
                     return float4.zero;

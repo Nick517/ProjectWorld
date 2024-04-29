@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace ECS.Components
 {
-    public struct DestroyChunkTagComponent : IComponentData
+    public struct FirstPersonCameraTag : IComponentData
     {
     }
 }

@@ -1,6 +1,6 @@
 using Unity.Mathematics;
 
-public static class MarchingCubesTables
+public static class MarchingCubeTables
 {
     public static int3 Corner(int index)
     {

@@ -7,8 +7,8 @@ namespace ECS.Authoring
     [AddComponentMenu("Custom Authoring/Input Manager Authoring")]
     public class InputManagerAuthoring : MonoBehaviour
     {
-        public float cameraSensitivity = 10.0f;
-        [Range(0.0f, 90.0f)] public float maxVerticalCameraAngle = 89.0f;
+        public float cameraSensitivity = 10;
+        [Range(0, 90)] public float maxVerticalCameraAngle = 89;
     }
 
     public class PlayerInputBaker : Baker<InputManagerAuthoring>
@@ -16,12 +16,12 @@ namespace ECS.Authoring
         public override void Bake(InputManagerAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent<FlyCameraInputComponent>(entity);
-            AddComponent<CameraInputComponent>(entity);
-            AddComponent(entity, new CameraSettingsComponent
+            AddComponent<FlyCameraInput>(entity);
+            AddComponent<CameraInput>(entity);
+            AddComponent(entity, new CameraSettings
             {
-                CameraSensitivity = authoring.cameraSensitivity,
-                MaxVerticalCameraAngle = authoring.maxVerticalCameraAngle
+                Sensitivity = authoring.cameraSensitivity,
+                MaxVerticalAngle = authoring.maxVerticalCameraAngle
             });
         }
     }

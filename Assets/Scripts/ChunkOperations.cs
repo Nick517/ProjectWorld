@@ -4,39 +4,25 @@ using Unity.Mathematics;
 
 public static class ChunkOperations
 {
-    public static float GetCubeSize(ChunkGenerationSettingsComponent chunkGenerationSettings, float chunkScale)
+    public static float3 GetCubeSize(ChunkGenerationSettings settings, float chunkScale)
     {
-        return math.pow(2, chunkScale) * chunkGenerationSettings.BaseCubeSize;
+        return math.pow(2, chunkScale) * settings.BaseCubeSize;
     }
 
-    public static float GetChunkSize(ChunkGenerationSettingsComponent chunkGenerationSettings, float chunkScale)
+    public static float3 GetChunkSize(ChunkGenerationSettings settings, float chunkScale)
     {
-        return GetCubeSize(chunkGenerationSettings, chunkScale) * chunkGenerationSettings.CubeCount;
+        return GetCubeSize(settings, chunkScale) * settings.CubeCount;
     }
 
-    public static float3 GetClosestChunkPosition(ChunkGenerationSettingsComponent chunkGenerationSettings,
-        ChunkAspect.Data data)
+    public static float3 GetClosestChunkPosition(ChunkGenerationSettings settings, ChunkAspect.Data data)
     {
-        var chunkSize = GetChunkSize(chunkGenerationSettings, data.ChunkScale);
-        var position = data.Position;
+        var chunkSize = GetChunkSize(settings, data.ChunkScale);
 
-        var x = math.floor(position.x / chunkSize);
-        var y = math.floor(position.y / chunkSize);
-        var z = math.floor(position.z / chunkSize);
-
-        var chunkPosition = new float3(x, y, z);
-
-        return chunkPosition * chunkSize;
+        return math.floor(data.Position / chunkSize) * chunkSize;
     }
 
-    public static float3 GetClosestChunkCenter(ChunkGenerationSettingsComponent chunkGenerationSettings,
-        ChunkAspect.Data data)
+    public static float3 GetClosestChunkCenter(ChunkGenerationSettings settings, ChunkAspect.Data data)
     {
-        var chunkSize = GetChunkSize(chunkGenerationSettings, data.ChunkScale);
-        var chunkSize3D = new float3(chunkSize, chunkSize, chunkSize);
-
-        var chunkCenter = data.Position + chunkSize3D / 2;
-
-        return chunkCenter;
+        return data.Position + GetChunkSize(settings, data.ChunkScale) / 2;
     }
 }

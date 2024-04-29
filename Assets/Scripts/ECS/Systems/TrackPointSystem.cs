@@ -12,27 +12,27 @@ namespace ECS.Systems
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<ChunkGenerationSettingsComponent>();
-            state.RequireForUpdate<TrackPointTagComponent>();
+            state.RequireForUpdate<ChunkGenerationSettings>();
+            state.RequireForUpdate<TrackPointTag>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
-            var chunkGenerationSettings = SystemAPI.GetSingleton<ChunkGenerationSettingsComponent>();
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            var settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
 
             foreach (var trackPoint in SystemAPI.Query<TrackPointAspect>())
             {
-                var trackPointChunkPosition = ChunkOperations.GetClosestChunkPosition(chunkGenerationSettings,
-                    new ChunkAspect.Data(trackPoint.Position, chunkGenerationSettings.ReloadScale));
+                var chunkPosition = ChunkOperations.GetClosestChunkPosition(settings,
+                    new ChunkAspect.Data(trackPoint.Position, settings.ReloadScale));
 
-                if (!trackPointChunkPosition.Equals(trackPoint.ChunkPosition))
-                    trackPoint.UpdateChunkPosition(entityCommandBuffer, trackPointChunkPosition);
+                if (!chunkPosition.Equals(trackPoint.ChunkPosition))
+                    trackPoint.UpdateChunkPosition(ecb, chunkPosition);
             }
 
-            entityCommandBuffer.Playback(state.EntityManager);
-            entityCommandBuffer.Dispose();
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

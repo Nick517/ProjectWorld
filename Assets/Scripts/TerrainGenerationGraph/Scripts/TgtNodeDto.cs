@@ -7,10 +7,10 @@ namespace TerrainGenerationGraph.Scripts
     [Serializable]
     public class TgtNodeDto
     {
-        public TgGraphData.NodeType nodeType;
+        public TgTreeData.NodeType nodeType;
         public SerializableInt4 nextIndexes = new(-1);
 
-        public TgtNodeDto(TgGraphData.NodeType nodeType)
+        public TgtNodeDto(TgTreeData.NodeType nodeType)
         {
             this.nodeType = nodeType;
         }

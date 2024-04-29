@@ -12,10 +12,10 @@ namespace ECS.Aspects
         public readonly Entity Entity;
 
         private readonly RefRO<LocalTransform> _localTransform;
-        private readonly RefRO<ChunkScaleComponent> _chunkScale;
+        private readonly RefRO<ChunkScale> _chunkScale;
         private float3 Position => _localTransform.ValueRO.Position;
 
-        private float ChunkScale => _chunkScale.ValueRO.ChunkScale;
+        private float Scale => _chunkScale.ValueRO.Scale;
 
 
         public struct Data : IEquatable<Data>
@@ -46,19 +46,17 @@ namespace ECS.Aspects
             }
         }
 
-        public static Data ChunkAspectToChunkData(ChunkAspect chunkAspect)
+        public static Data ChunkAspectToChunkData(ChunkAspect chunk)
         {
-            return new Data(chunkAspect.Position, chunkAspect.ChunkScale);
+            return new Data(chunk.Position, chunk.Scale);
         }
 
-        public static void CreateChunk(EntityCommandBuffer entityCommandBuffer,
-            ChunkGenerationSettingsComponent chunkGenerationSettings, Data data)
+        public static void CreateChunk(EntityCommandBuffer ecb, ChunkGenerationSettings settings, Data data)
         {
-            var chunkEntity = entityCommandBuffer.Instantiate(chunkGenerationSettings.ChunkPrefab);
-            entityCommandBuffer.SetComponent(chunkEntity, LocalTransform.FromPosition(data.Position));
-            entityCommandBuffer.AddComponent(chunkEntity,
-                new ChunkScaleComponent { ChunkScale = data.ChunkScale });
-            entityCommandBuffer.AddComponent<CreateChunkMeshDataTagComponent>(chunkEntity);
+            var chunkEntity = ecb.Instantiate(settings.ChunkPrefab);
+            ecb.SetComponent(chunkEntity, LocalTransform.FromPosition(data.Position));
+            ecb.AddComponent(chunkEntity, new ChunkScale { Scale = data.ChunkScale });
+            ecb.AddComponent<CreateChunkMeshDataTag>(chunkEntity);
         }
     }
 }

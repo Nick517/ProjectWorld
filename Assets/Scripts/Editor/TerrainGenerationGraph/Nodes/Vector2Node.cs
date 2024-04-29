@@ -2,6 +2,7 @@ using System;
 using ECS.Components;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using TerrainGenerationGraph.Scripts;
+using TgGraph = TerrainGenerationGraph.Scripts.TgGraph;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -32,7 +33,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
         {
-            var dto = new TgtNodeDto(TgGraphData.NodeType.Float2);
+            var dto = new TgtNodeDto(TgTreeData.NodeType.Float2);
 
             tgTreeDto.nodes.Add(dto);
 

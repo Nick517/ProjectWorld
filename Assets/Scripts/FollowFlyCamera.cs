@@ -19,7 +19,7 @@ namespace FlyCamera
         {
             NativeArray<Entity> entities = _entityManager.GetAllEntities(Allocator.Temp);
 
-            foreach (Entity entity in entities.Where(entity => _entityManager.HasComponent<FlyCameraSettingsComponent>(entity)))
+            foreach (Entity entity in entities.Where(entity => _entityManager.HasComponent<FlyCameraSettings>(entity)))
             {
                 ECS.Aspects.FlyCameraAspect flyCameraAspect = _entityManager.GetAspect<ECS.Aspects.FlyCameraAspect>(entity);
                 gameObject.transform.SetPositionAndRotation(flyCameraAspect.LocalTransform.Position, flyCameraAspect.LocalTransform.Rotation);

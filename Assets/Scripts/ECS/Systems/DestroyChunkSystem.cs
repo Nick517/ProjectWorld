@@ -13,13 +13,13 @@ namespace ECS.Systems
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var entityCommandBuffer = new EntityCommandBuffer(Allocator.Temp);
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var chunkAspect in SystemAPI.Query<ChunkAspect>().WithAll<DestroyChunkTagComponent>())
-                entityCommandBuffer.DestroyEntity(chunkAspect.Entity);
+            foreach (var chunkAspect in SystemAPI.Query<ChunkAspect>().WithAll<DestroyChunkTag>())
+                ecb.DestroyEntity(chunkAspect.Entity);
 
-            entityCommandBuffer.Playback(state.EntityManager);
-            entityCommandBuffer.Dispose();
+            ecb.Playback(state.EntityManager);
+            ecb.Dispose();
         }
     }
 }

@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace ECS.Components
 {
-    public struct FlyCameraSettingsComponent : IComponentData
+    public struct FlyCameraSettings : IComponentData
     {
         public float Acceleration;
         public float SprintMultiplier;

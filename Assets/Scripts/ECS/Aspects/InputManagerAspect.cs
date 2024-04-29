@@ -1,14 +1,15 @@
 using ECS.Components;
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEditor;
 
 namespace ECS.Aspects
 {
     public readonly partial struct InputManagerAspect : IAspect
     {
-        private readonly RefRW<FlyCameraInputComponent> _flyCameraInput;
-        private readonly RefRW<CameraInputComponent> _cameraInput;
-        private readonly RefRO<CameraSettingsComponent> _cameraSettings;
+        private readonly RefRW<FlyCameraInput> _flyCameraInput;
+        private readonly RefRW<CameraInput> _cameraInput;
+        private readonly RefRO<CameraSettings> _cameraSettings;
 
         public float3 Movement
         {
@@ -25,6 +26,6 @@ namespace ECS.Aspects
             set => _cameraInput.ValueRW.LookDelta = value;
         }
 
-        public float CameraSensitivity => _cameraSettings.ValueRO.CameraSensitivity;
+        public float Sensitivity => _cameraSettings.ValueRO.Sensitivity;
     }
 }

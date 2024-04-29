@@ -54,10 +54,10 @@ namespace Editor.TerrainGenerationGraph
                     level = 3,
                     userData = typeof(Vector4Node)
                 },
-                new SearchTreeEntry(new GUIContent("Perlin 4D"))
+                new SearchTreeEntry(new GUIContent("Perlin 3D"))
                 {
                     level = 3,
-                    userData = typeof(Perlin4DNode)
+                    userData = typeof(Perlin3DNode)
                 },
                 new SearchTreeGroupEntry(new GUIContent("World"), 2),
                 new SearchTreeEntry(new GUIContent("Position"))

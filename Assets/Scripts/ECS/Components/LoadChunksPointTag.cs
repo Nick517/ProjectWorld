@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace ECS.Components
 {
-    public struct TrackPointTagComponent : IComponentData
+    public struct LoadChunksPointTag : IComponentData
     {
     }
 }

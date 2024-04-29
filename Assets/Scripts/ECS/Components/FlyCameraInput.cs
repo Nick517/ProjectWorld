@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace ECS.Components
 {
-    public struct FlyCameraInputComponent : IComponentData
+    public struct FlyCameraInput : IComponentData
     {
         public float3 Movement;
         public bool Sprint;

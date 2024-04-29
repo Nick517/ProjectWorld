@@ -5,6 +5,7 @@ using TerrainGenerationGraph.Scripts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using TgGraph = TerrainGenerationGraph.Scripts.TgGraph;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -138,7 +139,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
         {
-            var dto = new TgtNodeDto(TgGraphData.NodeType.Value);
+            var dto = new TgtNodeDto(TgTreeData.NodeType.Value);
 
             tgTreeDto.nodes.Add(dto);
             

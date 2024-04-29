@@ -14,9 +14,9 @@ namespace ECS.Authoring
         public override void Bake(TrackPointAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent<TrackPointTagComponent>(entity);
-            AddComponent(entity, new ChunkPositionComponent { Position = authoring.transform.position });
-            AddComponent<LoadChunksPointTagComponent>(entity);
+            AddComponent<TrackPointTag>(entity);
+            AddComponent(entity, new ChunkPosition { Position = authoring.transform.position });
+            AddComponent<LoadChunksPointTag>(entity);
         }
     }
 }

@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace ECS.Components
 {
-    public struct ChunkPositionComponent : IComponentData
+    public struct ChunkPosition : IComponentData
     {
         public float3 Position;
     }

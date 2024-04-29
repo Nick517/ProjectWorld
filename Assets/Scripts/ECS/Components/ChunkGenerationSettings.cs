@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace ECS.Components
 {
-    public struct ChunkGenerationSettingsComponent : IComponentData
+    public struct ChunkGenerationSettings : IComponentData
     {
         public Entity ChunkPrefab;
         public float BaseCubeSize;

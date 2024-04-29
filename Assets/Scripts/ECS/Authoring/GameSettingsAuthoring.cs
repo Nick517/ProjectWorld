@@ -1,7 +1,6 @@
-using ECS.Components;
-using ScriptableObjects;
 using Unity.Entities;
 using UnityEngine;
+using ChunkGenerationSettings = ECS.Components.ChunkGenerationSettings;
 
 namespace ECS.Authoring
 {
@@ -9,7 +8,7 @@ namespace ECS.Authoring
     public class GameSettingsAuthoring : MonoBehaviour
     {
         public GameObject chunkPrefab;
-        public ChunkGenerationSettings chunkGenerationSettings;
+        public ScriptableObjects.ChunkGenerationSettings settings;
     }
 
     public class ChunkLoaderBaker : Baker<GameSettingsAuthoring>
@@ -17,16 +16,16 @@ namespace ECS.Authoring
         public override void Bake(GameSettingsAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new ChunkGenerationSettingsComponent
+            AddComponent(entity, new ChunkGenerationSettings
             {
                 ChunkPrefab = GetEntity(authoring.chunkPrefab, TransformUsageFlags.Dynamic),
-                BaseCubeSize = authoring.chunkGenerationSettings.baseCubeSize,
-                CubeCount = authoring.chunkGenerationSettings.cubeCount,
-                MapSurface = authoring.chunkGenerationSettings.mapSurface,
-                MaxChunkScale = authoring.chunkGenerationSettings.maxChunkScale,
-                MegaChunks = authoring.chunkGenerationSettings.megaChunks,
-                LOD = authoring.chunkGenerationSettings.lod,
-                ReloadScale = authoring.chunkGenerationSettings.reloadScale
+                BaseCubeSize = authoring.settings.baseCubeSize,
+                CubeCount = authoring.settings.cubeCount,
+                MapSurface = authoring.settings.mapSurface,
+                MaxChunkScale = authoring.settings.maxChunkScale,
+                MegaChunks = authoring.settings.megaChunks,
+                LOD = authoring.settings.lod,
+                ReloadScale = authoring.settings.reloadScale
             });
         }
     }

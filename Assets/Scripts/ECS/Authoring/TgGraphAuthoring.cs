@@ -20,14 +20,14 @@ namespace ECS.Authoring
             var tgTree = authoring.tgGraph.DeserializeTree();
 
             var builder = new BlobBuilder(Allocator.Temp);
-            ref var tgGraph = ref builder.ConstructRoot<TgGraphData>();
+            ref var tgGraph = ref builder.ConstructRoot<TgTreeData>();
 
             var nodeArrayBuilder = builder.Allocate(ref tgGraph.Nodes, tgTree.nodes.Count);
 
             for (var i = 0; i < tgTree.nodes.Count; i++)
             {
                 var dto = tgTree.nodes[i];
-                ref var node = ref builder.ConstructRoot<TgGraphData.Node>();
+                ref var node = ref builder.ConstructRoot<TgTreeData.Node>();
 
                 node.Type = dto.nodeType;
                 node.Next = dto.nextIndexes.Deserialize();
@@ -35,21 +35,19 @@ namespace ECS.Authoring
                 nodeArrayBuilder[i] = node;
             }
 
-            var valueArrayBuilder = builder.Allocate(
-                ref tgGraph.Values,
-                tgTree.values.Count
-            );
+            var valueArrayBuilder = builder.Allocate(ref tgGraph.Values, tgTree.values.Count);
 
             for (var i = 0; i < tgTree.values.Count; i++)
                 valueArrayBuilder[i] = new float4(tgTree.values[i].Deserialize());
 
-            var blobReference = builder.CreateBlobAssetReference<TgGraphData>(Allocator.Persistent);
+            var blobReference = builder.CreateBlobAssetReference<TgTreeData>(Allocator.Persistent);
 
             builder.Dispose();
 
             AddBlobAsset(ref blobReference, out _);
             var entity = GetEntity(TransformUsageFlags.None);
-            AddComponent(entity, new TgGraphComponent { Blob = blobReference });
+
+            AddComponent(entity, new TerrainGenerationTree { Blob = blobReference });
         }
     }
 }

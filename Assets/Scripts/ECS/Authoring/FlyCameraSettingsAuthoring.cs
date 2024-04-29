@@ -7,9 +7,9 @@ namespace ECS.Authoring
     [AddComponentMenu("Custom Authoring/Fly Camera Authoring")]
     public class FlyCameraSettingsAuthoring : MonoBehaviour
     {
-        public float acceleration = 1.0f;
-        public float sprintMultiplier = 4.0f;
-        public float damping = 5.0f;
+        public float acceleration = 1;
+        public float sprintMultiplier = 4;
+        public float damping = 5;
     }
 
     public class FlyCameraBaker : Baker<FlyCameraSettingsAuthoring>
@@ -17,8 +17,8 @@ namespace ECS.Authoring
         public override void Bake(FlyCameraSettingsAuthoring authoring)
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent<FirstPersonCameraTagComponent>(entity);
-            AddComponent(entity, new FlyCameraSettingsComponent
+            AddComponent<FirstPersonCameraTag>(entity);
+            AddComponent(entity, new FlyCameraSettings
             {
                 Acceleration = authoring.acceleration,
                 SprintMultiplier = authoring.sprintMultiplier,

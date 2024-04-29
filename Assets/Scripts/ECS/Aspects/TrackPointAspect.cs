@@ -10,7 +10,7 @@ namespace ECS.Aspects
         public readonly Entity Entity;
 
         private readonly RefRO<LocalTransform> _localTransform;
-        private readonly RefRW<ChunkPositionComponent> _chunkPosition;
+        private readonly RefRW<ChunkPosition> _chunkPosition;
 
         public float3 Position => _localTransform.ValueRO.Position;
 
@@ -20,10 +20,10 @@ namespace ECS.Aspects
             private set => _chunkPosition.ValueRW.Position = value;
         }
 
-        public void UpdateChunkPosition(EntityCommandBuffer entityCommandBuffer, float3 newChunkPosition)
+        public void UpdateChunkPosition(EntityCommandBuffer ecb, float3 newChunkPosition)
         {
             ChunkPosition = newChunkPosition;
-            entityCommandBuffer.AddComponent<LoadChunksPointTagComponent>(Entity);
+            ecb.AddComponent<LoadChunksPointTag>(Entity);
         }
     }
 }

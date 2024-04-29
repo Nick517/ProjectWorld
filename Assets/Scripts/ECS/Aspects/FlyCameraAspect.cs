@@ -8,7 +8,7 @@ namespace ECS.Aspects
     public readonly partial struct FlyCameraAspect : IAspect
     {
         private readonly RefRW<LocalTransform> _localTransform;
-        private readonly RefRO<FlyCameraSettingsComponent> _flyCameraSettings;
+        private readonly RefRO<FlyCameraSettings> _flyCameraSettings;
 
         public LocalTransform LocalTransform => _localTransform.ValueRO;
 
