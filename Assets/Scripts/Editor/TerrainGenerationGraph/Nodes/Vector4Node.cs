@@ -1,8 +1,6 @@
 using System;
-using ECS.Components;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts;
-using TgGraph = TerrainGenerationGraph.Scripts.TgGraph;
+using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -22,6 +20,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
+            NodeType = NodeType.Float4;
+
             title = "Vector 4";
 
             _inputPortX = AddInputPort("X");
@@ -29,31 +29,6 @@ namespace Editor.TerrainGenerationGraph.Nodes
             _inputPortZ = AddInputPort("Z");
             _inputPortW = AddInputPort("W");
             _outputPort = AddOutputPort("Out", 4);
-        }
-
-        #endregion
-
-        #region Terrain Genereration Tree
-
-        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
-        {
-            var dto = new TgtNodeDto(TgTreeData.NodeType.Float4);
-
-            tgTreeDto.nodes.Add(dto);
-
-            dto.nextIndexes.x = tgTreeDto.nodes.Count;
-            tgTreeDto = _inputPortX.GetNextTgtNodeDto(tgTreeDto);
-
-            dto.nextIndexes.y = tgTreeDto.nodes.Count;
-            tgTreeDto = _inputPortY.GetNextTgtNodeDto(tgTreeDto);
-
-            dto.nextIndexes.z = tgTreeDto.nodes.Count;
-            tgTreeDto = _inputPortZ.GetNextTgtNodeDto(tgTreeDto);
-
-            dto.nextIndexes.w = tgTreeDto.nodes.Count;
-            tgTreeDto = _inputPortW.GetNextTgtNodeDto(tgTreeDto);
-
-            return tgTreeDto;
         }
 
         #endregion

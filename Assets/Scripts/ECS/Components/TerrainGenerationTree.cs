@@ -1,110 +1,105 @@
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using static NodeOperations;
+using static NodeOperations.NodeType;
+using static Unity.Collections.Allocator;
 
 namespace ECS.Components
 {
     public struct TerrainGenerationTree : IComponentData
     {
-        public BlobAssetReference<TgTreeData> Blob;
+        public BlobAssetReference<TgTree> Blob;
 
-        public float Traverse(float3 position)
+        public struct TgTree
         {
-            return Blob.Value.TraverseTree(position);
-        }
-    }
+            public BlobArray<Node> Nodes;
+            public BlobArray<float4> Values;
+            public int CacheCount;
 
-    public struct TgTreeData
-    {
-        public BlobArray<Node> Nodes;
-        public BlobArray<float4> Values;
-
-        public struct Node
-        {
-            public NodeType Type;
-            public int4 Next;
-        }
-
-        public enum NodeType
-        {
-            Value,
-            Float2,
-            Float3,
-            Float4,
-            Add,
-            Subtract,
-            Multiply,
-            Divide,
-            Perlin3D,
-            Position
-        }
-
-        public float TraverseTree(float3 position)
-        {
-            return Traverse(0, position).x;
-        }
-
-        private float4 Traverse(int index, float3 position)
-        {
-            if (index == -1) return float4.zero;
-
-            var node = Nodes[index];
-
-            switch (node.Type)
+            public struct Node
             {
-                case NodeType.Value:
-                    return Values[node.Next.x];
+                public NodeType Type;
+                public int CacheIndex;
+                public int4 Next;
+            }
 
-                case NodeType.Float2:
-                    return new float4(
-                        Traverse(node.Next.x, position).x,
-                        Traverse(node.Next.y, position).x,
-                        0,
-                        0);
+            public struct Traversal
+            {
+                public readonly BlobAssetReference<TgTree> Blob;
+                public float4 Position;
+                public NativeArray<float4> Cache;
+                public NativeArray<bool> Cached;
 
-                case NodeType.Float3:
-                    return new float4(
-                        Traverse(node.Next.x, position).x,
-                        Traverse(node.Next.y, position).x,
-                        Traverse(node.Next.z, position).x,
-                        0);
+                public Traversal(TerrainGenerationTree tgTree)
+                {
+                    Blob = tgTree.Blob;
+                    Position = default;
+                    Cache = new NativeArray<float4>(Blob.Value.CacheCount, Temp);
+                    Cached = new NativeArray<bool>(Cache.Length, Temp);
+                }
 
-                case NodeType.Float4:
-                    return new float4(
-                        Traverse(node.Next.x, position).x,
-                        Traverse(node.Next.y, position).x,
-                        Traverse(node.Next.z, position).x,
-                        Traverse(node.Next.w, position).x);
+                public float Sample(float3 position)
+                {
+                    Position = new float4(position.x, position.y, position.z, 0);
 
-                case NodeType.Add:
-                    return Traverse(node.Next.x, position) +
-                           Traverse(node.Next.y, position);
+                    for (var x = 0; x < Cached.Length; x++) Cached[x] = false;
 
-                case NodeType.Subtract:
-                    return Traverse(node.Next.x, position) -
-                           Traverse(node.Next.y, position);
+                    var traversal = Traverse(0, this).x;
 
-                case NodeType.Multiply:
-                    return Traverse(node.Next.x, position) *
-                           Traverse(node.Next.y, position);
+                    ResetCache();
 
-                case NodeType.Divide:
-                    return Traverse(node.Next.x, position) /
-                           Traverse(node.Next.y, position);
+                    return traversal;
+                }
 
-                case NodeType.Perlin3D:
-                    return noise.cnoise(
-                        Traverse(node.Next.x, position) /
-                        Traverse(node.Next.y, position).x);
+                private void ResetCache()
+                {
+                    for (var i = 0; i < Cached.Length; i++) Cached[i] = false;
+                }
 
-                case NodeType.Position:
-                    return new float4(
-                        position.x,
-                        position.y,
-                        position.z,
-                        0);
+                public void Dispose()
+                {
+                    Cache.Dispose();
+                    Cached.Dispose();
+                }
+            }
 
-                default:
-                    return float4.zero;
+            private static float4 Traverse(int index, Traversal traversal)
+            {
+                if (index == -1) return default;
+
+                var node = traversal.Blob.Value.Nodes[index];
+
+                if (node.CacheIndex != -1 && traversal.Cached[node.CacheIndex]) return traversal.Cache[node.CacheIndex];
+
+                var sample =
+                    node.Type switch
+                    {
+                        Value =>
+                            traversal.Blob.Value.Values[node.Next.x],
+
+                        Position =>
+                            new float4(
+                                traversal.Position.x,
+                                traversal.Position.y,
+                                traversal.Position.z,
+                                0),
+
+                        _ => GetSample(
+                            node.Type,
+                            Traverse(node.Next.x, traversal),
+                            Traverse(node.Next.y, traversal),
+                            Traverse(node.Next.z, traversal),
+                            Traverse(node.Next.w, traversal))
+                    };
+
+                if (node.CacheIndex != -1)
+                {
+                    traversal.Cached[node.CacheIndex] = true;
+                    traversal.Cache[node.CacheIndex] = sample;
+                }
+
+                return sample;
             }
         }
     }

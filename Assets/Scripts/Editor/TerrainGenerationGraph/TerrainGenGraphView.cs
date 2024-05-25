@@ -117,6 +117,11 @@ namespace Editor.TerrainGenerationGraph
                 .ToList();
         }
 
+        private void ClearSavedDto()
+        {
+            foreach (var node in TggNodes) node.SavedDto = null;
+        }
+
         #endregion
 
         #region Save System
@@ -129,10 +134,13 @@ namespace Editor.TerrainGenerationGraph
 
         private string SerializeTree()
         {
-            var tgGraphDto = new TgGraph.TgTreeDto();
-            var serializedTree = RootNode.ToTgtNode(tgGraphDto);
+            var rootNode = RootNode.GatherDto();
+            ClearSavedDto();
+            rootNode.Simplify();
+
+            var tree = new TgGraph.TgTreeDto(rootNode);
             
-            return JsonConvert.SerializeObject(serializedTree, JsonSettings.Formatted);
+            return JsonConvert.SerializeObject(tree, JsonSettings.Formatted);
         }
 
         private string SerializeGraph()
@@ -168,7 +176,7 @@ namespace Editor.TerrainGenerationGraph
                 graphView.ClearGraph();
                 TggNodeDtoList.ForEach(dto => dto.Deserialize(graphView));
                 tggEdgeDtoList.ForEach(dto => dto.Deserialize(graphView));
-                graphView.TggNodes.Where(tggNode => tggNode is not DefaultValueNode).ToList()
+                graphView.TggNodes.Where(tggNode => tggNode is not ValueNode).ToList()
                     .ForEach(tggNode => tggNode.Update());
             }
         }

@@ -6,63 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ChunkOperations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ChunkOperations.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/ChunkAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/ChunkAspect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/FlyCameraAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/FlyCameraAspect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/InputManagerAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/InputManagerAspect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TrackPointAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TrackPointAspect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/FlyCameraSettingsAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/FlyCameraSettingsAuthoring.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/GameSettingsAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/GameSettingsAuthoring.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/InputManagerAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/InputManagerAuthoring.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TgGraphAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TgGraphAuthoring.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TrackPointAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TrackPointAuthoring.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraInputComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraInput.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraInputComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraInput.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraSettingsComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraSettings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraSettingsComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraSettings.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkGenerationSettingsComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkGenerationSettings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkGenerationSettingsComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkGenerationSettings.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkPositionComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkPosition.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkPositionComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkPosition.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkScaleComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkScale.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkScaleComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/ChunkScale.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CreateChunkMeshDataTagComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CreateChunkMeshDataTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CreateChunkMeshDataTagComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/CreateChunkMeshDataTag.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/DestroyChunkTagComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/DestroyChunkTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/DestroyChunkTagComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/DestroyChunkTag.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FirstPersonCameraTagComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FirstPersonCameraTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FirstPersonCameraTagComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FirstPersonCameraTag.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FlyCameraInputComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FlyCameraInput.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FlyCameraInputComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FlyCameraInput.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FlyCameraSettingsComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FlyCameraSettings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FlyCameraSettingsComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/FlyCameraSettings.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/LoadChunksPointTagComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/LoadChunksPointTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/LoadChunksPointTagComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/LoadChunksPointTag.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/SetChunkMeshTagComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/SetChunkMeshTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/SetChunkMeshTagComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/SetChunkMeshTag.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TgGraphComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TgGraph.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TgGraphComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TgGraph.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TrackPointTagComponent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TrackPointTag.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TrackPointTagComponent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TrackPointTag.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/CreateMeshDataJob.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/CreateMeshDataJob.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/ChunkLoaderSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/ChunkLoaderSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/CreateChunkMeshDataSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/CreateChunkMeshDataSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/DestroyChunkSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/DestroyChunkSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/FirstPersonCameraSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/FirstPersonCameraSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/FlyCameraMovementSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/FlyCameraMovementSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/InputManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/InputManagerSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/SetChunkMeshSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/SetChunkMeshSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TrackPointSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TrackPointSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/AddNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/AddNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/DefaultValueNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/DefaultValueNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/MultiplyNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/MultiplyNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Perlin3DNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Perlin3DNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/PositionNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/PositionNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector2Node.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector2Node.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector3Node.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector3Node.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector4Node.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector4Node.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/FollowFlyCamera.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/FollowFlyCamera.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NodeOperations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/NodeOperations.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EntitiesClientSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EntitiesClientSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,13 +22,11 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/392960c6b8924ad4aa464eaf3552f4303dc00/60/24864af4/Node.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f7237cf7abef49bfbb552d7eb076e422174200/80/1b1786e5/NativeArray`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/ECS/Components/CameraSettings.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ECS/Components/TgGraph.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/NodeOperations.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/Scripts/TgGraph.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities.graphics@1.0.16/Unity.Entities.Graphics/RenderMeshArray.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.0.16/Unity.Entities/EntityManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.0.16/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.0.16/Unity.Entities/Types/TypeManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.0.16/Unity.Transforms/LocalTransform.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.2.3/Unity.Entities/EntityCommandBuffer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.2.3/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@1.2.3/Unity.Entities/SystemAPI.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.shadergraph@14.0.10/Editor/Data/Graphs/SerializableTexture.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.shadergraph@14.0.10/Editor/Data/Util/PooledList.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -111,7 +55,7 @@
     &quot;Attach to Unity Player.Unity.exe (AssetImportWorker1).executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;feature-terrain-generator&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;fix-split-node&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -245,6 +189,38 @@
       <workItem from="1714133283336" duration="30542000" />
       <workItem from="1714381917062" duration="4352000" />
       <workItem from="1714391614378" duration="298000" />
+      <workItem from="1716433057427" duration="1940000" />
+      <workItem from="1716602083909" duration="4753000" />
+      <workItem from="1716611892283" duration="278000" />
+      <workItem from="1716616941419" duration="13281000" />
+      <workItem from="1716692831515" duration="802000" />
+      <workItem from="1716753218462" duration="802000" />
+      <workItem from="1716849179679" duration="7209000" />
+      <workItem from="1717021056258" duration="8276000" />
+      <workItem from="1717048556288" duration="12987000" />
+      <workItem from="1717652208294" duration="553000" />
+      <workItem from="1718146137494" duration="752000" />
+      <workItem from="1718171169424" duration="1655000" />
+      <workItem from="1718313140777" duration="8162000" />
+      <workItem from="1718604792349" duration="2271000" />
+      <workItem from="1718747765991" duration="3759000" />
+      <workItem from="1718755991924" duration="7682000" />
+      <workItem from="1718784109433" duration="1014000" />
+      <workItem from="1718830970459" duration="18190000" />
+      <workItem from="1718925913201" duration="2280000" />
+      <workItem from="1719036959458" duration="262000" />
+      <workItem from="1719037558922" duration="141000" />
+      <workItem from="1719181374442" duration="3582000" />
+      <workItem from="1719272391734" duration="2673000" />
+      <workItem from="1719297664414" duration="2842000" />
+      <workItem from="1719427919948" duration="10320000" />
+      <workItem from="1719513996455" duration="1787000" />
+      <workItem from="1719614681625" duration="784000" />
+      <workItem from="1719776136412" duration="990000" />
+      <workItem from="1719814296117" duration="2450000" />
+      <workItem from="1719819525940" duration="621000" />
+      <workItem from="1719880625867" duration="6615000" />
+      <workItem from="1719889533488" duration="11046000" />
     </task>
     <servers />
   </component>

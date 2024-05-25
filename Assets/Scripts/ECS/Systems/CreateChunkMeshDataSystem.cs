@@ -20,8 +20,8 @@ namespace ECS.Systems
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<Components.TerrainGenerationTree>();
             state.RequireForUpdate<ChunkGenerationSettings>();
+            state.RequireForUpdate<TerrainGenerationTree>();
             state.RequireForUpdate<CreateChunkMeshDataTag>();
 
             _chunkQuery = new EntityQueryBuilder(Allocator.Temp)
@@ -30,8 +30,8 @@ namespace ECS.Systems
                 .Build(ref state);
 
             _entityTypeHandle = state.GetEntityTypeHandle();
-            _localTransformTypeHandle = state.GetComponentTypeHandle<LocalTransform>();
-            _chunkScaleTypeHandle = state.GetComponentTypeHandle<ChunkScale>();
+            _localTransformTypeHandle = state.GetComponentTypeHandle<LocalTransform>(true);
+            _chunkScaleTypeHandle = state.GetComponentTypeHandle<ChunkScale>(true);
         }
 
         [BurstCompile]
@@ -43,7 +43,7 @@ namespace ECS.Systems
 
             var ecb = new EntityCommandBuffer(Allocator.TempJob);
             var settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
-            var tgGraph = SystemAPI.GetSingleton<Components.TerrainGenerationTree>();
+            var tgGraph = SystemAPI.GetSingleton<TerrainGenerationTree>();
 
             var createMeshDataJobHandle = new CreateMeshDataJob
             {
@@ -54,7 +54,7 @@ namespace ECS.Systems
                 Settings = settings,
                 TgTree = tgGraph
             }.ScheduleParallel(_chunkQuery, state.Dependency);
-            
+
             createMeshDataJobHandle.Complete();
 
             ecb.Playback(state.EntityManager);

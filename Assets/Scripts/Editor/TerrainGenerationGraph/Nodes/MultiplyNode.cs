@@ -1,8 +1,6 @@
 using System;
-using ECS.Components;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts;
-using TgGraph = TerrainGenerationGraph.Scripts.TgGraph;
+using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -20,6 +18,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
+            NodeType = NodeType.Multiply;
+
             title = "Multiply";
 
             _inputPortA = AddInputPort("A");
@@ -32,25 +32,6 @@ namespace Editor.TerrainGenerationGraph.Nodes
             var lowest = TggPort.GetLowestDimension(ConnectedOutputPorts);
             SetAllPortDimensions(lowest);
             base.Update();
-        }
-
-        #endregion
-
-        #region Terrain Generation Tree
-
-        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
-        {
-            var dto = new TgtNodeDto(TgTreeData.NodeType.Multiply);
-
-            tgTreeDto.nodes.Add(dto);
-
-            dto.nextIndexes.x = tgTreeDto.nodes.Count;
-            tgTreeDto = _inputPortA.GetNextTgtNodeDto(tgTreeDto);
-
-            dto.nextIndexes.y = tgTreeDto.nodes.Count;
-            tgTreeDto = _inputPortB.GetNextTgtNodeDto(tgTreeDto);
-
-            return tgTreeDto;
         }
 
         #endregion

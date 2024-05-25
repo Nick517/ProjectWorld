@@ -1,6 +1,7 @@
 using ECS.Components;
 using Unity.Collections;
 using Unity.Mathematics;
+using static ECS.Components.TerrainGenerationTree.TgTree;
 
 public static class TerrainGenerator
 {
@@ -13,6 +14,8 @@ public static class TerrainGenerator
 
         var map = new NativeArray<float>((int)math.pow(cubeCount, 3), Allocator.Temp);
 
+        var traversal = new Traversal(tgTree);
+
         for (var x = 0; x < cubeCount; x++)
         for (var y = 0; y < cubeCount; y++)
         for (var z = 0; z < cubeCount; z++)
@@ -21,8 +24,10 @@ public static class TerrainGenerator
             var position = index3D * cubeSize + offset;
             var index = GetFlatIndex(cubeCount, index3D);
 
-            map[index] = tgTree.Traverse(position);
+            map[index] = traversal.Sample(position);
         }
+
+        traversal.Dispose();
 
         return map;
     }

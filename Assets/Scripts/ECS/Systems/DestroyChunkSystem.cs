@@ -1,4 +1,3 @@
-using ECS.Aspects;
 using ECS.Components;
 using Unity.Burst;
 using Unity.Collections;
@@ -10,13 +9,23 @@ namespace ECS.Systems
     [BurstCompile]
     public partial struct DestroyChunkSystem : ISystem
     {
+        private EntityQuery _chunkQuery;
+
+        public void OnCreate(ref SystemState state)
+        {
+            state.RequireForUpdate<DestroyChunkTag>();
+
+            _chunkQuery = new EntityQueryBuilder(Allocator.Temp)
+                .WithAll<DestroyChunkTag>()
+                .Build(ref state);
+        }
+
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var chunkAspect in SystemAPI.Query<ChunkAspect>().WithAll<DestroyChunkTag>())
-                ecb.DestroyEntity(chunkAspect.Entity);
+            ecb.DestroyEntity(_chunkQuery, EntityQueryCaptureMode.AtRecord);
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();

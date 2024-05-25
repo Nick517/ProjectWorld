@@ -3,7 +3,6 @@ using ECS.Components;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
 
 namespace ECS.Aspects
 {
@@ -31,7 +30,7 @@ namespace ECS.Aspects
 
             public bool Equals(Data data)
             {
-                return Position.Equals(data.Position) && Mathf.Approximately(ChunkScale, data.ChunkScale);
+                return Position.Equals(data.Position) && Math.Abs(ChunkScale - data.ChunkScale) == 0;
             }
 
             public readonly override int GetHashCode()

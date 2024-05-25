@@ -11,6 +11,7 @@ namespace ECS.Systems
 
         protected override void OnCreate()
         {
+            RequireForUpdate<CameraInput>();
             _playerControls = new PlayerControls();
         }
 
@@ -29,7 +30,7 @@ namespace ECS.Systems
             inputManager.Sprint = _playerControls.FlyCamera.Sprint.IsPressed();
 
             var lookDelta = _playerControls.Camera.Look.ReadValue<Vector2>();
-            
+
             inputManager.LookDelta = lookDelta * inputManager.Sensitivity;
         }
 

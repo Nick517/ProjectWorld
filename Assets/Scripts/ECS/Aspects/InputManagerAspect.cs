@@ -1,7 +1,6 @@
 using ECS.Components;
 using Unity.Entities;
 using Unity.Mathematics;
-using UnityEditor;
 
 namespace ECS.Aspects
 {

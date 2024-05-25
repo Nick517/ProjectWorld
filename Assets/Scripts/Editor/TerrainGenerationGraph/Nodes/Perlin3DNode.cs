@@ -1,8 +1,6 @@
 using System;
-using ECS.Components;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts;
-using TgGraph = TerrainGenerationGraph.Scripts.TgGraph;
+using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -21,30 +19,13 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
+            NodeType = NodeType.Perlin3D;
+
             title = "Perlin 3D";
 
             _inputCoordPort = AddInputPort("Coord", 3);
             _inputScalePort = AddInputPort("Scale");
             _outputPort = AddOutputPort();
-        }
-
-        #endregion
-
-        #region Terrain Generation Tree
-
-        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
-        {
-            var dto = new TgtNodeDto(TgTreeData.NodeType.Perlin3D);
-
-            tgTreeDto.nodes.Add(dto);
-
-            dto.nextIndexes.x = tgTreeDto.nodes.Count;
-            tgTreeDto = _inputCoordPort.GetNextTgtNodeDto(tgTreeDto);
-
-            dto.nextIndexes.y = tgTreeDto.nodes.Count;
-            tgTreeDto = _inputScalePort.GetNextTgtNodeDto(tgTreeDto);
-
-            return tgTreeDto;
         }
 
         #endregion

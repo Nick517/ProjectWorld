@@ -1,6 +1,6 @@
 using System;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts;
+using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -20,6 +20,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
+            NodeType = NodeType.Skip;
+
             title = "Split";
 
             _inputPort = AddInputPort();
@@ -27,15 +29,6 @@ namespace Editor.TerrainGenerationGraph.Nodes
             _outputPortY = AddOutputPort("Y");
             _outputPortZ = AddOutputPort("Z");
             _outputPortW = AddOutputPort("W");
-        }
-
-        #endregion
-
-        #region Terrain Genereration Tree
-
-        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
-        {
-            return _inputPort.GetNextTgtNodeDto(tgTreeDto);
         }
 
         #endregion

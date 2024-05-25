@@ -1,15 +1,14 @@
-using ECS.Components;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using Serializable;
 using TerrainGenerationGraph.Scripts;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using TgGraph = TerrainGenerationGraph.Scripts.TgGraph;
+using static NodeOperations;
+using static UnityEditor.EditorApplication;
+using static UnityEngine.UIElements.FlexDirection;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
-    public sealed class DefaultValueNode : TggNode
+    public sealed class ValueNode : TggNode
     {
         #region Fields
 
@@ -28,8 +27,10 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
+            NodeType = NodeType.Value;
+
             titleContainer.RemoveFromHierarchy();
-            mainContainer.style.flexDirection = FlexDirection.Row;
+            mainContainer.style.flexDirection = Row;
 
             _floatFieldX = CreateFloatField();
             _floatFieldY = CreateFloatField();
@@ -73,7 +74,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
             ParentingTggNode.Add(this);
 
-            EditorApplication.update += Reposition;
+            update += Reposition;
         }
 
         public override void Destroy()
@@ -86,11 +87,11 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         private void Reposition()
         {
-            EditorApplication.update -= Reposition;
+            update -= Reposition;
 
             if (float.IsNaN(GetPosition().width))
             {
-                EditorApplication.update += Reposition;
+                update += Reposition;
                 return;
             }
 
@@ -105,8 +106,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         private FloatField CreateFloatField()
         {
-            FloatField floatField = new();
-            floatField.RegisterValueChangedCallback(_ => { ParentingInputPort.DefaultValue = Value; });
+            var floatField = new FloatField();
+            floatField.RegisterValueChangedCallback(_ => { ParentingInputPort.Value = Value; });
 
             return floatField;
         }
@@ -137,16 +138,9 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
+        public override TgtNodeDto GatherDto()
         {
-            var dto = new TgtNodeDto(TgTreeData.NodeType.Value);
-
-            tgTreeDto.nodes.Add(dto);
-            
-            dto.nextIndexes.x = tgTreeDto.values.Count;
-            tgTreeDto.values.Add(new SerializableFloat4(Value));
-            
-            return tgTreeDto;
+            return new TgtNodeDto(NodeType.Value, new TgtNodeDto[] { }, Value);
         }
 
         #endregion

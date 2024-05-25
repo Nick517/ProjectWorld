@@ -4,9 +4,10 @@ using System.Linq;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using Serializable;
 using TerrainGenerationGraph.Scripts;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static NodeOperations;
+using Node = UnityEditor.Experimental.GraphView.Node;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -14,7 +15,9 @@ namespace Editor.TerrainGenerationGraph.Nodes
     {
         #region Fields
 
+        public TgtNodeDto SavedDto;
         protected TerrainGenGraphView GraphView;
+        protected NodeType NodeType;
         private readonly List<TggPort> _tggPorts = new();
         private string _id;
 
@@ -44,15 +47,13 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         public virtual void Update()
         {
-            InputPorts.ForEach(inputPort => inputPort.UpdateDefaultValueNode());
+            InputPorts.ForEach(inputPort => inputPort.UpdateValueNode());
         }
 
         public virtual void Destroy()
         {
             DisconnectAllPorts();
-
-            InputPorts.ForEach(inputPort => inputPort.RemoveDefaultValueNode());
-
+            InputPorts.ForEach(inputPort => inputPort.RemoveValueNode());
             GraphView.RemoveElement(this);
         }
 
@@ -116,7 +117,22 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public abstract TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto);
+        public virtual TgtNodeDto GatherDto()
+        {
+            if (NodeType == NodeType.Skip) return InputPorts.First().NextTgtNodeDto();
+
+            if (SavedDto != null)
+            {
+                SavedDto.cached = true;
+
+                return SavedDto;
+            }
+
+            var nextNodes = InputPorts.Select(inputPort => inputPort.NextTgtNodeDto()).ToArray();
+
+            SavedDto = new TgtNodeDto(NodeType, nextNodes);
+            return SavedDto;
+        }
 
         #endregion
 

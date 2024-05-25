@@ -1,9 +1,11 @@
 using ECS.Components;
 using TerrainGenerationGraph.Scripts;
-using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using static ECS.Components.TerrainGenerationTree;
+using static ECS.Components.TerrainGenerationTree.TgTree;
+using static Unity.Collections.Allocator;
 
 namespace ECS.Authoring
 {
@@ -19,18 +21,22 @@ namespace ECS.Authoring
         {
             var tgTree = authoring.tgGraph.DeserializeTree();
 
-            var builder = new BlobBuilder(Allocator.Temp);
-            ref var tgGraph = ref builder.ConstructRoot<TgTreeData>();
+            var builder = new BlobBuilder(Temp);
+            ref var tgGraph = ref builder.ConstructRoot<TgTree>();
 
             var nodeArrayBuilder = builder.Allocate(ref tgGraph.Nodes, tgTree.nodes.Count);
+
+            var cacheCount = 0;
 
             for (var i = 0; i < tgTree.nodes.Count; i++)
             {
                 var dto = tgTree.nodes[i];
-                ref var node = ref builder.ConstructRoot<TgTreeData.Node>();
+                ref var node = ref builder.ConstructRoot<Node>();
 
                 node.Type = dto.nodeType;
-                node.Next = dto.nextIndexes.Deserialize();
+                node.CacheIndex = dto.cached ? cacheCount : -1;
+                if (dto.cached) cacheCount++;
+                node.Next = dto.nextIndex.Deserialize();
 
                 nodeArrayBuilder[i] = node;
             }
@@ -40,7 +46,8 @@ namespace ECS.Authoring
             for (var i = 0; i < tgTree.values.Count; i++)
                 valueArrayBuilder[i] = new float4(tgTree.values[i].Deserialize());
 
-            var blobReference = builder.CreateBlobAssetReference<TgTreeData>(Allocator.Persistent);
+            var blobReference = builder.CreateBlobAssetReference<TgTree>(Persistent);
+            blobReference.Value.CacheCount = cacheCount;
 
             builder.Dispose();
 

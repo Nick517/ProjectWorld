@@ -33,23 +33,22 @@ namespace ECS.Systems
 
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var chunkAspect in SystemAPI.Query<ChunkAspect, RenderMeshArray>().WithAll<SetChunkMeshTag>())
+            foreach (var query in SystemAPI.Query<ChunkAspect, RenderMeshArray>().WithAll<SetChunkMeshTag>())
             {
-                var chunk = chunkAspect.Item1;
-                var renderMeshArray = chunkAspect.Item2;
-
+                var chunk = query.Item1;
+                var renderMeshArray = query.Item2;
+                
                 var mesh = new Mesh
                 {
-                    vertices =
-                        _verticeBufferLookup[chunk.Entity].Reinterpret<Vector3>().AsNativeArray().ToArray(),
+                    vertices = _verticeBufferLookup[chunk.Entity].Reinterpret<Vector3>().AsNativeArray().ToArray(),
                     triangles = _triangleBufferLookup[chunk.Entity].Reinterpret<int>().AsNativeArray().ToArray()
                 };
-
+                
                 mesh.RecalculateNormals();
                 mesh.RecalculateBounds();
 
                 ecb.SetSharedComponentManaged(chunk.Entity,
-                    new RenderMeshArray(renderMeshArray.Materials, new[] { mesh }));
+                    new RenderMeshArray(new[] { renderMeshArray.MaterialReferences[0].Value }, new[] { mesh }));
                 ecb.SetComponent(chunk.Entity, new RenderBounds { Value = mesh.bounds.ToAABB() });
 
                 ecb.RemoveComponent<VerticeBufferElement>(chunk.Entity);

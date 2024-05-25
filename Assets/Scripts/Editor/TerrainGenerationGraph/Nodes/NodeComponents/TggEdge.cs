@@ -32,11 +32,11 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             InputPort?.Update();
         }
 
-        public TggEdge(TerrainGenGraphView graphView, DefaultValueNode defaultValueNode,
+        public TggEdge(TerrainGenGraphView graphView, ValueNode valueNode,
             InputPort parentingInputPort)
         {
             GraphView = graphView;
-            output = defaultValueNode.OutputPort;
+            output = valueNode.OutputPort;
             input = parentingInputPort;
             IsDvnEdge = true;
 

@@ -1,8 +1,6 @@
 using System;
-using ECS.Components;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts;
-using TgGraph = TerrainGenerationGraph.Scripts.TgGraph;
+using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -18,22 +16,11 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
+            NodeType = NodeType.Position;
+
             title = "Position";
 
             _outputPort = AddOutputPort("Out", 3);
-        }
-
-        #endregion
-
-        #region Terrain Generation Tree
-
-        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
-        {
-            var dto = new TgtNodeDto(TgTreeData.NodeType.Position);
-
-            tgTreeDto.nodes.Add(dto);
-
-            return tgTreeDto;
         }
 
         #endregion

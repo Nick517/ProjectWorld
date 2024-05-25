@@ -1,32 +1,30 @@
 using System.Linq;
+using ECS.Aspects;
 using ECS.Components;
-using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
-namespace FlyCamera
+public class FollowFlyCamera : MonoBehaviour
 {
-    public class FollowFlyCamera : MonoBehaviour
+    private EntityManager _entityManager;
+
+    private void Start()
     {
-        private EntityManager _entityManager;
+        _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+    }
 
-        private void Start()
+    private void Update()
+    {
+        var entities = _entityManager.GetAllEntities();
+
+        foreach (var entity in entities.Where(entity => _entityManager.HasComponent<FlyCameraSettings>(entity)))
         {
-            _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            var flyCameraAspect = _entityManager.GetAspect<FlyCameraAspect>(entity);
+            gameObject.transform.SetPositionAndRotation
+                (flyCameraAspect.LocalTransform.Position, flyCameraAspect.LocalTransform.Rotation);
+            break;
         }
 
-        private void Update()
-        {
-            NativeArray<Entity> entities = _entityManager.GetAllEntities(Allocator.Temp);
-
-            foreach (Entity entity in entities.Where(entity => _entityManager.HasComponent<FlyCameraSettings>(entity)))
-            {
-                ECS.Aspects.FlyCameraAspect flyCameraAspect = _entityManager.GetAspect<ECS.Aspects.FlyCameraAspect>(entity);
-                gameObject.transform.SetPositionAndRotation(flyCameraAspect.LocalTransform.Position, flyCameraAspect.LocalTransform.Rotation);
-                break;
-            }
-
-            entities.Dispose();
-        }
+        entities.Dispose();
     }
 }

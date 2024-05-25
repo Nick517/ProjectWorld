@@ -11,8 +11,8 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
     {
         #region Fields
 
-        public DefaultValueNode DefaultValueNode;
-        public Vector4 DefaultValue = Vector4.zero;
+        private ValueNode _valueNode;
+        public Vector4 Value = Vector4.zero;
 
         #endregion
 
@@ -32,44 +32,44 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             ParentTggNode.Update();
         }
 
-        private void AddDefaultValueNode()
+        private void AddValueNode()
         {
-            if (DefaultValueNode == null)
+            if (_valueNode == null)
             {
-                DefaultValueNode = (DefaultValueNode)TggNode.Create(GraphView, typeof(DefaultValueNode));
-                DefaultValueNode.ParentingInputPort = this;
-                DefaultValueNode.Update();
-                DefaultValueNode.Value = DefaultValue;
+                _valueNode = (ValueNode)TggNode.Create(GraphView, typeof(ValueNode));
+                _valueNode.ParentingInputPort = this;
+                _valueNode.Update();
+                _valueNode.Value = Value;
             }
         }
 
-        public void RemoveDefaultValueNode()
+        public void RemoveValueNode()
         {
-            if (DefaultValueNode != null)
+            if (_valueNode != null)
             {
-                DefaultValue = DefaultValueNode.Value;
-                DefaultValueNode?.Destroy();
-                DefaultValueNode = null;
+                Value = _valueNode.Value;
+                _valueNode?.Destroy();
+                _valueNode = null;
             }
         }
 
-        public void UpdateDefaultValueNode()
+        public void UpdateValueNode()
         {
-            if (DefaultValueNode != null)
+            if (_valueNode != null)
             {
                 if (ConnectedTggEdges.Any())
                 {
-                    RemoveDefaultValueNode();
+                    RemoveValueNode();
                 }
-                else if (DefaultValueNode.Dimensions != Dimensions)
+                else if (_valueNode.Dimensions != Dimensions)
                 {
-                    RemoveDefaultValueNode();
-                    AddDefaultValueNode();
+                    RemoveValueNode();
+                    AddValueNode();
                 }
             }
             else if (!ConnectedTggEdges.Any())
             {
-                AddDefaultValueNode();
+                AddValueNode();
             }
         }
 
@@ -77,9 +77,9 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Terrain Generation Tree
 
-        public TgGraph.TgTreeDto GetNextTgtNodeDto(TgGraph.TgTreeDto tgTreeDto)
+        public TgtNodeDto NextTgtNodeDto()
         {
-            return AllConnectedPorts.First().ParentTggNode.ToTgtNode(tgTreeDto);
+            return AllConnectedPorts.First().ParentTggNode.GatherDto();
         }
 
         #endregion
@@ -104,13 +104,13 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             public Dto(InputPort inputPort)
             {
                 id = inputPort.ID;
-                defaultValue = new SerializableVector4(inputPort.DefaultValue);
+                defaultValue = new SerializableVector4(inputPort.Value);
             }
 
             public void DeserializeTo(InputPort inputPort)
             {
                 inputPort.ID = id;
-                inputPort.DefaultValue = defaultValue.Deserialize();
+                inputPort.Value = defaultValue.Deserialize();
             }
         }
 

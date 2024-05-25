@@ -1,7 +1,7 @@
 using System;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts;
 using UnityEditor.Experimental.GraphView;
+using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
@@ -17,20 +17,13 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
+            NodeType = NodeType.Skip;
+
             title = "Sample";
 
             _inputPort = AddInputPort();
 
             capabilities &= ~Capabilities.Deletable;
-        }
-
-        #endregion
-
-        #region Terrain Generation Tree
-
-        public override TgGraph.TgTreeDto ToTgtNode(TgGraph.TgTreeDto tgTreeDto)
-        {
-            return _inputPort.GetNextTgtNodeDto(tgTreeDto);
         }
 
         #endregion
