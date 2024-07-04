@@ -4,7 +4,7 @@ using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
-    public class Vector3Node : TggNode, ITggNodeSerializable
+    public class Float3Node : TggNode, ITggNodeSerializable
     {
         #region Fields
 
@@ -21,7 +21,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
         {
             NodeType = NodeType.Float3;
 
-            title = "Vector 3";
+            title = "Float 3";
 
             _inputPortX = AddInputPort("X");
             _inputPortY = AddInputPort("Y");
@@ -50,17 +50,17 @@ namespace Editor.TerrainGenerationGraph.Nodes
             {
             }
 
-            public Vector3NodeDto(Vector3Node vector3Node) : base(vector3Node)
+            public Vector3NodeDto(Float3Node float3Node) : base(float3Node)
             {
-                inputPortXDto = vector3Node._inputPortX.ToDto();
-                inputPortYDto = vector3Node._inputPortY.ToDto();
-                inputPortZDto = vector3Node._inputPortZ.ToDto();
-                outputPortDto = vector3Node._outputPort.ToDto();
+                inputPortXDto = float3Node._inputPortX.ToDto();
+                inputPortYDto = float3Node._inputPortY.ToDto();
+                inputPortZDto = float3Node._inputPortZ.ToDto();
+                outputPortDto = float3Node._outputPort.ToDto();
             }
 
             public override TggNode Deserialize(TerrainGenGraphView graphView)
             {
-                var vector3Node = (Vector3Node)Create(graphView, typeof(Vector3Node));
+                var vector3Node = (Float3Node)Create(graphView, typeof(Float3Node));
 
                 DeserializeTo(vector3Node);
                 inputPortXDto.DeserializeTo(vector3Node._inputPortX);

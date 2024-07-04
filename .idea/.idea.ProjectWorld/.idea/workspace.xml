@@ -6,9 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/ChunkLoaderSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/ChunkLoaderSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/NodeOperations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/NodeOperations.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EntitiesClientSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EntitiesClientSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector2Node.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Float2Node.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector2Node.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Float2Node.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector3Node.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Float3Node.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector3Node.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Float3Node.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector4Node.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Float4Node.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Vector4Node.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/Float4Node.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggSearchWindow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/TggSearchWindow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

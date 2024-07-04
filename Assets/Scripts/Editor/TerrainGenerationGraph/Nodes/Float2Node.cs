@@ -4,7 +4,7 @@ using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
-    public class Vector2Node : TggNode, ITggNodeSerializable
+    public class Float2Node : TggNode, ITggNodeSerializable
     {
         #region Fields
 
@@ -20,7 +20,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
         {
             NodeType = NodeType.Float2;
 
-            title = "Vector 2";
+            title = "Float 2";
 
             _inputPortX = AddInputPort("X");
             _inputPortY = AddInputPort("Y");
@@ -47,16 +47,16 @@ namespace Editor.TerrainGenerationGraph.Nodes
             {
             }
 
-            public Vector2NodeDto(Vector2Node vector2Node) : base(vector2Node)
+            public Vector2NodeDto(Float2Node float2Node) : base(float2Node)
             {
-                inputPortXDto = vector2Node._inputPortX.ToDto();
-                inputPortYDto = vector2Node._inputPortY.ToDto();
-                outputPortDto = vector2Node._outputPort.ToDto();
+                inputPortXDto = float2Node._inputPortX.ToDto();
+                inputPortYDto = float2Node._inputPortY.ToDto();
+                outputPortDto = float2Node._outputPort.ToDto();
             }
 
             public override TggNode Deserialize(TerrainGenGraphView graphView)
             {
-                var vector2Node = (Vector2Node)Create(graphView, typeof(Vector2Node));
+                var vector2Node = (Float2Node)Create(graphView, typeof(Float2Node));
 
                 DeserializeTo(vector2Node);
                 inputPortXDto.DeserializeTo(vector2Node._inputPortX);

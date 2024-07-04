@@ -26,57 +26,73 @@ namespace Editor.TerrainGenerationGraph
             List<SearchTreeEntry> entries = new()
             {
                 new SearchTreeGroupEntry(new GUIContent("Create Node")),
+
                 new SearchTreeGroupEntry(new GUIContent("Channel"), 1),
+
                 new SearchTreeEntry(new GUIContent("Split"))
                 {
                     level = 2,
                     userData = typeof(SplitNode)
                 },
+
                 new SearchTreeGroupEntry(new GUIContent("Input"), 1),
+
                 new SearchTreeGroupEntry(new GUIContent("Basic"), 2),
+
                 new SearchTreeEntry(new GUIContent("Float"))
                 {
                     level = 3,
                     userData = typeof(FloatNode)
                 },
-                new SearchTreeEntry(new GUIContent("Vector 2"))
+                new SearchTreeEntry(new GUIContent("Float 2"))
                 {
                     level = 3,
-                    userData = typeof(Vector2Node)
+                    userData = typeof(Float2Node)
                 },
-                new SearchTreeEntry(new GUIContent("Vector 3"))
+                new SearchTreeEntry(new GUIContent("Float 3"))
                 {
                     level = 3,
-                    userData = typeof(Vector3Node)
+                    userData = typeof(Float3Node)
                 },
-                new SearchTreeEntry(new GUIContent("Vector 4"))
+                new SearchTreeEntry(new GUIContent("Float 4"))
                 {
                     level = 3,
-                    userData = typeof(Vector4Node)
+                    userData = typeof(Float4Node)
                 },
-                new SearchTreeEntry(new GUIContent("Perlin 3D"))
-                {
-                    level = 3,
-                    userData = typeof(Perlin3DNode)
-                },
-                new SearchTreeGroupEntry(new GUIContent("World"), 2),
+
+                new SearchTreeGroupEntry(new GUIContent("Geometry"), 2),
+
                 new SearchTreeEntry(new GUIContent("Position"))
                 {
                     level = 3,
                     userData = typeof(PositionNode)
                 },
+
+                new SearchTreeGroupEntry(new GUIContent("Procedural"), 1),
+
+                new SearchTreeGroupEntry(new GUIContent("Noise"), 2),
+
+                new SearchTreeEntry(new GUIContent("Perlin 3D"))
+                {
+                    level = 3,
+                    userData = typeof(Perlin3DNode)
+                },
+
                 new SearchTreeGroupEntry(new GUIContent("Math"), 1),
+
                 new SearchTreeGroupEntry(new GUIContent("Basic"), 2),
+
                 new SearchTreeEntry(new GUIContent("Add"))
                 {
                     level = 3,
                     userData = typeof(AddNode)
                 },
+
                 new SearchTreeEntry(new GUIContent("Multiply"))
                 {
-                level = 3,
-                userData = typeof(MultiplyNode)
-            }
+                    level = 3,
+                    userData = typeof(MultiplyNode)
+                }
             };
 
             return entries;
