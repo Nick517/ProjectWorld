@@ -119,7 +119,7 @@ namespace Editor.TerrainGenerationGraph
 
         private void ClearSavedDto()
         {
-            foreach (var node in TggNodes) node.SavedDto = null;
+            TggNodes.ForEach(tggNode => tggNode.ClearDto());
         }
 
         #endregion

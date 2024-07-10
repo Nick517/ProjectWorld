@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using static Editor.TerrainGenerationGraph.Nodes.NodeComponents.TggPort;
 using static NodeOperations;
@@ -13,14 +14,14 @@ namespace Editor.TerrainGenerationGraph.Nodes
         private InputPort _inputPortB;
         private OutputPort _outputPort;
 
+        protected override List<NodeType> NodeTypes => new() { NodeType.Add };
+
         #endregion
 
         #region Methods
 
         protected override void SetUp()
         {
-            NodeType = NodeType.Add;
-
             title = "Add";
 
             _inputPortA = AddInputPort("A");

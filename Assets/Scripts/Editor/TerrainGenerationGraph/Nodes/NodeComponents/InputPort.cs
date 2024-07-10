@@ -79,7 +79,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         public TgtNodeDto NextTgtNodeDto()
         {
-            return AllConnectedPorts.First().ParentTggNode.GatherDto();
+            return AllConnectedPorts.First().ParentTggNode.GatherDto(this);
         }
 
         #endregion

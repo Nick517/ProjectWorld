@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using TerrainGenerationGraph.Scripts;
 using UnityEngine;
@@ -21,14 +22,14 @@ namespace Editor.TerrainGenerationGraph.Nodes
         private FloatField _floatFieldZ;
         private FloatField _floatFieldW;
 
+        protected override List<NodeType> NodeTypes => new() { NodeType.Value };
+
         #endregion
 
         #region Methods
 
         protected override void SetUp()
         {
-            NodeType = NodeType.Value;
-
             titleContainer.RemoveFromHierarchy();
             mainContainer.style.flexDirection = Row;
 
@@ -138,7 +139,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public override TgtNodeDto GatherDto()
+        public override TgtNodeDto GatherDto(InputPort inputPort)
         {
             return new TgtNodeDto(NodeType.Value, new TgtNodeDto[] { }, Value);
         }

@@ -68,16 +68,6 @@ namespace Editor.TerrainGenerationGraph
                     userData = typeof(PositionNode)
                 },
 
-                new SearchTreeGroupEntry(new GUIContent("Procedural"), 1),
-
-                new SearchTreeGroupEntry(new GUIContent("Noise"), 2),
-
-                new SearchTreeEntry(new GUIContent("Perlin 3D"))
-                {
-                    level = 3,
-                    userData = typeof(Perlin3DNode)
-                },
-
                 new SearchTreeGroupEntry(new GUIContent("Math"), 1),
 
                 new SearchTreeGroupEntry(new GUIContent("Basic"), 2),
@@ -92,6 +82,16 @@ namespace Editor.TerrainGenerationGraph
                 {
                     level = 3,
                     userData = typeof(MultiplyNode)
+                },
+
+                new SearchTreeGroupEntry(new GUIContent("Procedural"), 1),
+
+                new SearchTreeGroupEntry(new GUIContent("Noise"), 2),
+
+                new SearchTreeEntry(new GUIContent("Perlin 3D"))
+                {
+                    level = 3,
+                    userData = typeof(Perlin3DNode)
                 }
             };
 

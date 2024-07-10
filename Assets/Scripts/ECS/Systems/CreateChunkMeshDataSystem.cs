@@ -4,6 +4,7 @@ using ECS.Jobs;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Transforms;
 
 namespace ECS.Systems
@@ -55,7 +56,8 @@ namespace ECS.Systems
                 TgTree = tgGraph
             }.ScheduleParallel(_chunkQuery, state.Dependency);
 
-            createMeshDataJobHandle.Complete();
+            state.Dependency = JobHandle.CombineDependencies(state.Dependency, createMeshDataJobHandle);
+            state.Dependency.Complete();
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();

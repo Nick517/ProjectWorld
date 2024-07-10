@@ -14,12 +14,12 @@ namespace Editor.TerrainGenerationGraph.Nodes
     public abstract class TggNode : Node
     {
         #region Fields
-
-        public TgtNodeDto SavedDto;
+        
         protected TerrainGenGraphView GraphView;
-        protected NodeType NodeType;
         private readonly List<TggPort> _tggPorts = new();
         private string _id;
+
+        protected abstract List<NodeType> NodeTypes { get; }
 
         #endregion
 
@@ -99,7 +99,9 @@ namespace Editor.TerrainGenerationGraph.Nodes
             return outputPort;
         }
 
-        private List<InputPort> InputPorts => _tggPorts.OfType<InputPort>().ToList();
+        protected List<InputPort> InputPorts => _tggPorts.OfType<InputPort>().ToList();
+
+        protected List<OutputPort> OutputPorts => _tggPorts.OfType<OutputPort>().ToList();
 
         protected List<TggPort> ConnectedOutputPorts =>
             InputPorts
@@ -117,21 +119,30 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public virtual TgtNodeDto GatherDto()
+        private TgtNodeDto _savedDto;
+        
+        public virtual TgtNodeDto GatherDto(InputPort inputPort = default)
         {
-            if (NodeType == NodeType.Skip) return InputPorts.First().NextTgtNodeDto();
-
-            if (SavedDto != null)
+            if (!NodeTypes.Any()) return InputPorts.First().NextTgtNodeDto();
+            
+            if (_savedDto != null)
             {
-                SavedDto.cached = true;
-
-                return SavedDto;
+                _savedDto.cached = true;
+                
+                return _savedDto;
             }
+            
+            var index = OutputPorts.FindIndex(port => inputPort != null && inputPort.ConnectedTggPort == port);
 
-            var nextNodes = InputPorts.Select(inputPort => inputPort.NextTgtNodeDto()).ToArray();
+            var nextNodes = InputPorts.Select(port => port.NextTgtNodeDto()).ToArray();
 
-            SavedDto = new TgtNodeDto(NodeType, nextNodes);
-            return SavedDto;
+            _savedDto = new TgtNodeDto(NodeTypes.ElementAt(index), nextNodes);
+            return _savedDto;
+        }
+
+        public virtual void ClearDto()
+        {
+            _savedDto = null;
         }
 
         #endregion

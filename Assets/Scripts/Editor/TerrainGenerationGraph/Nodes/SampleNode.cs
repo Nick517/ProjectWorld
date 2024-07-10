@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using UnityEditor.Experimental.GraphView;
 using static NodeOperations;
@@ -11,14 +12,14 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         private InputPort _inputPort;
 
+        protected override List<NodeType> NodeTypes => new();
+
         #endregion
 
         #region Methods
 
         protected override void SetUp()
         {
-            NodeType = NodeType.Skip;
-
             title = "Sample";
 
             _inputPort = AddInputPort();

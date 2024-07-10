@@ -50,6 +50,8 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             ConnectedTggEdges.ForEach(tggEdge => tggEdge.Destroy());
         }
 
+        public TggPort ConnectedTggPort => ConnectedTggPorts.First();
+
         public List<TggPort> ConnectedTggPorts =>
             ConnectedTggEdges
                 .Select(tggEdge => tggEdge.PortOfType(OppositePortDirection)).ToList();
@@ -62,7 +64,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             GraphView.TggEdges
                 .Where(tggEdge => !tggEdge.IsDvnEdge && tggEdge.TggPorts.Contains(this))
                 .ToList();
-
+        
         public List<TggEdge> AllConnectedEdges =>
             GraphView.TggEdges
                 .Where(tggEdge => tggEdge.TggPorts.Contains(this))

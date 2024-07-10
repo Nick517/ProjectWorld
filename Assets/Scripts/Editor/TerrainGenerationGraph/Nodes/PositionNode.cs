@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using static NodeOperations;
 
@@ -9,6 +10,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
         #region Fields
 
         private OutputPort _outputPort;
+        
+        protected override List<NodeType> NodeTypes => new() { NodeType.Position };
 
         #endregion
 
@@ -16,8 +19,6 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
-            NodeType = NodeType.Position;
-
             title = "Position";
 
             _outputPort = AddOutputPort("Out", 3);

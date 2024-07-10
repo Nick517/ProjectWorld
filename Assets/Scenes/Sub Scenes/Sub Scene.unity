@@ -133,6 +133,21 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1868792608161587835, guid: 074f2e90a5824764bb9dc080e95a1dd8,
         type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1868792608161587835, guid: 074f2e90a5824764bb9dc080e95a1dd8,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1868792608161587835, guid: 074f2e90a5824764bb9dc080e95a1dd8,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 1868792608161587835, guid: 074f2e90a5824764bb9dc080e95a1dd8,
+        type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -189,7 +204,7 @@ PrefabInstance:
         type: 3}
       propertyPath: tgGraph
       value: 
-      objectReference: {fileID: 11400000, guid: 12359ca8c04b98a428d51e4b6f00f838,
+      objectReference: {fileID: 11400000, guid: a348aef19bb9d5e4ea4afb82c5cdea07,
         type: 2}
     - target: {fileID: 5812077677126750501, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
@@ -228,6 +243,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Fly Camera
+      objectReference: {fileID: 0}
+    - target: {fileID: 7734283982704057008, guid: 4688299cda1843840837b8f03c4da5da,
+        type: 3}
+      propertyPath: acceleration
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

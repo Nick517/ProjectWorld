@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using static NodeOperations;
 
@@ -10,8 +11,9 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         private InputPort _inputCoordPort;
         private InputPort _inputScalePort;
-
         private OutputPort _outputPort;
+
+        protected override List<NodeType> NodeTypes => new() { NodeType.Perlin3D };
 
         #endregion
 
@@ -19,8 +21,6 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         protected override void SetUp()
         {
-            NodeType = NodeType.Perlin3D;
-
             title = "Perlin 3D";
 
             _inputCoordPort = AddInputPort("Coord", 3);

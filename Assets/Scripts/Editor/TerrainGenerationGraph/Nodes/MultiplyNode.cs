@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using static NodeOperations;
 
@@ -12,14 +13,14 @@ namespace Editor.TerrainGenerationGraph.Nodes
         private InputPort _inputPortB;
         private OutputPort _outputPort;
 
+        protected override List<NodeType> NodeTypes => new() { NodeType.Multiply };
+        
         #endregion
 
         #region Methods
 
         protected override void SetUp()
         {
-            NodeType = NodeType.Multiply;
-
             title = "Multiply";
 
             _inputPortA = AddInputPort("A");
