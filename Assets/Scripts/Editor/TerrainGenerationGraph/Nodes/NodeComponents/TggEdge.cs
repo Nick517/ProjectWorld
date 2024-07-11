@@ -96,7 +96,6 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         {
             public string outputPortId;
             public string inputPortId;
-            public bool isDvnEdge;
 
             public Dto()
             {
@@ -106,14 +105,13 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             {
                 outputPortId = tggEdge.OutputPort.ID;
                 inputPortId = tggEdge.InputPort.ID;
-                isDvnEdge = tggEdge.IsDvnEdge;
             }
 
             public virtual void Deserialize(TerrainGenGraphView graphView)
             {
                 var outputPort = graphView.GetTggPort(outputPortId) as OutputPort;
                 var inputPort = graphView.GetTggPort(inputPortId) as InputPort;
-                _ = new TggEdge(graphView, outputPort, inputPort, isDvnEdge);
+                _ = new TggEdge(graphView, outputPort, inputPort);
             }
         }
 

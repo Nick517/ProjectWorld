@@ -1,31 +1,21 @@
-using System;
 using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
-    public class MultiplyNode : TggNode, ITggNodeSerializable
+    public class MultiplyNode : TggNode
     {
-        #region Fields
-
-        private InputPort _inputPortA;
-        private InputPort _inputPortB;
-        private OutputPort _outputPort;
-
         protected override List<NodeType> NodeTypes => new() { NodeType.Multiply };
-        
-        #endregion
 
-        #region Methods
 
         protected override void SetUp()
         {
             title = "Multiply";
 
-            _inputPortA = AddInputPort("A");
-            _inputPortB = AddInputPort("B");
-            _outputPort = AddOutputPort();
+            AddInputPort("A");
+            AddInputPort("B");
+            AddOutputPort();
         }
 
         public override void Update()
@@ -34,47 +24,5 @@ namespace Editor.TerrainGenerationGraph.Nodes
             SetAllPortDimensions(lowest);
             base.Update();
         }
-
-        #endregion
-
-        #region Serialization
-
-        public Dto ToDto()
-        {
-            return new MultiplyNodeDto(this);
-        }
-
-        [Serializable]
-        public class MultiplyNodeDto : Dto
-        {
-            public InputPort.Dto inputPortADto;
-            public InputPort.Dto inputPortBDto;
-            public OutputPort.Dto outputPortDto;
-
-            public MultiplyNodeDto()
-            {
-            }
-
-            public MultiplyNodeDto(MultiplyNode multiplyNode) : base(multiplyNode)
-            {
-                inputPortADto = multiplyNode._inputPortA.ToDto();
-                inputPortBDto = multiplyNode._inputPortB.ToDto();
-                outputPortDto = multiplyNode._outputPort.ToDto();
-            }
-
-            public override TggNode Deserialize(TerrainGenGraphView graphView)
-            {
-                var multiplyNode = (MultiplyNode)Create(graphView, typeof(MultiplyNode));
-
-                DeserializeTo(multiplyNode);
-                inputPortADto.DeserializeTo(multiplyNode._inputPortA);
-                inputPortBDto.DeserializeTo(multiplyNode._inputPortB);
-                outputPortDto.DeserializeTo(multiplyNode._outputPort);
-
-                return multiplyNode;
-            }
-        }
-
-        #endregion
     }
 }

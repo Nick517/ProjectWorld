@@ -1,66 +1,16 @@
-using System;
-using System.Collections.Generic;
-using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using UnityEditor.Experimental.GraphView;
-using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
-    public class SampleNode : TggNode, ITggNodeSerializable
+    public class SampleNode : TggNode
     {
-        #region Fields
-
-        private InputPort _inputPort;
-
-        protected override List<NodeType> NodeTypes => new();
-
-        #endregion
-
-        #region Methods
-
         protected override void SetUp()
         {
             title = "Sample";
 
-            _inputPort = AddInputPort();
+            AddInputPort();
 
             capabilities &= ~Capabilities.Deletable;
         }
-
-        #endregion
-
-        #region Serialization
-
-        public Dto ToDto()
-        {
-            return new SampleNodeDto(this);
-        }
-
-        [Serializable]
-        public class SampleNodeDto : Dto
-        {
-            public InputPort.Dto inputPortDto;
-
-            public SampleNodeDto()
-            {
-            }
-
-            public SampleNodeDto(SampleNode sampleNode) : base(sampleNode)
-            {
-                inputPortDto = sampleNode._inputPort.ToDto();
-            }
-
-            public override TggNode Deserialize(TerrainGenGraphView graphView)
-            {
-                var sampleNode = (SampleNode)Create(graphView, typeof(SampleNode));
-
-                DeserializeTo(sampleNode);
-                inputPortDto.DeserializeTo(sampleNode._inputPort);
-
-                return sampleNode;
-            }
-        }
-
-        #endregion
     }
 }

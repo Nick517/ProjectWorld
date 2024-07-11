@@ -17,5 +17,5 @@ MonoBehaviour:
   mapSurface: 0.5
   maxChunkScale: 10
   megaChunks: 2
-  lod: 3
+  lod: 2
   reloadScale: 1

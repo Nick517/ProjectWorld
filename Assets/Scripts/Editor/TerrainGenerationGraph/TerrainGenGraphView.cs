@@ -139,7 +139,7 @@ namespace Editor.TerrainGenerationGraph
             rootNode.Simplify();
 
             var tree = new TgGraph.TgTreeDto(rootNode);
-            
+
             return JsonConvert.SerializeObject(tree, JsonSettings.Formatted);
         }
 
@@ -156,7 +156,7 @@ namespace Editor.TerrainGenerationGraph
         [Serializable]
         public class Dto
         {
-            public List<TggNode.Dto> TggNodeDtoList;
+            public List<TggNode.Dto> tggNodeDtoList;
             public List<TggEdge.Dto> tggEdgeDtoList;
 
             public Dto()
@@ -165,7 +165,7 @@ namespace Editor.TerrainGenerationGraph
 
             public Dto(TerrainGenGraphView graphView)
             {
-                TggNodeDtoList = graphView.TggNodes.OfType<ITggNodeSerializable>()
+                tggNodeDtoList = graphView.TggNodes.Where(tggNode => tggNode is not ValueNode)
                     .Select(tggNode => tggNode.ToDto()).ToList();
                 tggEdgeDtoList = graphView.TggEdges.Where(tggEdge => !tggEdge.IsDvnEdge)
                     .Select(tggEdge => tggEdge.ToDto()).ToList();
@@ -174,7 +174,7 @@ namespace Editor.TerrainGenerationGraph
             public void Deserialize(TerrainGenGraphView graphView)
             {
                 graphView.ClearGraph();
-                TggNodeDtoList.ForEach(dto => dto.Deserialize(graphView));
+                tggNodeDtoList.ForEach(dto => dto.Deserialize(graphView));
                 tggEdgeDtoList.ForEach(dto => dto.Deserialize(graphView));
                 graphView.TggNodes.Where(tggNode => tggNode is not ValueNode).ToList()
                     .ForEach(tggNode => tggNode.Update());
