@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using TerrainGenerationGraph.Scripts;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static NodeOperations;
@@ -22,7 +22,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
         private FloatField _floatFieldZ;
         private FloatField _floatFieldW;
 
-        protected override List<NodeType> NodeTypes => new() { NodeType.Value };
+        private const float OffsetX = -15;
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
             _floatFieldZ = CreateFloatField();
             _floatFieldW = CreateFloatField();
 
-            OutputPort = AddOutputPort(null);
+            AddOutputPort();
 
             capabilities = 0;
         }
@@ -84,8 +84,6 @@ namespace Editor.TerrainGenerationGraph.Nodes
             GraphView.RemoveElement(this);
         }
 
-        private const float OffsetX = -15;
-
         private void Reposition()
         {
             update -= Reposition;
@@ -105,6 +103,13 @@ namespace Editor.TerrainGenerationGraph.Nodes
             Position = newPosition;
         }
 
+        private void AddOutputPort()
+        {
+            OutputPort = new OutputPort(GraphView, this, null, typeof(float), NodeType.Value);
+
+            OutputPorts.Add(OutputPort);
+        }
+
         private FloatField CreateFloatField()
         {
             var floatField = new FloatField();
@@ -113,17 +118,10 @@ namespace Editor.TerrainGenerationGraph.Nodes
             return floatField;
         }
 
-        public Vector4 Value
+        public float4 Value
         {
-            get
-            {
-                var x = _floatFieldX.value;
-                var y = _floatFieldY.value;
-                var z = _floatFieldZ.value;
-                var w = _floatFieldW.value;
+            get => new(_floatFieldX.value, _floatFieldY.value, _floatFieldZ.value, _floatFieldW.value);
 
-                return new Vector4(x, y, z, w);
-            }
             set
             {
                 _floatFieldX.value = value.x;

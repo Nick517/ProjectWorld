@@ -5,6 +5,7 @@ public static class NodeOperations
 {
     public enum NodeType
     {
+        Skip,
         Value,
         SplitOutX,
         SplitOutY,

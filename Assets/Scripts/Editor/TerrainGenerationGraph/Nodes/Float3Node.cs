@@ -1,12 +1,9 @@
-using System.Collections.Generic;
 using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
     public class Float3Node : TggNode
     {
-        protected override List<NodeType> NodeTypes => new() { NodeType.Float3 };
-
         protected override void SetUp()
         {
             title = "Float 3";
@@ -14,7 +11,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
             AddInputPort("X");
             AddInputPort("Y");
             AddInputPort("Z");
-            AddOutputPort("Out", 3);
+            AddOutputPort(NodeType.Float3, 3);
         }
     }
 }

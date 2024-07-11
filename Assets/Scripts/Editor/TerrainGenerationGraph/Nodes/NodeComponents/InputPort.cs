@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using Serializable;
 using TerrainGenerationGraph.Scripts;
+using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;
-using UnityEngine;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {
@@ -12,7 +12,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         #region Fields
 
         private ValueNode _valueNode;
-        public Vector4 Value = Vector4.zero;
+        public float4 Value = float4.zero;
 
         #endregion
 

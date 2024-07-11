@@ -119,7 +119,7 @@ namespace Editor.TerrainGenerationGraph
 
         private void ClearSavedDto()
         {
-            TggNodes.ForEach(tggNode => tggNode.ResetTgtNodeDtoCache());
+            TggPorts.OfType<OutputPort>().ToList().ForEach(outputPort => outputPort.TgtNodeDto = null);
         }
 
         #endregion
@@ -167,6 +167,7 @@ namespace Editor.TerrainGenerationGraph
             {
                 tggNodeDtoList = graphView.TggNodes.Where(tggNode => tggNode is not ValueNode)
                     .Select(tggNode => tggNode.ToDto()).ToList();
+                
                 tggEdgeDtoList = graphView.TggEdges.Where(tggEdge => !tggEdge.IsDvnEdge)
                     .Select(tggEdge => tggEdge.ToDto()).ToList();
             }
@@ -174,8 +175,11 @@ namespace Editor.TerrainGenerationGraph
             public void Deserialize(TerrainGenGraphView graphView)
             {
                 graphView.ClearGraph();
+                
                 tggNodeDtoList.ForEach(dto => dto.Deserialize(graphView));
+                
                 tggEdgeDtoList.ForEach(dto => dto.Deserialize(graphView));
+                
                 graphView.TggNodes.Where(tggNode => tggNode is not ValueNode).ToList()
                     .ForEach(tggNode => tggNode.Update());
             }
