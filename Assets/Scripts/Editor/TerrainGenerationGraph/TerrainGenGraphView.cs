@@ -119,7 +119,7 @@ namespace Editor.TerrainGenerationGraph
 
         private void ClearSavedDto()
         {
-            TggNodes.ForEach(tggNode => tggNode.ClearDto());
+            TggNodes.ForEach(tggNode => tggNode.ResetTgtNodeDtoCache());
         }
 
         #endregion
@@ -134,7 +134,7 @@ namespace Editor.TerrainGenerationGraph
 
         private string SerializeTree()
         {
-            var rootNode = RootNode.GatherDto();
+            var rootNode = RootNode.GatherTgtNodeDto();
             ClearSavedDto();
             rootNode.Simplify();
 

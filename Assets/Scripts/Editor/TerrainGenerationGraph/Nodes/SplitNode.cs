@@ -1,9 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts;
-using UnityEngine;
 using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
@@ -39,83 +36,6 @@ namespace Editor.TerrainGenerationGraph.Nodes
             _outputPortY = AddOutputPort("Y");
             _outputPortZ = AddOutputPort("Z");
             _outputPortW = AddOutputPort("W");
-        }
-
-        #endregion
-
-        #region Terrain Generation Tree
-
-        private TgtNodeDto _savedDtoX;
-        private TgtNodeDto _savedDtoY;
-        private TgtNodeDto _savedDtoZ;
-        private TgtNodeDto _savedDtoW;
-
-        public override TgtNodeDto GatherDto(InputPort inputPort = default)
-        {
-            var index = OutputPorts.FindIndex(port => inputPort != null && inputPort.ConnectedTggPort == port);
-            var nextNodes = InputPorts.Select(port => port.NextTgtNodeDto()).ToArray();
-
-            if (index == 0)
-            {
-                if (_savedDtoX != null)
-                {
-                    _savedDtoX.cached = true;
-
-                    return _savedDtoX;
-                }
-
-                _savedDtoX = new TgtNodeDto(NodeType.SplitOutX, nextNodes);
-                return _savedDtoX;
-            }
-
-            if (index == 1)
-            {
-                if (_savedDtoY != null)
-                {
-                    _savedDtoY.cached = true;
-
-                    return _savedDtoY;
-                }
-
-                _savedDtoY = new TgtNodeDto(NodeType.SplitOutY, nextNodes);
-                return _savedDtoY;
-            }
-
-            if (index == 2)
-            {
-                if (_savedDtoZ != null)
-                {
-                    _savedDtoZ.cached = true;
-
-                    return _savedDtoZ;
-                }
-
-                _savedDtoZ = new TgtNodeDto(NodeType.SplitOutZ, nextNodes);
-                return _savedDtoZ;
-            }
-
-            if (index == 3)
-            {
-                if (_savedDtoW != null)
-                {
-                    _savedDtoW.cached = true;
-
-                    return _savedDtoW;
-                }
-
-                _savedDtoW = new TgtNodeDto(NodeType.SplitOutW, nextNodes);
-                return _savedDtoW;
-            }
-
-            return null;
-        }
-        
-        public override void ClearDto()
-        {
-            _savedDtoX = null;
-            _savedDtoY = null;
-            _savedDtoZ = null;
-            _savedDtoW = null;
         }
 
         #endregion

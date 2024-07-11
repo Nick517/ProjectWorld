@@ -14,10 +14,11 @@ namespace Editor.TerrainGenerationGraph.Nodes
     public abstract class TggNode : Node
     {
         #region Fields
-        
+
         protected TerrainGenGraphView GraphView;
         private readonly List<TggPort> _tggPorts = new();
         private string _id;
+        private TgtNodeDto[] _tgtNodeDtoCache;
 
         protected abstract List<NodeType> NodeTypes { get; }
 
@@ -41,6 +42,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
             SetUp();
             RefreshPorts();
             RefreshExpandedState();
+            ResetTgtNodeDtoCache();
         }
 
         protected abstract void SetUp();
@@ -99,9 +101,9 @@ namespace Editor.TerrainGenerationGraph.Nodes
             return outputPort;
         }
 
-        protected List<InputPort> InputPorts => _tggPorts.OfType<InputPort>().ToList();
+        private List<InputPort> InputPorts => _tggPorts.OfType<InputPort>().ToList();
 
-        protected List<OutputPort> OutputPorts => _tggPorts.OfType<OutputPort>().ToList();
+        private List<OutputPort> OutputPorts => _tggPorts.OfType<OutputPort>().ToList();
 
         protected List<TggPort> ConnectedOutputPorts =>
             InputPorts
@@ -119,30 +121,29 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        private TgtNodeDto _savedDto;
-        
-        public virtual TgtNodeDto GatherDto(InputPort inputPort = default)
+        public virtual TgtNodeDto GatherTgtNodeDto(InputPort inputPort = default)
         {
             if (!NodeTypes.Any()) return InputPorts.First().NextTgtNodeDto();
-            
-            if (_savedDto != null)
-            {
-                _savedDto.cached = true;
-                
-                return _savedDto;
-            }
-            
+
             var index = OutputPorts.FindIndex(port => inputPort != null && inputPort.ConnectedTggPort == port);
+
+            if (_tgtNodeDtoCache[index] != null)
+            {
+                _tgtNodeDtoCache[index].cached = true;
+
+                return _tgtNodeDtoCache[index];
+            }
 
             var nextNodes = InputPorts.Select(port => port.NextTgtNodeDto()).ToArray();
 
-            _savedDto = new TgtNodeDto(NodeTypes.ElementAt(index), nextNodes);
-            return _savedDto;
+            _tgtNodeDtoCache[index] = new TgtNodeDto(NodeTypes.ElementAt(index), nextNodes);
+
+            return _tgtNodeDtoCache[index];
         }
 
-        public virtual void ClearDto()
+        public void ResetTgtNodeDtoCache()
         {
-            _savedDto = null;
+            _tgtNodeDtoCache = new TgtNodeDto[NodeTypes.Count];
         }
 
         #endregion

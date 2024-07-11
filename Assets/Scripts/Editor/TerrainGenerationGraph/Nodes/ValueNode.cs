@@ -139,7 +139,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public override TgtNodeDto GatherDto(InputPort inputPort)
+        public override TgtNodeDto GatherTgtNodeDto(InputPort inputPort = default)
         {
             return new TgtNodeDto(NodeType.Value, new TgtNodeDto[] { }, Value);
         }
