@@ -1,5 +1,4 @@
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using TerrainGenerationGraph.Scripts;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,14 +12,14 @@ namespace Editor.TerrainGenerationGraph.Nodes
     {
         #region Fields
 
-        public OutputPort OutputPort;
-        public InputPort ParentingInputPort;
+        public readonly OutputPort OutputPort;
+        private readonly InputPort _parentingInputPort;
         public int Dimensions;
 
-        private FloatField _floatFieldX;
-        private FloatField _floatFieldY;
-        private FloatField _floatFieldZ;
-        private FloatField _floatFieldW;
+        private readonly FloatField _floatFieldX;
+        private readonly FloatField _floatFieldY;
+        private readonly FloatField _floatFieldZ;
+        private readonly FloatField _floatFieldW;
 
         private const float OffsetX = -15;
 
@@ -28,24 +27,24 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Methods
 
-        protected override void SetUp()
+        public ValueNode(TerrainGenGraphView graphView, InputPort parentingInputPort)
         {
+            GraphView = graphView;
+            _parentingInputPort = parentingInputPort;
+
             titleContainer.RemoveFromHierarchy();
             mainContainer.style.flexDirection = Row;
-
             _floatFieldX = CreateFloatField();
             _floatFieldY = CreateFloatField();
             _floatFieldZ = CreateFloatField();
             _floatFieldW = CreateFloatField();
-
-            AddOutputPort();
-
+            OutputPort = new OutputPort(GraphView, this, null, typeof(float), Operation.Value);
             capabilities = 0;
         }
 
-        public override void Update()
+        public new void Update()
         {
-            Dimensions = ParentingInputPort.Dimensions;
+            Dimensions = _parentingInputPort.Dimensions;
 
             mainContainer.Add(new Label("X"));
             mainContainer.Add(_floatFieldX);
@@ -71,16 +70,17 @@ namespace Editor.TerrainGenerationGraph.Nodes
             OutputPort.SetDimensions(Dimensions);
             mainContainer.Add(OutputPort);
 
-            _ = new TggEdge(GraphView, this, ParentingInputPort);
+            _ = new TggEdge(GraphView, this, _parentingInputPort);
 
             ParentingTggNode.Add(this);
 
             update += Reposition;
         }
 
-        public override void Destroy()
+        public new void Destroy()
         {
             OutputPort.AllConnectedEdges.ForEach(tggEdge => GraphView.RemoveElement(tggEdge));
+
             GraphView.RemoveElement(this);
         }
 
@@ -91,29 +91,23 @@ namespace Editor.TerrainGenerationGraph.Nodes
             if (float.IsNaN(GetPosition().width))
             {
                 update += Reposition;
+
                 return;
             }
 
-            var newPosition = ParentingInputPort.Position - ParentingTggNode.Position;
+            var newPosition = _parentingInputPort.Position - ParentingTggNode.Position;
             var size = GetPosition().size;
             var offset = new Vector2(size.x, size.y / 2);
             offset.x -= OffsetX;
             newPosition -= offset;
 
-            Position = newPosition;
-        }
-
-        private void AddOutputPort()
-        {
-            OutputPort = new OutputPort(GraphView, this, null, typeof(float), NodeType.Value);
-
-            OutputPorts.Add(OutputPort);
+            SetPosition(new Rect(newPosition, Vector2.zero));
         }
 
         private FloatField CreateFloatField()
         {
             var floatField = new FloatField();
-            floatField.RegisterValueChangedCallback(_ => { ParentingInputPort.Value = Value; });
+            floatField.RegisterValueChangedCallback(_ => { _parentingInputPort.Value = Value; });
 
             return floatField;
         }
@@ -131,16 +125,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
             }
         }
 
-        private TggNode ParentingTggNode => ParentingInputPort.ParentTggNode;
-
-        #endregion
-
-        #region Terrain Generation Tree
-
-        public override TgtNodeDto GatherTgtNodeDto(InputPort inputPort = default)
-        {
-            return new TgtNodeDto(NodeType.Value, new TgtNodeDto[] { }, Value);
-        }
+        private TggNode ParentingTggNode => _parentingInputPort.ParentTggNode;
 
         #endregion
     }

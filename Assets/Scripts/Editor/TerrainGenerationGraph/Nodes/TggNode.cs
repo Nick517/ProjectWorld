@@ -4,55 +4,132 @@ using System.Linq;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using Serializable;
 using TerrainGenerationGraph.Scripts;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static NodeOperations;
-using Node = UnityEditor.Experimental.GraphView.Node;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
-    public abstract class TggNode : Node
+    public class TggNode : Node
     {
         #region Fields
 
+        public readonly string NodeType;
         protected TerrainGenGraphView GraphView;
         private readonly List<InputPort> _inputPorts = new();
-        protected readonly List<OutputPort> OutputPorts = new();
+        private readonly List<OutputPort> _outputPorts = new();
         private string _id;
-        protected bool SetPortsToLowest;
+        private readonly bool _setPortsToLowest;
 
         #endregion
 
         #region Methods
 
-        public static TggNode Create(TerrainGenGraphView graphView, Type nodeType)
+        protected TggNode()
         {
-            var node = (TggNode)Activator.CreateInstance(nodeType);
-            node.GraphView = graphView;
-            node.Initialize();
-
-            return node;
         }
-
-        private void Initialize()
+        
+        public TggNode(TerrainGenGraphView graphView, string nodeType)
         {
+            GraphView = graphView;
+            NodeType = nodeType;
             _id = GraphUtil.NewID;
+            base.title = NodeType;
+
+            switch (NodeType)
+            {
+                case "Sample":
+                    AddInputPort();
+                    capabilities &= ~Capabilities.Deletable;
+                    break;
+
+                case "Split":
+                    AddInputPort();
+                    AddOutputPort("X", Operation.SplitOutX);
+                    AddOutputPort("Y", Operation.SplitOutY);
+                    AddOutputPort("Z", Operation.SplitOutZ);
+                    AddOutputPort("W", Operation.SplitOutW);
+                    break;
+
+                case "Float":
+                    AddInputPort("X");
+                    AddOutputPort();
+                    break;
+
+                case "Float 2":
+                    AddInputPort("X");
+                    AddInputPort("Y");
+                    AddOutputPort(Operation.Float2, 2);
+                    break;
+
+                case "Float 3":
+                    AddInputPort("X");
+                    AddInputPort("Y");
+                    AddInputPort("Z");
+                    AddOutputPort(Operation.Float3, 3);
+                    break;
+
+                case "Float 4":
+                    AddInputPort("X");
+                    AddInputPort("Y");
+                    AddInputPort("Z");
+                    AddInputPort("W");
+                    AddOutputPort(Operation.Float4, 4);
+                    break;
+
+                case "Position":
+                    AddOutputPort(Operation.Position, 3);
+                    break;
+
+                case "Add":
+                    AddInputPort("A");
+                    AddInputPort("B");
+                    AddOutputPort(Operation.Add);
+                    _setPortsToLowest = true;
+                    break;
+                
+                case "Subtract":
+                    AddInputPort("A");
+                    AddInputPort("B");
+                    AddOutputPort(Operation.Subtract);
+                    _setPortsToLowest = true;
+                    break;
+
+                case "Multiply":
+                    AddInputPort("A");
+                    AddInputPort("B");
+                    AddOutputPort(Operation.Multiply);
+                    _setPortsToLowest = true;
+                    break;
+                
+                case "Divide":
+                    AddInputPort("A");
+                    AddInputPort("B");
+                    AddOutputPort(Operation.Divide);
+                    _setPortsToLowest = true;
+                    break;
+
+                case "Perlin 3D":
+                    AddInputPort("Coord", 3);
+                    AddInputPort("Scale");
+                    AddOutputPort(Operation.Perlin3D);
+                    break;
+            }
+
             GraphView.AddElement(this);
-            SetUp();
             RefreshPorts();
             RefreshExpandedState();
         }
 
-        protected abstract void SetUp();
-
-        public virtual void Update()
+        public void Update()
         {
-            if (SetPortsToLowest) SetAllPortDimensions(TggPort.GetLowestDimension(ConnectedOutputPorts));
+            if (_setPortsToLowest) SetAllPortDimensions(TggPort.GetLowestDimension(ConnectedOutputPorts));
 
             _inputPorts.ForEach(inputPort => inputPort.UpdateValueNode());
         }
 
-        public virtual void Destroy()
+        public void Destroy()
         {
             DisconnectAllPorts();
             _inputPorts.ForEach(inputPort => inputPort.RemoveValueNode());
@@ -79,7 +156,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Utility
 
-        protected void AddInputPort(string defaultName = "In", int defaultDimensions = 1)
+        private void AddInputPort(string defaultName = "In", int defaultDimensions = 1)
         {
             var type = TggPort.TypeFromDimensions(defaultDimensions);
             var inputPort = new InputPort(GraphView, this, defaultName, type);
@@ -88,22 +165,22 @@ namespace Editor.TerrainGenerationGraph.Nodes
             _inputPorts.Add(inputPort);
         }
 
-        protected void AddOutputPort(NodeType nodeType, int defaultDimensions = 1)
+        private void AddOutputPort(Operation operation, int defaultDimensions = 1)
         {
-            AddOutputPort("Out", nodeType, defaultDimensions);
+            AddOutputPort("Out", operation, defaultDimensions);
         }
 
-        protected void AddOutputPort(string defaultName = "Out", NodeType nodeType = default,
+        private void AddOutputPort(string defaultName = "Out", Operation operation = default,
             int defaultDimensions = 1)
         {
             var type = TggPort.TypeFromDimensions(defaultDimensions);
-            var outputPort = new OutputPort(GraphView, this, defaultName, type, nodeType);
+            var outputPort = new OutputPort(GraphView, this, defaultName, type, operation);
 
             outputContainer.Add(outputPort);
-            OutputPorts.Add(outputPort);
+            _outputPorts.Add(outputPort);
         }
 
-        private List<TggPort> TggPorts => _inputPorts.Concat<TggPort>(OutputPorts).ToList();
+        private List<TggPort> TggPorts => _inputPorts.Concat<TggPort>(_outputPorts).ToList();
 
         private List<TggPort> ConnectedOutputPorts =>
             _inputPorts
@@ -121,13 +198,14 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public virtual TgtNodeDto GatherTgtNodeDto(InputPort inputPort = default)
+        public TgtNodeDto GatherTgtNodeDto(InputPort inputPort = null)
         {
-            if (inputPort == default) return _inputPorts.First().NextTgtNodeDto();
+            if (inputPort == null) return _inputPorts.First().NextTgtNodeDto();
 
             var outputPort = inputPort.ConnectedTggPort as OutputPort;
 
-            if (outputPort == null || outputPort.NodeType == NodeType.Skip) return _inputPorts.First().NextTgtNodeDto();
+            if (outputPort == null || outputPort.Operation == Operation.Skip)
+                return _inputPorts.First().NextTgtNodeDto();
 
             if (outputPort.TgtNodeDto != null)
             {
@@ -138,7 +216,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
             var nextNodes = _inputPorts.Select(port => port.NextTgtNodeDto()).ToArray();
 
-            outputPort.TgtNodeDto = new TgtNodeDto(outputPort.NodeType, nextNodes);
+            outputPort.TgtNodeDto = new TgtNodeDto(outputPort.Operation, nextNodes);
 
             return outputPort.TgtNodeDto;
         }
@@ -155,7 +233,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
         [Serializable]
         public class Dto
         {
-            public string typeName;
+            public string nodeType;
             public string id;
             public SerializableVector2 position;
             public List<InputPort.Dto> inputPortDtoList;
@@ -167,27 +245,26 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
             public Dto(TggNode tggNode)
             {
-                typeName = tggNode.GetType().FullName;
+                nodeType = tggNode.NodeType;
                 id = tggNode._id;
                 position = new SerializableVector2(tggNode.Position);
                 inputPortDtoList = tggNode._inputPorts.Select(inputPort => inputPort.ToDto()).ToList();
-                outputPortDtoList = tggNode.OutputPorts.Select(outputPort => outputPort.ToDto()).ToList();
+                outputPortDtoList = tggNode._outputPorts.Select(outputPort => outputPort.ToDto()).ToList();
             }
 
             public TggNode Deserialize(TerrainGenGraphView graphView)
             {
-                var type = Type.GetType(typeName);
-
-                var tggNode = Create(graphView, type);
-
-                tggNode._id = id;
-                tggNode.Position = position.Deserialize();
+                var tggNode = new TggNode(graphView, nodeType)
+                {
+                    _id = id,
+                    Position = position.Deserialize()
+                };
 
                 for (var i = 0; i < tggNode._inputPorts.Count; i++)
                     inputPortDtoList[i].DeserializeTo(tggNode._inputPorts[i]);
 
-                for (var i = 0; i < tggNode.OutputPorts.Count; i++)
-                    outputPortDtoList[i].DeserializeTo(tggNode.OutputPorts[i]);
+                for (var i = 0; i < tggNode._outputPorts.Count; i++)
+                    outputPortDtoList[i].DeserializeTo(tggNode._outputPorts[i]);
 
                 return tggNode;
             }

@@ -31,7 +31,7 @@ namespace Editor.TerrainGenerationGraph
             AddSearchWindow();
             graphViewChanged += OnGraphViewChanged;
 
-            var sampleNode = TggNode.Create(this, typeof(SampleNode));
+            var sampleNode = new TggNode(this, "Sample");
             sampleNode.Update();
         }
 
@@ -94,7 +94,7 @@ namespace Editor.TerrainGenerationGraph
 
         #region Utility
 
-        private SampleNode RootNode => nodes.OfType<SampleNode>().FirstOrDefault();
+        private TggNode RootNode => TggNodes.FirstOrDefault(tggNode => tggNode.NodeType == "Sample");
 
         private List<TggNode> TggNodes => nodes.OfType<TggNode>().ToList();
 
@@ -165,23 +165,22 @@ namespace Editor.TerrainGenerationGraph
 
             public Dto(TerrainGenGraphView graphView)
             {
-                tggNodeDtoList = graphView.TggNodes.Where(tggNode => tggNode is not ValueNode)
+                tggNodeDtoList = graphView.TggNodes.Where(tggNode => tggNode.NodeType != null).ToList()
                     .Select(tggNode => tggNode.ToDto()).ToList();
-                
-                tggEdgeDtoList = graphView.TggEdges.Where(tggEdge => !tggEdge.IsDvnEdge)
+
+                tggEdgeDtoList = graphView.TggEdges.Where(tggEdge => !tggEdge.IsValueNodeEdge)
                     .Select(tggEdge => tggEdge.ToDto()).ToList();
             }
 
             public void Deserialize(TerrainGenGraphView graphView)
             {
                 graphView.ClearGraph();
-                
+
                 tggNodeDtoList.ForEach(dto => dto.Deserialize(graphView));
-                
+
                 tggEdgeDtoList.ForEach(dto => dto.Deserialize(graphView));
-                
-                graphView.TggNodes.Where(tggNode => tggNode is not ValueNode).ToList()
-                    .ForEach(tggNode => tggNode.Update());
+
+                graphView.TggNodes.ToList().ForEach(tggNode => tggNode.Update());
             }
         }
 

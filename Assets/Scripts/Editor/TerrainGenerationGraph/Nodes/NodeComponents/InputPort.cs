@@ -4,6 +4,7 @@ using Serializable;
 using TerrainGenerationGraph.Scripts;
 using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;
+using static NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {
@@ -32,27 +33,6 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             ParentTggNode.Update();
         }
 
-        private void AddValueNode()
-        {
-            if (_valueNode == null)
-            {
-                _valueNode = (ValueNode)TggNode.Create(GraphView, typeof(ValueNode));
-                _valueNode.ParentingInputPort = this;
-                _valueNode.Update();
-                _valueNode.Value = Value;
-            }
-        }
-
-        public void RemoveValueNode()
-        {
-            if (_valueNode != null)
-            {
-                Value = _valueNode.Value;
-                _valueNode?.Destroy();
-                _valueNode = null;
-            }
-        }
-
         public void UpdateValueNode()
         {
             if (_valueNode != null)
@@ -73,12 +53,34 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             }
         }
 
+        private void AddValueNode()
+        {
+            if (_valueNode == null)
+            {
+                _valueNode = new ValueNode(GraphView, this);
+                _valueNode.Update();
+                _valueNode.Value = Value;
+            }
+        }
+
+        public void RemoveValueNode()
+        {
+            if (_valueNode != null)
+            {
+                Value = _valueNode.Value;
+                _valueNode?.Destroy();
+                _valueNode = null;
+            }
+        }
+
         #endregion
 
         #region Terrain Generation Tree
 
         public TgtNodeDto NextTgtNodeDto()
         {
+            if (_valueNode != null) return new TgtNodeDto(Operation.Value, new TgtNodeDto[] { }, Value);
+
             return AllConnectedPorts.First().ParentTggNode.GatherTgtNodeDto(this);
         }
 

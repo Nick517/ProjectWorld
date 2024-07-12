@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using Serializable;
 using UnityEngine;
 using static JsonSettings;
-using static NodeOperations.NodeType;
+using static NodeOperations.Operation;
 
 namespace TerrainGenerationGraph.Scripts
 {
@@ -41,7 +41,7 @@ namespace TerrainGenerationGraph.Scripts
 
                 nodes.Add(node);
 
-                if (node.nodeType == Value)
+                if (node.operation == Value)
                 {
                     AddValue(node);
 

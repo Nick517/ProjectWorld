@@ -33,7 +33,7 @@ namespace ECS.Authoring
                 var dto = tgTree.nodes[i];
                 ref var node = ref builder.ConstructRoot<Node>();
 
-                node.Type = dto.nodeType;
+                node.Type = dto.operation;
                 node.CacheIndex = dto.cached ? cacheCount : -1;
                 if (dto.cached) cacheCount++;
                 node.Next = dto.nextIndex.Deserialize();

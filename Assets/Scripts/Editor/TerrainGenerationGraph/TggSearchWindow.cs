@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes;
 using UnityEditor.Experimental.GraphView;
@@ -32,7 +31,7 @@ namespace Editor.TerrainGenerationGraph
                 new SearchTreeEntry(new GUIContent("Split"))
                 {
                     level = 2,
-                    userData = typeof(SplitNode)
+                    userData = "Split"
                 },
 
                 new SearchTreeGroupEntry(new GUIContent("Input"), 1),
@@ -42,22 +41,22 @@ namespace Editor.TerrainGenerationGraph
                 new SearchTreeEntry(new GUIContent("Float"))
                 {
                     level = 3,
-                    userData = typeof(FloatNode)
+                    userData = "Float"
                 },
                 new SearchTreeEntry(new GUIContent("Float 2"))
                 {
                     level = 3,
-                    userData = typeof(Float2Node)
+                    userData = "Float 2"
                 },
                 new SearchTreeEntry(new GUIContent("Float 3"))
                 {
                     level = 3,
-                    userData = typeof(Float3Node)
+                    userData = "Float 3"
                 },
                 new SearchTreeEntry(new GUIContent("Float 4"))
                 {
                     level = 3,
-                    userData = typeof(Float4Node)
+                    userData = "Float 4"
                 },
 
                 new SearchTreeGroupEntry(new GUIContent("Geometry"), 2),
@@ -65,7 +64,7 @@ namespace Editor.TerrainGenerationGraph
                 new SearchTreeEntry(new GUIContent("Position"))
                 {
                     level = 3,
-                    userData = typeof(PositionNode)
+                    userData = "Position"
                 },
 
                 new SearchTreeGroupEntry(new GUIContent("Math"), 1),
@@ -75,13 +74,25 @@ namespace Editor.TerrainGenerationGraph
                 new SearchTreeEntry(new GUIContent("Add"))
                 {
                     level = 3,
-                    userData = typeof(AddNode)
+                    userData = "Add"
+                },
+                
+                new SearchTreeEntry(new GUIContent("Subtract"))
+                {
+                    level = 3,
+                    userData = "Subtract"
                 },
 
                 new SearchTreeEntry(new GUIContent("Multiply"))
                 {
                     level = 3,
-                    userData = typeof(MultiplyNode)
+                    userData = "Multiply"
+                },
+                
+                new SearchTreeEntry(new GUIContent("Divide"))
+                {
+                    level = 3,
+                    userData = "Divide"
                 },
 
                 new SearchTreeGroupEntry(new GUIContent("Procedural"), 1),
@@ -91,7 +102,7 @@ namespace Editor.TerrainGenerationGraph
                 new SearchTreeEntry(new GUIContent("Perlin 3D"))
                 {
                     level = 3,
-                    userData = typeof(Perlin3DNode)
+                    userData = "Perlin 3D"
                 }
             };
 
@@ -100,8 +111,8 @@ namespace Editor.TerrainGenerationGraph
 
         public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context)
         {
-            var nodeType = (Type)entry.userData;
-            var tggNode = TggNode.Create(_graphView, nodeType);
+            var nodeType = (string)entry.userData;
+            var tggNode = new TggNode(_graphView, nodeType);
             tggNode.Update();
             tggNode.Position = context.screenMousePosition;
 

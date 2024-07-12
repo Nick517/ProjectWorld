@@ -62,7 +62,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         public List<TggEdge> ConnectedTggEdges =>
             GraphView.TggEdges
-                .Where(tggEdge => !tggEdge.IsDvnEdge && tggEdge.TggPorts.Contains(this))
+                .Where(tggEdge => !tggEdge.IsValueNodeEdge && tggEdge.TggPorts.Contains(this))
                 .ToList();
         
         public List<TggEdge> AllConnectedEdges =>

@@ -2,7 +2,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using static NodeOperations;
-using static NodeOperations.NodeType;
+using static NodeOperations.Operation;
 using static Unity.Collections.Allocator;
 
 namespace ECS.Components
@@ -19,7 +19,7 @@ namespace ECS.Components
 
             public struct Node
             {
-                public NodeType Type;
+                public Operation Type;
                 public int CacheIndex;
                 public int4 Next;
             }

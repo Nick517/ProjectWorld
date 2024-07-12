@@ -1,9 +1,9 @@
 using Unity.Mathematics;
-using static NodeOperations.NodeType;
+using static NodeOperations.Operation;
 
 public static class NodeOperations
 {
-    public enum NodeType
+    public enum Operation
     {
         Skip,
         Value,
@@ -22,7 +22,7 @@ public static class NodeOperations
         Perlin3D
     }
 
-    public static float4 GetSample(NodeType type,
+    public static float4 GetSample(Operation type,
         float4 traversalX = default, float4 traversalY = default,
         float4 traversalZ = default, float4 traversalW = default)
     {

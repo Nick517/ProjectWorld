@@ -10,7 +10,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         public TerrainGenGraphView GraphView;
 
-        public readonly bool IsDvnEdge;
+        public readonly bool IsValueNodeEdge;
 
         public List<TggPort> TggPorts => new() { OutputPort, InputPort };
 
@@ -32,24 +32,23 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             InputPort?.Update();
         }
 
-        public TggEdge(TerrainGenGraphView graphView, ValueNode valueNode,
-            InputPort parentingInputPort)
+        public TggEdge(TerrainGenGraphView graphView, ValueNode valueNode, InputPort parentingInputPort)
         {
             GraphView = graphView;
             output = valueNode.OutputPort;
             input = parentingInputPort;
-            IsDvnEdge = true;
+            IsValueNodeEdge = true;
 
             graphView.AddElement(this);
         }
 
         private TggEdge(TerrainGenGraphView graphView, OutputPort outputPort, InputPort parentingInputPort,
-            bool isDvnEdge = false)
+            bool isValueNodeEdge = false)
         {
             GraphView = graphView;
             output = outputPort;
             input = parentingInputPort;
-            IsDvnEdge = isDvnEdge;
+            IsValueNodeEdge = isValueNodeEdge;
 
             graphView.AddElement(this);
             parentingInputPort.Update();
@@ -61,7 +60,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         public void Destroy()
         {
-            if (!IsDvnEdge)
+            if (!IsValueNodeEdge)
             {
                 GraphView.RemoveElement(this);
                 InputPort?.Update();
