@@ -138,7 +138,7 @@ namespace Editor.TerrainGenerationGraph
             ClearSavedDto();
             rootNode.Simplify();
 
-            var tree = new TgGraph.TgTreeDto(rootNode);
+            var tree = new TgTreeDto(rootNode);
 
             return JsonConvert.SerializeObject(tree, JsonSettings.Formatted);
         }

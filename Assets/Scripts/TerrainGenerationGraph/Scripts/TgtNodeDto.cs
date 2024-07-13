@@ -3,7 +3,6 @@ using System.Linq;
 using Newtonsoft.Json;
 using Serializable;
 using Unity.Mathematics;
-using UnityEngine.Serialization;
 using static NodeOperations;
 
 namespace TerrainGenerationGraph.Scripts
@@ -11,7 +10,7 @@ namespace TerrainGenerationGraph.Scripts
     [Serializable]
     public class TgtNodeDto
     {
-        [FormerlySerializedAs("nodeType")] public Operation operation;
+        public Operation operation;
         public SerializableInt4 nextIndex;
         public bool cached;
 

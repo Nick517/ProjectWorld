@@ -14,6 +14,11 @@ public static class ChunkOperations
         return GetCubeSize(settings, chunkScale) * settings.CubeCount;
     }
 
+    public static float3 GetClosestCubePosition(ChunkGenerationSettings settings, float3 position)
+    {
+        return math.floor(position / settings.BaseCubeSize) * settings.BaseCubeSize;
+    }
+
     public static float3 GetClosestChunkPosition(ChunkGenerationSettings settings, ChunkAspect.Data data)
     {
         var chunkSize = GetChunkSize(settings, data.ChunkScale);

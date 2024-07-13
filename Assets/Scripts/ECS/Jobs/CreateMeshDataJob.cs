@@ -97,7 +97,7 @@ namespace ECS.Jobs
             var configIndex = 0;
 
             for (var i = 0; i < 8; i++)
-                if (cube[i] > settings.MapSurface)
+                if (cube[i] <= settings.MapSurface)
                     configIndex |= 1 << i;
 
             return configIndex;
