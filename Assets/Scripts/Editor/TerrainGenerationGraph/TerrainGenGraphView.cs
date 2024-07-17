@@ -180,7 +180,7 @@ namespace Editor.TerrainGenerationGraph
 
                 tggEdgeDtoList.ForEach(dto => dto.Deserialize(graphView));
 
-                graphView.TggNodes.ToList().ForEach(tggNode => tggNode.Update());
+                graphView.TggNodes.ForEach(tggNode => tggNode.Update());
             }
         }
 

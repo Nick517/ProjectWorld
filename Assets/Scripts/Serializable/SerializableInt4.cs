@@ -15,7 +15,7 @@ namespace Serializable
         {
         }
 
-        public SerializableInt4(int4 int4)
+        private SerializableInt4(int4 int4)
         {
             x = int4.x;
             y = int4.y;
@@ -23,17 +23,14 @@ namespace Serializable
             w = int4.w;
         }
 
-        public SerializableInt4(int x, int y, int z, int w)
+        public static implicit operator SerializableInt4(int4 int4)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.w = w;
+            return new SerializableInt4(int4);
         }
 
-        public int4 Deserialize()
+        public static implicit operator int4(SerializableInt4 serializableInt4)
         {
-            return new int4(x, y, z, w);
+            return new int4(serializableInt4.x, serializableInt4.y, serializableInt4.z, serializableInt4.w);
         }
     }
 }

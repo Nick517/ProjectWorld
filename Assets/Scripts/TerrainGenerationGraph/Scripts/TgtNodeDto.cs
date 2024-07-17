@@ -24,7 +24,7 @@ namespace TerrainGenerationGraph.Scripts
         public TgtNodeDto(Operation operation, TgtNodeDto[] nextNodes, float4 value = default)
         {
             this.operation = operation;
-            nextIndex = new SerializableInt4(-1);
+            nextIndex = new int4(-1);
             this.nextNodes = nextNodes;
             this.value = value;
         }

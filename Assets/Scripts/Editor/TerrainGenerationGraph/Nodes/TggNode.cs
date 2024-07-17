@@ -4,6 +4,7 @@ using System.Linq;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using Serializable;
 using TerrainGenerationGraph.Scripts;
+using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -29,7 +30,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
         protected TggNode()
         {
         }
-        
+
         public TggNode(TerrainGenGraphView graphView, string nodeType)
         {
             GraphView = graphView;
@@ -88,7 +89,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                     AddOutputPort(Operation.Add);
                     _setPortsToLowest = true;
                     break;
-                
+
                 case "Subtract":
                     AddInputPort("A");
                     AddInputPort("B");
@@ -102,7 +103,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                     AddOutputPort(Operation.Multiply);
                     _setPortsToLowest = true;
                     break;
-                
+
                 case "Divide":
                     AddInputPort("A");
                     AddInputPort("B");
@@ -247,7 +248,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
             {
                 nodeType = tggNode.NodeType;
                 id = tggNode._id;
-                position = new SerializableVector2(tggNode.Position);
+                position = tggNode.Position;
                 inputPortDtoList = tggNode._inputPorts.Select(inputPort => inputPort.ToDto()).ToList();
                 outputPortDtoList = tggNode._outputPorts.Select(outputPort => outputPort.ToDto()).ToList();
             }
@@ -257,7 +258,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                 var tggNode = new TggNode(graphView, nodeType)
                 {
                     _id = id,
-                    Position = position.Deserialize()
+                    Position = position
                 };
 
                 for (var i = 0; i < tggNode._inputPorts.Count; i++)

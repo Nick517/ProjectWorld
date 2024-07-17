@@ -50,7 +50,7 @@ namespace TerrainGenerationGraph.Scripts
 
         public void AddValue(TgtNodeDto node)
         {
-            values.Add(new SerializableFloat4(node.value));
+            values.Add(node.value);
             node.nextIndex.x = values.Count - 1;
         }
     }

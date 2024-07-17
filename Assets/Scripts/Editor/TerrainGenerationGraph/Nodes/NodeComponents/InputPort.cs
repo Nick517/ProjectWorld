@@ -97,7 +97,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         public class Dto
         {
             public string id;
-            public SerializableVector4 defaultValue;
+            public SerializableFloat4 defaultValue;
 
             public Dto()
             {
@@ -106,13 +106,13 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             public Dto(InputPort inputPort)
             {
                 id = inputPort.ID;
-                defaultValue = new SerializableVector4(inputPort.Value);
+                defaultValue = inputPort.Value;
             }
 
             public void DeserializeTo(InputPort inputPort)
             {
                 inputPort.ID = id;
-                inputPort.Value = defaultValue.Deserialize();
+                inputPort.Value = defaultValue;
             }
         }
 
