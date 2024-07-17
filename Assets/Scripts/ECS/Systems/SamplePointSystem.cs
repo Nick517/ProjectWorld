@@ -3,7 +3,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
-using static ECS.Components.TerrainGenerationTree.TgTree;
+using static ECS.Components.TerrainGenTree.TgTree;
 
 namespace ECS.Systems
 {
@@ -13,14 +13,14 @@ namespace ECS.Systems
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<TerrainGenerationTree>();
+            state.RequireForUpdate<TerrainGenTree>();
             state.RequireForUpdate<ChunkGenerationSettings>();
             state.RequireForUpdate<SamplePointTag>();
         }
 
         public void OnUpdate(ref SystemState state)
         {
-            var tgTree = SystemAPI.GetSingleton<TerrainGenerationTree>();
+            var tgTree = SystemAPI.GetSingleton<TerrainGenTree>();
             var settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
 
             foreach (var point in SystemAPI.Query<RefRO<SamplePointTag>, RefRO<LocalTransform>>())

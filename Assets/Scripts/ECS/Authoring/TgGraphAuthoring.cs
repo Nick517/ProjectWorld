@@ -2,8 +2,8 @@ using ECS.Components;
 using TerrainGenerationGraph.Scripts;
 using Unity.Entities;
 using UnityEngine;
-using static ECS.Components.TerrainGenerationTree;
-using static ECS.Components.TerrainGenerationTree.TgTree;
+using static ECS.Components.TerrainGenTree;
+using static ECS.Components.TerrainGenTree.TgTree;
 using static Unity.Collections.Allocator;
 
 namespace ECS.Authoring
@@ -52,7 +52,7 @@ namespace ECS.Authoring
             AddBlobAsset(ref blobReference, out _);
             var entity = GetEntity(TransformUsageFlags.None);
 
-            AddComponent(entity, new TerrainGenerationTree { Blob = blobReference });
+            AddComponent(entity, new TerrainGenTree { Blob = blobReference });
         }
     }
 }

@@ -22,81 +22,33 @@ public static class NodeOperations
         Perlin3D
     }
 
-    public static float4 GetSample(Operation type,
-        float4 traversalX = default, float4 traversalY = default,
-        float4 traversalZ = default, float4 traversalW = default)
+    public static float4 GetOutput(Operation type, float4 inputX, float4 inputY, float4 inputZ, float4 inputW)
     {
         return type switch
         {
-            SplitOutX =>
-                new float4(
-                    traversalX.x,
-                    0,
-                    0,
-                    0),
+            SplitOutX => new float4(inputX.x, 0, 0, 0),
 
-            SplitOutY =>
-                new float4(
-                    traversalX.y,
-                    0,
-                    0,
-                    0),
+            SplitOutY => new float4(inputX.y, 0, 0, 0),
 
-            SplitOutZ =>
-                new float4(
-                    traversalX.z,
-                    0,
-                    0,
-                    0),
+            SplitOutZ => new float4(inputX.z, 0, 0, 0),
 
-            SplitOutW =>
-                new float4(
-                    traversalX.w,
-                    0,
-                    0,
-                    0),
+            SplitOutW => new float4(inputX.w, 0, 0, 0),
 
-            Float2 =>
-                new float4(
-                    traversalX.x,
-                    traversalY.x,
-                    0,
-                    0),
+            Float2 => new float4(inputX.x, inputY.x, 0, 0),
 
-            Float3 =>
-                new float4(
-                    traversalX.x,
-                    traversalY.x,
-                    traversalZ.x,
-                    0),
+            Float3 => new float4(inputX.x, inputY.x, inputZ.x, 0),
 
-            Float4 =>
-                new float4(
-                    traversalX.x,
-                    traversalY.x,
-                    traversalZ.x,
-                    traversalW.x),
+            Float4 => new float4(inputX.x, inputY.x, inputZ.x, inputW.x),
 
-            Add =>
-                traversalX +
-                traversalY,
+            Add => inputX + inputY,
 
-            Subtract =>
-                traversalX -
-                traversalY,
+            Subtract => inputX - inputY,
 
-            Multiply =>
-                traversalX *
-                traversalY,
+            Multiply => inputX * inputY,
 
-            Divide =>
-                traversalX /
-                traversalY,
+            Divide => inputX / inputY,
 
-            Perlin3D =>
-                noise.cnoise(
-                    traversalX /
-                    traversalY.x),
+            Perlin3D => noise.cnoise(inputX / inputY.x),
 
             _ => default
         };

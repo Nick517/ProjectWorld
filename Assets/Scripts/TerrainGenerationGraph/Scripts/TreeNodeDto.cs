@@ -8,23 +8,22 @@ using static NodeOperations;
 namespace TerrainGenerationGraph.Scripts
 {
     [Serializable]
-    public class TgtNodeDto
+    public class TreeNodeDto
     {
         public Operation operation;
-        public SerializableInt4 nextIndex;
+        public SerializableInt4 nextIndex = new int4(-1);
         public bool cached;
 
-        [JsonIgnore] public TgtNodeDto[] nextNodes;
+        [JsonIgnore] public TreeNodeDto[] nextNodes;
         [JsonIgnore] public float4 value;
 
-        public TgtNodeDto()
+        public TreeNodeDto()
         {
         }
 
-        public TgtNodeDto(Operation operation, TgtNodeDto[] nextNodes, float4 value = default)
+        public TreeNodeDto(Operation operation, TreeNodeDto[] nextNodes, float4 value = default)
         {
             this.operation = operation;
-            nextIndex = new int4(-1);
             this.nextNodes = nextNodes;
             this.value = value;
         }
@@ -35,22 +34,20 @@ namespace TerrainGenerationGraph.Scripts
 
             value = operation switch
             {
-                Operation.Value =>
-                    value,
+                Operation.Value => value,
 
-                _ =>
-                    GetSample(
-                        operation,
-                        nextNodes.Length > 0 ? nextNodes[0].value : default,
-                        nextNodes.Length > 1 ? nextNodes[1].value : default,
-                        nextNodes.Length > 2 ? nextNodes[2].value : default,
-                        nextNodes.Length > 3 ? nextNodes[3].value : default)
+                _ => GetOutput(
+                    operation,
+                    nextNodes.Length > 0 ? nextNodes[0].value : default,
+                    nextNodes.Length > 1 ? nextNodes[1].value : default,
+                    nextNodes.Length > 2 ? nextNodes[2].value : default,
+                    nextNodes.Length > 3 ? nextNodes[3].value : default)
             };
 
             if (nextNodes.Any() && nextNodes.All(node => node.operation == Operation.Value))
             {
                 operation = Operation.Value;
-                nextNodes = new TgtNodeDto[] { };
+                nextNodes = new TreeNodeDto[] { };
             }
         }
     }

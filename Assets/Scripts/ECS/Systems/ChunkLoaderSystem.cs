@@ -31,11 +31,10 @@ namespace ECS.Systems
             // Gather Data of all existing Chunks not marked for destruction
             var existingChunkData = new NativeHashSet<Data>(2000, Allocator.Temp);
             foreach (var chunk in SystemAPI.Query<ChunkAspect>().WithAbsent<DestroyChunkTag>())
-                _ = existingChunkData.Add(ChunkAspectToChunkData(chunk));
+                existingChunkData.Add(ChunkAspectToChunkData(chunk));
 
             // Create Data for all Chunks that need to be created around the TrackPoint
-            var trackPointAspect =
-                SystemAPI.GetAspect<TrackPointAspect>(SystemAPI.GetSingletonEntity<TrackPointTag>());
+            var trackPointAspect = SystemAPI.GetAspect<TrackPointAspect>(SystemAPI.GetSingletonEntity<TrackPointTag>());
             var newChunkData = new NativeHashSet<Data>(200, Allocator.Temp);
             newChunkData.UnionWith(CreateNewChunkData(trackPointAspect.ChunkPosition));
             ecb.RemoveComponent<LoadChunksPointTag>(trackPointAspect.Entity);
@@ -56,8 +55,7 @@ namespace ECS.Systems
                     ecb.AddComponent<DestroyChunkTag>(chunk.Entity);
 
             // Create Chunks from data in createChunkData
-            foreach (var chunkData in createChunkData)
-                CreateChunk(ecb, _settings, chunkData);
+            foreach (var chunkData in createChunkData) CreateChunk(ecb, _settings, chunkData);
 
             ecb.Playback(state.EntityManager);
             ecb.Dispose();
@@ -74,17 +72,14 @@ namespace ECS.Systems
 
             var subChunks = new NativeHashSet<Data>(10, Allocator.Temp);
 
-            var pointPosition = ChunkOperations.GetClosestChunkPosition(_settings,
-                new Data(origin, maxChunkScale - 1));
+            var pointPosition = ChunkOperations.GetClosestChunkPosition(_settings, origin, maxChunkScale - 1);
             var chunkSize = ChunkOperations.GetChunkSize(_settings, maxChunkScale);
 
             for (var x = -megaChunks; x < megaChunks; x++)
             for (var y = -megaChunks; y < megaChunks; y++)
             for (var z = -megaChunks; z < megaChunks; z++)
             {
-                var position = new float3(x, y, z);
-                position *= chunkSize;
-                position += pointPosition;
+                var position = new float3(x, y, z) * chunkSize + pointPosition;
 
                 var subData = new Data(position, maxChunkScale);
                 subChunks.UnionWith(CreateSubChunkData(subData, origin));
@@ -97,31 +92,23 @@ namespace ECS.Systems
             float3 origin)
         {
             var subChunks = new NativeHashSet<Data>(10, Allocator.Temp);
-
             var subChunkScale = data.ChunkScale - 1;
             var subChunkSize = ChunkOperations.GetChunkSize(_settings, subChunkScale);
-            var originPosition = ChunkOperations.GetClosestChunkPosition(_settings,
-                new Data(origin, subChunkScale));
+            var originPosition = ChunkOperations.GetClosestChunkPosition(_settings, origin, subChunkScale);
 
             for (var x = 0; x < 2; x++)
             for (var y = 0; y < 2; y++)
             for (var z = 0; z < 2; z++)
             {
-                var subChunkPosition = new float3(x, y, z);
-                subChunkPosition *= subChunkSize;
-                subChunkPosition += data.Position;
-
+                var subChunkPosition = new float3(x, y, z) * subChunkSize + data.Position;
                 var subChunkData = new Data(subChunkPosition, subChunkScale);
-
-                var originChunkCenter = ChunkOperations.GetClosestChunkCenter(_settings,
-                    new Data(originPosition, subChunkScale));
-                var subChunkCenter = ChunkOperations.GetClosestChunkCenter(_settings, subChunkData);
+                var originChunkCenter = ChunkOperations.GetClosestChunkCenter(_settings, originPosition, subChunkScale);
+                var subChunkCenter = ChunkOperations.GetClosestChunkCenter(_settings, subChunkPosition, subChunkScale);
                 var distance = math.distance(originChunkCenter, subChunkCenter);
 
                 if (distance < subChunkSize.x * _settings.LOD && subChunkScale > 0)
                     subChunks.UnionWith(CreateSubChunkData(subChunkData, origin));
-                else
-                    _ = subChunks.Add(subChunkData);
+                else subChunks.Add(subChunkData);
             }
 
             return subChunks;

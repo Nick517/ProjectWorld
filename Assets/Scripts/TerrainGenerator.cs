@@ -1,11 +1,11 @@
 using ECS.Components;
 using Unity.Collections;
 using Unity.Mathematics;
-using static ECS.Components.TerrainGenerationTree.TgTree;
+using static ECS.Components.TerrainGenTree.TgTree;
 
 public static class TerrainGenerator
 {
-    public static NativeArray<float> PopulateMap(ChunkGenerationSettings settings, TerrainGenerationTree tgTree,
+    public static NativeArray<float> PopulateMap(ChunkGenerationSettings settings, TerrainGenTree tgTree,
         float3 chunkPosition, float chunkScale)
     {
         var cubeSize = ChunkOperations.GetCubeSize(settings, chunkScale);
