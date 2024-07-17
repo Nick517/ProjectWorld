@@ -8,6 +8,7 @@ using TerrainGenerationGraph.Scripts;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UIElements;
 
 namespace Editor.TerrainGenerationGraph
@@ -80,7 +81,7 @@ namespace Editor.TerrainGenerationGraph
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange evt)
         {
-            evt.elementsToRemove?.OfType<TggEdge>().ToList().ForEach(tggEdge => tggEdge.Destroy());
+            evt.elementsToRemove?.OfType<TggEdge>().ToList().ForEach(edge => edge.Destroy());
 
             return evt;
         }
@@ -94,17 +95,17 @@ namespace Editor.TerrainGenerationGraph
 
         #region Utility
 
-        private TggNode RootNode => TggNodes.FirstOrDefault(tggNode => tggNode.NodeType == "Sample");
+        private TggNode RootNode => Nodes.FirstOrDefault(tggNode => tggNode.NodeType == "Sample");
 
-        private List<TggNode> TggNodes => nodes.OfType<TggNode>().ToList();
+        private List<TggNode> Nodes => nodes.OfType<TggNode>().ToList();
 
-        private List<TggPort> TggPorts => ports.OfType<TggPort>().ToList();
+        private List<TggPort> Ports => ports.OfType<TggPort>().ToList();
 
-        public List<TggEdge> TggEdges => edges.OfType<TggEdge>().ToList();
+        public List<TggEdge> Edges => edges.OfType<TggEdge>().ToList();
 
         public TggPort GetTggPort(string id)
         {
-            return TggPorts.FirstOrDefault(tggPort => tggPort.ID == id);
+            return Ports.FirstOrDefault(port => port.ID == id);
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -119,7 +120,7 @@ namespace Editor.TerrainGenerationGraph
 
         private void ClearSavedDto()
         {
-            TggPorts.OfType<OutputPort>().ToList().ForEach(outputPort => outputPort.TgtNodeDto = null);
+            Ports.OfType<OutputPort>().ToList().ForEach(outputPort => outputPort.TreeNodeDto = null);
         }
 
         #endregion
@@ -156,8 +157,8 @@ namespace Editor.TerrainGenerationGraph
         [Serializable]
         public class Dto
         {
-            public List<TggNode.Dto> tggNodeDtoList;
-            public List<TggEdge.Dto> tggEdgeDtoList;
+            public List<TggNode.Dto> nodeDtoList;
+            public List<TggEdge.Dto> edgeDtoList;
 
             public Dto()
             {
@@ -165,22 +166,22 @@ namespace Editor.TerrainGenerationGraph
 
             public Dto(TerrainGenGraphView graphView)
             {
-                tggNodeDtoList = graphView.TggNodes.Where(tggNode => tggNode.NodeType != null).ToList()
-                    .Select(tggNode => tggNode.ToDto()).ToList();
+                nodeDtoList = graphView.Nodes.Where(node => node.NodeType != null).ToList()
+                    .Select(node => node.ToDto()).ToList();
 
-                tggEdgeDtoList = graphView.TggEdges.Where(tggEdge => !tggEdge.IsValueNodeEdge)
-                    .Select(tggEdge => tggEdge.ToDto()).ToList();
+                edgeDtoList = graphView.Edges.Where(edge => !edge.IsValueNodeEdge)
+                    .Select(edge => edge.ToDto()).ToList();
             }
 
             public void Deserialize(TerrainGenGraphView graphView)
             {
                 graphView.ClearGraph();
 
-                tggNodeDtoList.ForEach(dto => dto.Deserialize(graphView));
+                nodeDtoList.ForEach(dto => dto.Deserialize(graphView));
 
-                tggEdgeDtoList.ForEach(dto => dto.Deserialize(graphView));
+                edgeDtoList.ForEach(dto => dto.Deserialize(graphView));
 
-                graphView.TggNodes.ToList().ForEach(tggNode => tggNode.Update());
+                graphView.Nodes.ForEach(node => node.Update());
             }
         }
 

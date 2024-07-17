@@ -29,7 +29,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
         protected TggNode()
         {
         }
-        
+
         public TggNode(TerrainGenGraphView graphView, string nodeType)
         {
             GraphView = graphView;
@@ -88,7 +88,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                     AddOutputPort(Operation.Add);
                     _setPortsToLowest = true;
                     break;
-                
+
                 case "Subtract":
                     AddInputPort("A");
                     AddInputPort("B");
@@ -102,7 +102,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                     AddOutputPort(Operation.Multiply);
                     _setPortsToLowest = true;
                     break;
-                
+
                 case "Divide":
                     AddInputPort("A");
                     AddInputPort("B");
@@ -126,24 +126,24 @@ namespace Editor.TerrainGenerationGraph.Nodes
         {
             if (_setPortsToLowest) SetAllPortDimensions(TggPort.GetLowestDimension(ConnectedOutputPorts));
 
-            _inputPorts.ForEach(inputPort => inputPort.UpdateValueNode());
+            _inputPorts.ForEach(port => port.UpdateValueNode());
         }
 
         public void Destroy()
         {
             DisconnectAllPorts();
-            _inputPorts.ForEach(inputPort => inputPort.RemoveValueNode());
+            _inputPorts.ForEach(port => port.RemoveValueNode());
             GraphView.RemoveElement(this);
         }
 
         private void SetAllPortDimensions(int dimensions)
         {
-            TggPorts.ForEach(tggPort => tggPort.SetDimensions(dimensions));
+            Ports.ForEach(port => port.SetDimensions(dimensions));
         }
 
         private void DisconnectAllPorts()
         {
-            TggPorts.ForEach(tggPort => tggPort.Disconnect());
+            Ports.ForEach(port => port.Disconnect());
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -170,8 +170,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
             AddOutputPort("Out", operation, defaultDimensions);
         }
 
-        private void AddOutputPort(string defaultName = "Out", Operation operation = default,
-            int defaultDimensions = 1)
+        private void AddOutputPort(string defaultName = "Out", Operation operation = default, int defaultDimensions = 1)
         {
             var type = TggPort.TypeFromDimensions(defaultDimensions);
             var outputPort = new OutputPort(GraphView, this, defaultName, type, operation);
@@ -180,12 +179,9 @@ namespace Editor.TerrainGenerationGraph.Nodes
             _outputPorts.Add(outputPort);
         }
 
-        private List<TggPort> TggPorts => _inputPorts.Concat<TggPort>(_outputPorts).ToList();
+        private List<TggPort> Ports => _inputPorts.Concat<TggPort>(_outputPorts).ToList();
 
-        private List<TggPort> ConnectedOutputPorts =>
-            _inputPorts
-                .SelectMany(inputPort => inputPort.ConnectedTggPorts)
-                .ToList();
+        private List<TggPort> ConnectedOutputPorts => _inputPorts.SelectMany(port => port.ConnectedPorts).ToList();
 
         public Vector2 Position
         {
@@ -198,27 +194,26 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
         #region Terrain Generation Tree
 
-        public TgtNodeDto GatherTgtNodeDto(InputPort inputPort = null)
+        public TreeNodeDto GatherTgtNodeDto(InputPort inputPort = null)
         {
-            if (inputPort == null) return _inputPorts.First().NextTgtNodeDto();
+            if (inputPort == null) return _inputPorts.First().NextNodeDto();
 
-            var outputPort = inputPort.ConnectedTggPort as OutputPort;
+            var outputPort = inputPort.ConnectedPort as OutputPort;
 
-            if (outputPort == null || outputPort.Operation == Operation.Skip)
-                return _inputPorts.First().NextTgtNodeDto();
+            if (outputPort == null || outputPort.Operation == Operation.Skip) return _inputPorts.First().NextNodeDto();
 
-            if (outputPort.TgtNodeDto != null)
+            if (outputPort.TreeNodeDto != null)
             {
-                outputPort.TgtNodeDto.cached = true;
+                outputPort.TreeNodeDto.cached = true;
 
-                return outputPort.TgtNodeDto;
+                return outputPort.TreeNodeDto;
             }
 
-            var nextNodes = _inputPorts.Select(port => port.NextTgtNodeDto()).ToArray();
+            var nextNodes = _inputPorts.Select(port => port.NextNodeDto()).ToArray();
 
-            outputPort.TgtNodeDto = new TgtNodeDto(outputPort.Operation, nextNodes);
+            outputPort.TreeNodeDto = new TreeNodeDto(outputPort.Operation, nextNodes);
 
-            return outputPort.TgtNodeDto;
+            return outputPort.TreeNodeDto;
         }
 
         #endregion
@@ -243,13 +238,13 @@ namespace Editor.TerrainGenerationGraph.Nodes
             {
             }
 
-            public Dto(TggNode tggNode)
+            public Dto(TggNode node)
             {
-                nodeType = tggNode.NodeType;
-                id = tggNode._id;
-                position = new SerializableVector2(tggNode.Position);
-                inputPortDtoList = tggNode._inputPorts.Select(inputPort => inputPort.ToDto()).ToList();
-                outputPortDtoList = tggNode._outputPorts.Select(outputPort => outputPort.ToDto()).ToList();
+                nodeType = node.NodeType;
+                id = node._id;
+                position = node.Position;
+                inputPortDtoList = node._inputPorts.Select(inputPort => inputPort.ToDto()).ToList();
+                outputPortDtoList = node._outputPorts.Select(outputPort => outputPort.ToDto()).ToList();
             }
 
             public TggNode Deserialize(TerrainGenGraphView graphView)
@@ -257,7 +252,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                 var tggNode = new TggNode(graphView, nodeType)
                 {
                     _id = id,
-                    Position = position.Deserialize()
+                    Position = position
                 };
 
                 for (var i = 0; i < tggNode._inputPorts.Count; i++)

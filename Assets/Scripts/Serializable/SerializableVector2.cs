@@ -13,21 +13,20 @@ namespace Serializable
         {
         }
 
-        public SerializableVector2(Vector2 vector2)
+        private SerializableVector2(Vector2 vector2)
         {
             x = vector2.x;
             y = vector2.y;
         }
 
-        public SerializableVector2(float x, float y)
+        public static implicit operator SerializableVector2(Vector2 vector2)
         {
-            this.x = x;
-            this.y = y;
+            return new SerializableVector2(vector2);
         }
 
-        public Vector2 Deserialize()
+        public static implicit operator Vector2(SerializableVector2 serializableVector2)
         {
-            return new Vector2(x, y);
+            return new Vector2(serializableVector2.x, serializableVector2.y);
         }
     }
 }

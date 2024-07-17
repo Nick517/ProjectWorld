@@ -1,10 +1,9 @@
 using ECS.Components;
 using TerrainGenerationGraph.Scripts;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
-using static ECS.Components.TerrainGenerationTree;
-using static ECS.Components.TerrainGenerationTree.TgTree;
+using static ECS.Components.TerrainGenTree;
+using static ECS.Components.TerrainGenTree.TgTree;
 using static Unity.Collections.Allocator;
 
 namespace ECS.Authoring
@@ -36,15 +35,14 @@ namespace ECS.Authoring
                 node.Type = dto.operation;
                 node.CacheIndex = dto.cached ? cacheCount : -1;
                 if (dto.cached) cacheCount++;
-                node.Next = dto.nextIndex.Deserialize();
+                node.Next = dto.nextIndex;
 
                 nodeArrayBuilder[i] = node;
             }
 
             var valueArrayBuilder = builder.Allocate(ref tgGraph.Values, tgTree.values.Count);
 
-            for (var i = 0; i < tgTree.values.Count; i++)
-                valueArrayBuilder[i] = new float4(tgTree.values[i].Deserialize());
+            for (var i = 0; i < tgTree.values.Count; i++) valueArrayBuilder[i] = tgTree.values[i];
 
             var blobReference = builder.CreateBlobAssetReference<TgTree>(Persistent);
             blobReference.Value.CacheCount = cacheCount;
@@ -54,7 +52,7 @@ namespace ECS.Authoring
             AddBlobAsset(ref blobReference, out _);
             var entity = GetEntity(TransformUsageFlags.None);
 
-            AddComponent(entity, new TerrainGenerationTree { Blob = blobReference });
+            AddComponent(entity, new TerrainGenTree { Blob = blobReference });
         }
     }
 }

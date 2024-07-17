@@ -8,7 +8,13 @@ namespace ECS.Authoring
     public class GameSettingsAuthoring : MonoBehaviour
     {
         public GameObject chunkPrefab;
-        public ScriptableObjects.ChunkGenerationSettings settings;
+        public float baseCubeSize = 1;
+        public int cubeCount = 8;
+        [Range(0, 1)] public float mapSurface = 0.5f;
+        public int maxChunkScale = 8;
+        public int megaChunks = 2;
+        public float lod = 2;
+        public float reloadScale = 1;
     }
 
     public class ChunkLoaderBaker : Baker<GameSettingsAuthoring>
@@ -19,13 +25,13 @@ namespace ECS.Authoring
             AddComponent(entity, new ChunkGenerationSettings
             {
                 ChunkPrefab = GetEntity(authoring.chunkPrefab, TransformUsageFlags.Dynamic),
-                BaseCubeSize = authoring.settings.baseCubeSize,
-                CubeCount = authoring.settings.cubeCount,
-                MapSurface = authoring.settings.mapSurface,
-                MaxChunkScale = authoring.settings.maxChunkScale,
-                MegaChunks = authoring.settings.megaChunks,
-                LOD = authoring.settings.lod,
-                ReloadScale = authoring.settings.reloadScale
+                BaseCubeSize = authoring.baseCubeSize,
+                CubeCount = authoring.cubeCount,
+                MapSurface = authoring.mapSurface,
+                MaxChunkScale = authoring.maxChunkScale,
+                MegaChunks = authoring.megaChunks,
+                LOD = authoring.lod,
+                ReloadScale = authoring.reloadScale
             });
         }
     }

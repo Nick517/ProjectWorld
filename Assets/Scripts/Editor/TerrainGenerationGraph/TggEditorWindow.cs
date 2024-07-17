@@ -23,13 +23,13 @@ namespace Editor.TerrainGenerationGraph
         {
             var tgGraph = EditorUtility.InstanceIDToObject(instanceID) as TgGraph;
 
-            // Does not do anything if the clicked object is not a TerrainGenerationTree
+            // Does not do anything if the clicked object is not a TerrainGenTree
             if (tgGraph == null) return false;
 
             var windows = Resources.FindObjectsOfTypeAll<TggEditorWindow>();
             var name = tgGraph.name;
 
-            // If an editor window with a reference to the TerrainGenerationTree is already open, focuses on that window
+            // If an editor window with a reference to the TerrainGenTree is already open, focuses on that window
             foreach (var window in windows)
                 if (window._graphView.TgGraph == tgGraph)
                 {
@@ -38,10 +38,10 @@ namespace Editor.TerrainGenerationGraph
                     return true;
                 }
 
-            // Creates a new editor window with the clicked TerrainGenerationTree
+            // Creates a new editor window with the clicked TerrainGenTree
             var newWindow = CreateWindow<TggEditorWindow>(name, typeof(SceneView));
 
-            // If the opened TerrainGenerationTree does not have any saved data, add default data
+            // If the opened TerrainGenTree does not have any saved data, add default data
             if (string.IsNullOrEmpty(tgGraph.serializedGraphData)) InitializeTgGraph(ref tgGraph);
 
             newWindow._graphView.TgGraph = tgGraph;

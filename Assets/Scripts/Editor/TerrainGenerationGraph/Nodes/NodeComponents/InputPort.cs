@@ -13,14 +13,14 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         #region Fields
 
         private ValueNode _valueNode;
-        public float4 Value = float4.zero;
+        public float4 Value;
 
         #endregion
 
         #region Constructors
 
-        public InputPort(TerrainGenGraphView graphView, TggNode parentTggNode, string defaultName, Type type) :
-            base(graphView, parentTggNode, defaultName, Direction.Input, Capacity.Single, type)
+        public InputPort(TerrainGenGraphView graphView, TggNode parentNode, string defaultName, Type type) :
+            base(graphView, parentNode, defaultName, Direction.Input, Capacity.Single, type)
         {
         }
 
@@ -30,14 +30,14 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         public void Update()
         {
-            ParentTggNode.Update();
+            ParentNode.Update();
         }
 
         public void UpdateValueNode()
         {
             if (_valueNode != null)
             {
-                if (ConnectedTggEdges.Any())
+                if (ConnectedEdges.Any())
                 {
                     RemoveValueNode();
                 }
@@ -47,7 +47,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
                     AddValueNode();
                 }
             }
-            else if (!ConnectedTggEdges.Any())
+            else if (!ConnectedEdges.Any())
             {
                 AddValueNode();
             }
@@ -77,11 +77,11 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Terrain Generation Tree
 
-        public TgtNodeDto NextTgtNodeDto()
+        public TreeNodeDto NextNodeDto()
         {
-            if (_valueNode != null) return new TgtNodeDto(Operation.Value, new TgtNodeDto[] { }, Value);
+            if (_valueNode != null) return new TreeNodeDto(Operation.Value, new TreeNodeDto[] { }, Value);
 
-            return AllConnectedPorts.First().ParentTggNode.GatherTgtNodeDto(this);
+            return AllConnectedPorts.First().ParentNode.GatherTgtNodeDto(this);
         }
 
         #endregion
@@ -97,7 +97,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         public class Dto
         {
             public string id;
-            public SerializableVector4 defaultValue;
+            public SerializableFloat4 defaultValue;
 
             public Dto()
             {
@@ -106,13 +106,13 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             public Dto(InputPort inputPort)
             {
                 id = inputPort.ID;
-                defaultValue = new SerializableVector4(inputPort.Value);
+                defaultValue = inputPort.Value;
             }
 
             public void DeserializeTo(InputPort inputPort)
             {
                 inputPort.ID = id;
-                inputPort.Value = defaultValue.Deserialize();
+                inputPort.Value = defaultValue;
             }
         }
 

@@ -22,7 +22,7 @@ namespace ECS.Systems
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<ChunkGenerationSettings>();
-            state.RequireForUpdate<TerrainGenerationTree>();
+            state.RequireForUpdate<TerrainGenTree>();
             state.RequireForUpdate<CreateChunkMeshDataTag>();
 
             _chunkQuery = new EntityQueryBuilder(Allocator.Temp)
@@ -44,7 +44,7 @@ namespace ECS.Systems
 
             var ecb = new EntityCommandBuffer(Allocator.TempJob);
             var settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
-            var tgGraph = SystemAPI.GetSingleton<TerrainGenerationTree>();
+            var tgGraph = SystemAPI.GetSingleton<TerrainGenTree>();
 
             var createMeshDataJobHandle = new CreateMeshDataJob
             {

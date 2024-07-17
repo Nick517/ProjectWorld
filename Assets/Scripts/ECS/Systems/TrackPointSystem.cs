@@ -24,11 +24,10 @@ namespace ECS.Systems
 
             foreach (var trackPoint in SystemAPI.Query<TrackPointAspect>())
             {
-                var chunkPosition = ChunkOperations.GetClosestChunkPosition(settings,
-                    new ChunkAspect.Data(trackPoint.Position, settings.ReloadScale));
+                var chunkPosition =
+                    ChunkOperations.GetClosestChunkPosition(settings, trackPoint.Position, settings.ReloadScale);
 
-                if (!chunkPosition.Equals(trackPoint.ChunkPosition))
-                    trackPoint.UpdateChunkPosition(ecb, chunkPosition);
+                if (!chunkPosition.Equals(trackPoint.ChunkPosition)) trackPoint.UpdateChunkPosition(ecb, chunkPosition);
             }
 
             ecb.Playback(state.EntityManager);

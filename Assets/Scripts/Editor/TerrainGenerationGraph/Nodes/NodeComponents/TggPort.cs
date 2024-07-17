@@ -13,7 +13,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         protected readonly TerrainGenGraphView GraphView;
 
-        public readonly TggNode ParentTggNode;
+        public readonly TggNode ParentNode;
         public string ID;
         private readonly string _defaultName;
 
@@ -21,12 +21,12 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         #region Constructors
 
-        protected TggPort(TerrainGenGraphView graphView, TggNode parentTggNode, string defaultName,
-            Direction direction, Capacity capacity, Type type)
+        protected TggPort(TerrainGenGraphView graphView, TggNode parentNode, string defaultName, Direction direction,
+            Capacity capacity, Type type)
             : base(Orientation.Horizontal, direction, capacity, type)
         {
             GraphView = graphView;
-            ParentTggNode = parentTggNode;
+            ParentNode = parentNode;
             ID = GraphUtil.NewID;
             _defaultName = defaultName;
             SetDimensions(DimensionsFromType(type));
@@ -42,32 +42,32 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         {
             portType = PortTypes.ElementAt(dimensions - 1);
             portName = _defaultName != null ? $"{_defaultName}({dimensions})" : "";
-            ConnectedTggPorts.OfType<InputPort>().ToList().ForEach(inputPort => inputPort.ParentTggNode.Update());
+            ConnectedPorts.OfType<InputPort>().ToList().ForEach(inputPort => inputPort.ParentNode.Update());
         }
 
         public void Disconnect()
         {
-            ConnectedTggEdges.ForEach(tggEdge => tggEdge.Destroy());
+            ConnectedEdges.ForEach(edge => edge.Destroy());
         }
 
-        public TggPort ConnectedTggPort => ConnectedTggPorts.First();
+        public TggPort ConnectedPort => ConnectedPorts.First();
 
-        public List<TggPort> ConnectedTggPorts =>
-            ConnectedTggEdges
-                .Select(tggEdge => tggEdge.PortOfType(OppositePortDirection)).ToList();
+        public List<TggPort> ConnectedPorts =>
+            ConnectedEdges
+                .Select(edge => edge.PortOfType(OppositePortDirection)).ToList();
 
         protected List<TggPort> AllConnectedPorts =>
             AllConnectedEdges
-                .Select(tggEdge => tggEdge.PortOfType(OppositePortDirection)).ToList();
+                .Select(edge => edge.PortOfType(OppositePortDirection)).ToList();
 
-        public List<TggEdge> ConnectedTggEdges =>
-            GraphView.TggEdges
-                .Where(tggEdge => !tggEdge.IsValueNodeEdge && tggEdge.TggPorts.Contains(this))
+        public List<TggEdge> ConnectedEdges =>
+            GraphView.Edges
+                .Where(edge => !edge.IsValueNodeEdge && edge.TggPorts.Contains(this))
                 .ToList();
-        
+
         public List<TggEdge> AllConnectedEdges =>
-            GraphView.TggEdges
-                .Where(tggEdge => tggEdge.TggPorts.Contains(this))
+            GraphView.Edges
+                .Where(edge => edge.TggPorts.Contains(this))
                 .ToList();
 
         private Type OppositePortDirection => this is OutputPort ? typeof(InputPort) : typeof(OutputPort);
@@ -76,11 +76,9 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         public Vector2 Position => GraphView.contentViewContainer.WorldToLocal(GetGlobalCenter());
 
-        public static int GetLowestDimension(List<TggPort> tggPorts)
+        public static int GetLowestDimension(List<TggPort> ports)
         {
-            return tggPorts == null || tggPorts.Count == 0
-                ? 1
-                : tggPorts.Select(tggPort => DimensionsFromType(tggPort.portType)).Prepend(4).Min();
+            return ports.Count == 0 ? 1 : ports.Select(port => DimensionsFromType(port.portType)).Prepend(4).Min();
         }
 
         public static Type TypeFromDimensions(int dimensions)

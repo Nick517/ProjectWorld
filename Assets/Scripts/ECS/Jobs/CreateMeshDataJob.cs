@@ -17,7 +17,7 @@ namespace ECS.Jobs
         [ReadOnly] public ComponentTypeHandle<LocalTransform> LocalTransformTypeHandle;
         [ReadOnly] public ComponentTypeHandle<ChunkScale> ChunkScaleTypeHandle;
         [ReadOnly] public ChunkGenerationSettings Settings;
-        [ReadOnly] public TerrainGenerationTree TgTree;
+        [ReadOnly] public TerrainGenTree TgTree;
 
         public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask,
             in v128 chunkEnabledMask)
@@ -36,12 +36,11 @@ namespace ECS.Jobs
 
                 var vertices = new NativeList<float3>(Allocator.Temp);
                 var cubeMap =
-                    new NativeArray<float>(
-                        TerrainGenerator.PopulateMap(Settings, TgTree, position, chunkScale),
+                    new NativeArray<float>(TerrainGenerator.PopulateMap(Settings, TgTree, position, chunkScale),
                         Allocator.Temp);
 
-                _ = Ecb.AddBuffer<TriangleBufferElement>(i, entity);
-                _ = Ecb.AddBuffer<VerticeBufferElement>(i, entity);
+                Ecb.AddBuffer<TriangleBufferElement>(i, entity);
+                Ecb.AddBuffer<VerticeBufferElement>(i, entity);
 
                 for (var x = 0; x < Settings.CubeCount; x++)
                 for (var y = 0; y < Settings.CubeCount; y++)

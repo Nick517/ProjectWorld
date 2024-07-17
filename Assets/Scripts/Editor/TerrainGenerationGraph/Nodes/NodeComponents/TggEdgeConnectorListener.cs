@@ -11,8 +11,8 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         private readonly TerrainGenGraphView _graphView;
         private readonly GraphViewChange _graphViewChange;
-        private readonly List<Edge> _edgesToCreate;
-        private readonly List<Edge> _edgesToDelete;
+        private readonly List<Edge> _edgesToCreate = new();
+        private readonly List<Edge> _edgesToDelete = new();
 
         #endregion
 
@@ -21,8 +21,6 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         public TggEdgeConnectorListener(TerrainGenGraphView graphView)
         {
             _graphView = graphView;
-            _edgesToCreate = new List<Edge>();
-            _edgesToDelete = new List<Edge>();
             _graphViewChange.edgesToCreate = _edgesToCreate;
         }
 
@@ -37,6 +35,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         public void OnDrop(GraphView graphView, Edge edge)
         {
             var tggEdge = edge as TggEdge;
+
             if (tggEdge == null) return;
 
             tggEdge.GraphView = _graphView;
@@ -45,8 +44,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             _edgesToCreate.Add(tggEdge);
             _edgesToDelete.Clear();
 
-            _edgesToDelete.AddRange(tggEdge.InputPort.ConnectedTggEdges
-                .Where(connection => connection != tggEdge));
+            _edgesToDelete.AddRange(tggEdge.InputPort.ConnectedEdges.Where(connection => connection != tggEdge));
 
 
             if (_edgesToDelete.Count > 0) graphView.DeleteElements(_edgesToDelete);

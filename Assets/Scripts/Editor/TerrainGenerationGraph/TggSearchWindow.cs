@@ -43,16 +43,19 @@ namespace Editor.TerrainGenerationGraph
                     level = 3,
                     userData = "Float"
                 },
+                
                 new SearchTreeEntry(new GUIContent("Float 2"))
                 {
                     level = 3,
                     userData = "Float 2"
                 },
+                
                 new SearchTreeEntry(new GUIContent("Float 3"))
                 {
                     level = 3,
                     userData = "Float 3"
                 },
+                
                 new SearchTreeEntry(new GUIContent("Float 4"))
                 {
                     level = 3,
@@ -112,9 +115,9 @@ namespace Editor.TerrainGenerationGraph
         public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context)
         {
             var nodeType = (string)entry.userData;
-            var tggNode = new TggNode(_graphView, nodeType);
-            tggNode.Update();
-            tggNode.Position = context.screenMousePosition;
+            var node = new TggNode(_graphView, nodeType);
+            node.Update();
+            node.Position = context.screenMousePosition;
 
             return true;
         }

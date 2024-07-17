@@ -9,10 +9,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         #region Fields
 
         public TerrainGenGraphView GraphView;
-
         public readonly bool IsValueNodeEdge;
-
-        public List<TggPort> TggPorts => new() { OutputPort, InputPort };
 
         #endregion
 
@@ -67,15 +64,17 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             }
             else
             {
-                InputPort.ParentTggNode.Destroy();
+                InputPort.ParentNode.Destroy();
                 GraphView.RemoveElement(this);
             }
         }
+        
+        public List<TggPort> TggPorts => new() { OutputPort, InputPort };
 
         private OutputPort OutputPort => output as OutputPort;
 
         public InputPort InputPort => input as InputPort;
-
+        
         public TggPort PortOfType(Type type)
         {
             return type == typeof(OutputPort) ? OutputPort : InputPort;
@@ -100,10 +99,10 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             {
             }
 
-            public Dto(TggEdge tggEdge)
+            public Dto(TggEdge edge)
             {
-                outputPortId = tggEdge.OutputPort.ID;
-                inputPortId = tggEdge.InputPort.ID;
+                outputPortId = edge.OutputPort.ID;
+                inputPortId = edge.InputPort.ID;
             }
 
             public virtual void Deserialize(TerrainGenGraphView graphView)

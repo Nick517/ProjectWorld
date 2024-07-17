@@ -9,19 +9,19 @@ namespace TerrainGenerationGraph.Scripts
     [Serializable]
     public class TgTreeDto
     {
-        public List<TgtNodeDto> nodes = new();
+        public List<TreeNodeDto> nodes = new();
         public List<SerializableFloat4> values = new();
 
         public TgTreeDto()
         {
         }
 
-        public TgTreeDto(TgtNodeDto rootNode)
+        public TgTreeDto(TreeNodeDto rootNode)
         {
             AddNode(rootNode);
         }
 
-        public void AddNode(TgtNodeDto node)
+        public void AddNode(TreeNodeDto node)
         {
             if (nodes.Contains(node)) return;
 
@@ -48,9 +48,9 @@ namespace TerrainGenerationGraph.Scripts
             if (nextIndexList.Count > 3) node.nextIndex.w = nextIndexList.ElementAt(3);
         }
 
-        public void AddValue(TgtNodeDto node)
+        public void AddValue(TreeNodeDto node)
         {
-            values.Add(new SerializableFloat4(node.value));
+            values.Add(node.value);
             node.nextIndex.x = values.Count - 1;
         }
     }

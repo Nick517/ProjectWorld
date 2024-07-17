@@ -1,6 +1,5 @@
 using System;
 using Unity.Mathematics;
-using UnityEngine;
 
 namespace Serializable
 {
@@ -16,25 +15,22 @@ namespace Serializable
         {
         }
 
-        public SerializableFloat4(Vector4 vector4)
+        private SerializableFloat4(float4 float4)
         {
-            x = vector4.x;
-            y = vector4.y;
-            z = vector4.z;
-            w = vector4.w;
+            x = float4.x;
+            y = float4.y;
+            z = float4.z;
+            w = float4.w;
         }
 
-        public SerializableFloat4(float x, float y, float z, float w)
+        public static implicit operator SerializableFloat4(float4 float4)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.w = w;
+            return new SerializableFloat4(float4);
         }
 
-        public float4 Deserialize()
+        public static implicit operator float4(SerializableFloat4 serializableFloat4)
         {
-            return new float4(x, y, z, w);
+            return new float4(serializableFloat4.x, serializableFloat4.y, serializableFloat4.z, serializableFloat4.w);
         }
     }
 }

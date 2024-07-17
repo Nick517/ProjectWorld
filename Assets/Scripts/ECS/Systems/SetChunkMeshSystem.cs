@@ -21,7 +21,6 @@ namespace ECS.Systems
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SetChunkMeshTag>();
-
             _verticeBufferLookup = state.GetBufferLookup<VerticeBufferElement>(true);
             _triangleBufferLookup = state.GetBufferLookup<TriangleBufferElement>(true);
         }
@@ -30,7 +29,6 @@ namespace ECS.Systems
         {
             _verticeBufferLookup.Update(ref state);
             _triangleBufferLookup.Update(ref state);
-
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var query in SystemAPI.Query<ChunkAspect, RenderMeshArray>().WithAll<SetChunkMeshTag>())
@@ -53,7 +51,6 @@ namespace ECS.Systems
 
                 ecb.RemoveComponent<VerticeBufferElement>(chunk.Entity);
                 ecb.RemoveComponent<TriangleBufferElement>(chunk.Entity);
-
                 ecb.RemoveComponent<SetChunkMeshTag>(chunk.Entity);
             }
 

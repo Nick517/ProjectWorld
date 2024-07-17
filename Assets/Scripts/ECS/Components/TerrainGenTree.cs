@@ -7,7 +7,7 @@ using static Unity.Collections.Allocator;
 
 namespace ECS.Components
 {
-    public struct TerrainGenerationTree : IComponentData
+    public struct TerrainGenTree : IComponentData
     {
         public BlobAssetReference<TgTree> Blob;
 
@@ -31,7 +31,7 @@ namespace ECS.Components
                 public NativeArray<float4> Cache;
                 public NativeArray<bool> Cached;
 
-                public Traversal(TerrainGenerationTree tgTree)
+                public Traversal(TerrainGenTree tgTree)
                 {
                     Blob = tgTree.Blob;
                     Position = default;
@@ -85,7 +85,7 @@ namespace ECS.Components
                                 traversal.Position.z,
                                 0),
 
-                        _ => GetSample(
+                        _ => GetOutput(
                             node.Type,
                             Traverse(node.Next.x, traversal),
                             Traverse(node.Next.y, traversal),

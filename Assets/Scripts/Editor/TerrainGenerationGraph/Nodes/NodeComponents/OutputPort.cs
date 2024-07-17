@@ -7,13 +7,13 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
     public class OutputPort : TggPort
     {
         public readonly NodeOperations.Operation Operation;
-        public TgtNodeDto TgtNodeDto;
+        public TreeNodeDto TreeNodeDto;
 
         #region Constructors
 
-        public OutputPort(TerrainGenGraphView graphView, TggNode parentTggNode, string defaultName, Type type,
+        public OutputPort(TerrainGenGraphView graphView, TggNode parentNode, string defaultName, Type type,
             NodeOperations.Operation operation) :
-            base(graphView, parentTggNode, defaultName, Direction.Output, Capacity.Multi, type)
+            base(graphView, parentNode, defaultName, Direction.Output, Capacity.Multi, type)
         {
             Operation = operation;
         }

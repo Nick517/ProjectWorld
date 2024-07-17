@@ -1,4 +1,3 @@
-using ECS.Aspects;
 using ECS.Components;
 using Unity.Mathematics;
 
@@ -19,15 +18,15 @@ public static class ChunkOperations
         return math.floor(position / settings.BaseCubeSize) * settings.BaseCubeSize;
     }
 
-    public static float3 GetClosestChunkPosition(ChunkGenerationSettings settings, ChunkAspect.Data data)
+    public static float3 GetClosestChunkPosition(ChunkGenerationSettings settings, float3 position, float chunkScale)
     {
-        var chunkSize = GetChunkSize(settings, data.ChunkScale);
+        var chunkSize = GetChunkSize(settings, chunkScale);
 
-        return math.floor(data.Position / chunkSize) * chunkSize;
+        return math.floor(position / chunkSize) * chunkSize;
     }
 
-    public static float3 GetClosestChunkCenter(ChunkGenerationSettings settings, ChunkAspect.Data data)
+    public static float3 GetClosestChunkCenter(ChunkGenerationSettings settings, float3 position, float chunkScale)
     {
-        return data.Position + GetChunkSize(settings, data.ChunkScale) / 2;
+        return position + GetChunkSize(settings, chunkScale) / 2;
     }
 }

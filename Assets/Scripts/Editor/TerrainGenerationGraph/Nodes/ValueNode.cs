@@ -13,14 +13,13 @@ namespace Editor.TerrainGenerationGraph.Nodes
         #region Fields
 
         public readonly OutputPort OutputPort;
-        private readonly InputPort _parentingInputPort;
         public int Dimensions;
 
         private readonly FloatField _floatFieldX;
         private readonly FloatField _floatFieldY;
         private readonly FloatField _floatFieldZ;
         private readonly FloatField _floatFieldW;
-
+        private readonly InputPort _parentingInputPort;
         private const float OffsetX = -15;
 
         #endregion
@@ -72,14 +71,14 @@ namespace Editor.TerrainGenerationGraph.Nodes
 
             _ = new TggEdge(GraphView, this, _parentingInputPort);
 
-            ParentingTggNode.Add(this);
+            ParentingNode.Add(this);
 
             update += Reposition;
         }
 
         public new void Destroy()
         {
-            OutputPort.AllConnectedEdges.ForEach(tggEdge => GraphView.RemoveElement(tggEdge));
+            OutputPort.AllConnectedEdges.ForEach(edge => GraphView.RemoveElement(edge));
 
             GraphView.RemoveElement(this);
         }
@@ -95,7 +94,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
                 return;
             }
 
-            var newPosition = _parentingInputPort.Position - ParentingTggNode.Position;
+            var newPosition = _parentingInputPort.Position - ParentingNode.Position;
             var size = GetPosition().size;
             var offset = new Vector2(size.x, size.y / 2);
             offset.x -= OffsetX;
@@ -125,7 +124,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
             }
         }
 
-        private TggNode ParentingTggNode => _parentingInputPort.ParentTggNode;
+        private TggNode ParentingNode => _parentingInputPort.ParentNode;
 
         #endregion
     }
