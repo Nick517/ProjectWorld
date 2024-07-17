@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6844e0b4959a1b14fab25025de9a81ef, type: 3}
+  m_Name: Perlin
+  m_EditorClassIdentifier: 
+  serializedTreeData: "{\r\n  \"nodes\": [\r\n    {\r\n      \"operation\": 11,\r\n     
+    \"nextIndex\": {\r\n        \"x\": 1,\r\n        \"y\": 2,\r\n        \"z\":
+    -1,\r\n        \"w\": -1\r\n      },\r\n      \"cached\": false\r\n    },\r\n   
+    {\r\n      \"operation\": 1,\r\n      \"nextIndex\": {\r\n        \"x\": 0,\r\n       
+    \"y\": -1,\r\n        \"z\": -1,\r\n        \"w\": -1\r\n      },\r\n      \"cached\":
+    false\r\n    },\r\n    {\r\n      \"operation\": 12,\r\n      \"nextIndex\":
+    {\r\n        \"x\": 3,\r\n        \"y\": 6,\r\n        \"z\": -1,\r\n       
+    \"w\": -1\r\n      },\r\n      \"cached\": false\r\n    },\r\n    {\r\n     
+    \"operation\": 14,\r\n      \"nextIndex\": {\r\n        \"x\": 4,\r\n       
+    \"y\": 5,\r\n        \"z\": -1,\r\n        \"w\": -1\r\n      },\r\n      \"cached\":
+    false\r\n    },\r\n    {\r\n      \"operation\": 9,\r\n      \"nextIndex\": {\r\n       
+    \"x\": -1,\r\n        \"y\": -1,\r\n        \"z\": -1,\r\n        \"w\": -1\r\n     
+    },\r\n      \"cached\": false\r\n    },\r\n    {\r\n      \"operation\": 1,\r\n     
+    \"nextIndex\": {\r\n        \"x\": 1,\r\n        \"y\": -1,\r\n        \"z\":
+    -1,\r\n        \"w\": -1\r\n      },\r\n      \"cached\": false\r\n    },\r\n   
+    {\r\n      \"operation\": 1,\r\n      \"nextIndex\": {\r\n        \"x\": 2,\r\n       
+    \"y\": -1,\r\n        \"z\": -1,\r\n        \"w\": -1\r\n      },\r\n      \"cached\":
+    false\r\n    }\r\n  ],\r\n  \"values\": [\r\n    {\r\n      \"x\": 1.0,\r\n     
+    \"y\": 0.0,\r\n      \"z\": 0.0,\r\n      \"w\": 0.0\r\n    },\r\n    {\r\n     
+    \"x\": 50.0,\r\n      \"y\": 0.0,\r\n      \"z\": 0.0,\r\n      \"w\": 0.0\r\n   
+    },\r\n    {\r\n      \"x\": 2.0,\r\n      \"y\": 0.0,\r\n      \"z\": 0.0,\r\n     
+    \"w\": 0.0\r\n    }\r\n  ]\r\n}"
+  serializedGraphData: "{\r\n  \"tggNodeDtoList\": [\r\n    {\r\n      \"nodeType\":
+    \"Sample\",\r\n      \"id\": \"09d8c838-8dc8-4140-8f25-69b10e16de28\",\r\n     
+    \"position\": {\r\n        \"x\": 0.0,\r\n        \"y\": 0.0\r\n      },\r\n     
+    \"inputPortDtoList\": [\r\n        {\r\n          \"id\": \"114e350f-2d6e-49fe-a58a-37a1484849e0\",\r\n         
+    \"defaultValue\": {\r\n            \"x\": 0.0,\r\n            \"y\": 0.0,\r\n           
+    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        }\r\n      ],\r\n     
+    \"outputPortDtoList\": []\r\n    },\r\n    {\r\n      \"nodeType\": \"Subtract\",\r\n     
+    \"id\": \"41ff3d9c-d67c-4161-b309-8e9feb03d727\",\r\n      \"position\": {\r\n       
+    \"x\": -179.2,\r\n        \"y\": 0.0\r\n      },\r\n      \"inputPortDtoList\":
+    [\r\n        {\r\n          \"id\": \"9dcd626c-b76a-44c9-8613-8686c7a523fe\",\r\n         
+    \"defaultValue\": {\r\n            \"x\": 1.0,\r\n            \"y\": 0.0,\r\n           
+    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        },\r\n       
+    {\r\n          \"id\": \"23ad7cf7-04ae-4019-a182-2594def17471\",\r\n         
+    \"defaultValue\": {\r\n            \"x\": 0.0,\r\n            \"y\": 0.0,\r\n           
+    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        }\r\n      ],\r\n     
+    \"outputPortDtoList\": [\r\n        {\r\n          \"id\": \"a2202407-5586-4aef-8840-152ab7ea6497\"\r\n       
+    }\r\n      ]\r\n    },\r\n    {\r\n      \"nodeType\": \"Multiply\",\r\n     
+    \"id\": \"2d4c9135-24a7-4b49-bbf7-2a3d1dcd87bd\",\r\n      \"position\": {\r\n       
+    \"x\": -409.599976,\r\n        \"y\": 0.0\r\n      },\r\n      \"inputPortDtoList\":
+    [\r\n        {\r\n          \"id\": \"520c13b9-b01e-404e-96c8-7f31dfc18802\",\r\n         
+    \"defaultValue\": {\r\n            \"x\": 0.0,\r\n            \"y\": 0.0,\r\n           
+    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        },\r\n       
+    {\r\n          \"id\": \"589db2ef-7b8c-4baa-8e7e-cbd0e8e3ccd2\",\r\n         
+    \"defaultValue\": {\r\n            \"x\": 2.0,\r\n            \"y\": 0.0,\r\n           
+    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        }\r\n      ],\r\n     
+    \"outputPortDtoList\": [\r\n        {\r\n          \"id\": \"fc6637e5-7d29-4575-a460-5d06abc50975\"\r\n       
+    }\r\n      ]\r\n    },\r\n    {\r\n      \"nodeType\": \"Perlin 3D\",\r\n     
+    \"id\": \"4a313ca0-cb3c-48ae-a5e7-b4bbf0fa95ca\",\r\n      \"position\": {\r\n       
+    \"x\": -670.399963,\r\n        \"y\": 0.0\r\n      },\r\n      \"inputPortDtoList\":
+    [\r\n        {\r\n          \"id\": \"072a24e1-b440-4a5c-be05-f8c0d0e9200f\",\r\n         
+    \"defaultValue\": {\r\n            \"x\": 0.0,\r\n            \"y\": 0.0,\r\n           
+    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        },\r\n       
+    {\r\n          \"id\": \"b85594db-e4af-4218-8da9-205b11c11c44\",\r\n         
+    \"defaultValue\": {\r\n            \"x\": 50.0,\r\n            \"y\": 0.0,\r\n           
+    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        }\r\n      ],\r\n     
+    \"outputPortDtoList\": [\r\n        {\r\n          \"id\": \"06e90b0e-f581-413e-80e4-e04ac064f270\"\r\n       
+    }\r\n      ]\r\n    },\r\n    {\r\n      \"nodeType\": \"Position\",\r\n     
+    \"id\": \"4139d0f3-43f3-497e-99fd-fa823632e847\",\r\n      \"position\": {\r\n       
+    \"x\": -876.8,\r\n        \"y\": 0.0\r\n      },\r\n      \"inputPortDtoList\":
+    [],\r\n      \"outputPortDtoList\": [\r\n        {\r\n          \"id\": \"b7feeb25-3604-4c3e-a91a-9dbc2a4393e0\"\r\n       
+    }\r\n      ]\r\n    }\r\n  ],\r\n  \"tggEdgeDtoList\": [\r\n    {\r\n      \"outputPortId\":
+    \"a2202407-5586-4aef-8840-152ab7ea6497\",\r\n      \"inputPortId\": \"114e350f-2d6e-49fe-a58a-37a1484849e0\"\r\n   
+    },\r\n    {\r\n      \"outputPortId\": \"fc6637e5-7d29-4575-a460-5d06abc50975\",\r\n     
+    \"inputPortId\": \"23ad7cf7-04ae-4019-a182-2594def17471\"\r\n    },\r\n    {\r\n     
+    \"outputPortId\": \"06e90b0e-f581-413e-80e4-e04ac064f270\",\r\n      \"inputPortId\":
+    \"520c13b9-b01e-404e-96c8-7f31dfc18802\"\r\n    },\r\n    {\r\n      \"outputPortId\":
+    \"b7feeb25-3604-4c3e-a91a-9dbc2a4393e0\",\r\n      \"inputPortId\": \"072a24e1-b440-4a5c-be05-f8c0d0e9200f\"\r\n   
+    }\r\n  ]\r\n}"
