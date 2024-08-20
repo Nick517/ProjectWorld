@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Editor.TerrainGenerationGraph.Graph;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using Serializable;
-using TerrainGenerationGraph.Scripts;
+using TerrainGenerationGraph;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static NodeOperations;
+using static Utility.TerrainGeneration.NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {

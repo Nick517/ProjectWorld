@@ -1,6 +1,8 @@
 using System;
-using TerrainGenerationGraph.Scripts;
+using Editor.TerrainGenerationGraph.Graph;
+using TerrainGenerationGraph;
 using UnityEditor.Experimental.GraphView;
+using Utility.TerrainGeneration;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {

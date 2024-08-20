@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Editor.TerrainGenerationGraph.Graph;
 using UnityEditor.Experimental.GraphView;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents

@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
+using Editor.TerrainGenerationGraph.Graph;
 using Serializable;
-using TerrainGenerationGraph.Scripts;
+using TerrainGenerationGraph;
 using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;
-using static NodeOperations;
+using static Utility.TerrainGeneration.NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {
