@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,13 +38,11 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 12
-  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +65,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -450,17 +445,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
         type: 3}
-      propertyPath: m_Rigs.Array.data[0]
+      propertyPath: 'm_Rigs.Array.data[0]'
       value: 
       objectReference: {fileID: 1117528470}
     - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
         type: 3}
-      propertyPath: m_Rigs.Array.data[1]
+      propertyPath: 'm_Rigs.Array.data[1]'
       value: 
       objectReference: {fileID: 1123174582}
     - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
         type: 3}
-      propertyPath: m_Rigs.Array.data[2]
+      propertyPath: 'm_Rigs.Array.data[2]'
       value: 
       objectReference: {fileID: 2024362713}
     - target: {fileID: 5646377776813570214, guid: 54bee0fe83bf46a458aa0e809e371675,
@@ -938,6 +933,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1580614102078287380, guid: 746239effa5613b4d8ea59226a5e6ed4,
+        type: 3}
+      propertyPath: m_Version
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 2898253292670618299, guid: 746239effa5613b4d8ea59226a5e6ed4,
         type: 3}
       propertyPath: m_Name
