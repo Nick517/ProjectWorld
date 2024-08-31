@@ -8,6 +8,7 @@ namespace ECS.Authoring.TerrainGeneration
     public class GameSettingsAuthoring : MonoBehaviour
     {
         public GameObject chunkPrefab;
+        public Material terrainMaterial;
         public float baseCubeSize = 1;
         public int cubeCount = 8;
         [Range(0, 1)] public float mapSurface = 0.5f;
@@ -25,6 +26,7 @@ namespace ECS.Authoring.TerrainGeneration
             AddComponent(entity, new ChunkGenerationSettings
             {
                 ChunkPrefab = GetEntity(authoring.chunkPrefab, TransformUsageFlags.Dynamic),
+                Material = authoring.terrainMaterial,
                 BaseCubeSize = authoring.baseCubeSize,
                 CubeCount = authoring.cubeCount,
                 MapSurface = authoring.mapSurface,

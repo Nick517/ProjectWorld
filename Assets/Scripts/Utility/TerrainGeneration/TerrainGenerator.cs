@@ -15,7 +15,7 @@ namespace Utility.TerrainGeneration
 
             var map = new NativeArray<float>((int)math.pow(cubeCount, 3), Allocator.Temp);
 
-            var traversal = new TerrainGenTree.TgTree.Traversal(tgTree);
+            using var traversal = new TerrainGenTree.TgTree.Traversal(tgTree);
 
             for (var x = 0; x < cubeCount; x++)
             for (var y = 0; y < cubeCount; y++)
@@ -27,8 +27,6 @@ namespace Utility.TerrainGeneration
 
                 map[index] = traversal.Sample(position);
             }
-
-            traversal.Dispose();
 
             return map;
         }

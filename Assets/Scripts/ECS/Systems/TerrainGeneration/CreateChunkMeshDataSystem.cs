@@ -42,7 +42,7 @@ namespace ECS.Systems.TerrainGeneration
             _localTransformTypeHandle.Update(ref state);
             _chunkScaleTypeHandle.Update(ref state);
 
-            var ecb = new EntityCommandBuffer(Allocator.TempJob);
+            using var ecb = new EntityCommandBuffer(Allocator.TempJob);
             var settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
             var tgGraph = SystemAPI.GetSingleton<TerrainGenTree>();
 
@@ -60,7 +60,6 @@ namespace ECS.Systems.TerrainGeneration
             state.Dependency.Complete();
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
         }
     }
 }

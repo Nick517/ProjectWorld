@@ -1,3 +1,4 @@
+using System.Linq;
 using ECS.BufferElements.TerrainGeneration;
 using ECS.Components.TerrainGeneration;
 using Unity.Burst;
@@ -16,11 +17,19 @@ namespace ECS.Systems.TerrainGeneration
     {
         private BufferLookup<VerticeBufferElement> _verticeBufferLookup;
         private BufferLookup<TriangleBufferElement> _triangleBufferLookup;
+        private EntityQuery _chunkQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<ChunkGenerationSettings>();
             state.RequireForUpdate<SetChunkMeshTag>();
+            
+            _chunkQuery = new EntityQueryBuilder(Allocator.Temp)
+                .WithAspect<ChunkAspect>()
+                .WithAll<SetChunkMeshTag>()
+                .Build(ref state);
+            
             _verticeBufferLookup = state.GetBufferLookup<VerticeBufferElement>(true);
             _triangleBufferLookup = state.GetBufferLookup<TriangleBufferElement>(true);
         }
@@ -29,33 +38,32 @@ namespace ECS.Systems.TerrainGeneration
         {
             _verticeBufferLookup.Update(ref state);
             _triangleBufferLookup.Update(ref state);
-            var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var query in SystemAPI.Query<ChunkAspect, RenderMeshArray>().WithAll<SetChunkMeshTag>())
+            using var ecb = new EntityCommandBuffer(Allocator.Temp);
+            var material = SystemAPI.GetSingleton<ChunkGenerationSettings>().Material.Value;
+
+            using var chunks = _chunkQuery.ToEntityArray(Allocator.Temp);
+            foreach (var chunk in chunks)
             {
-                var chunk = query.Item1;
-                var renderMeshArray = query.Item2;
-
                 var mesh = new Mesh
                 {
-                    vertices = _verticeBufferLookup[chunk.Entity].Reinterpret<Vector3>().AsNativeArray().ToArray(),
-                    triangles = _triangleBufferLookup[chunk.Entity].Reinterpret<int>().AsNativeArray().ToArray()
+                    vertices = _verticeBufferLookup[chunk].Reinterpret<Vector3>().AsNativeArray().ToArray(),
+                    triangles = _triangleBufferLookup[chunk].Reinterpret<int>().AsNativeArray().ToArray()
                 };
 
                 mesh.RecalculateNormals();
                 mesh.RecalculateBounds();
 
-                ecb.SetSharedComponentManaged(chunk.Entity,
-                    new RenderMeshArray(new[] { renderMeshArray.MaterialReferences[0].Value }, new[] { mesh }));
-                ecb.SetComponent(chunk.Entity, new RenderBounds { Value = mesh.bounds.ToAABB() });
+                ecb.SetSharedComponentManaged(chunk, new RenderMeshArray(new[] { material }, new[] { mesh }));
+                ecb.SetComponent(chunk, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
+                ecb.SetComponent(chunk, new RenderBounds { Value = mesh.bounds.ToAABB() });
 
-                ecb.RemoveComponent<VerticeBufferElement>(chunk.Entity);
-                ecb.RemoveComponent<TriangleBufferElement>(chunk.Entity);
-                ecb.RemoveComponent<SetChunkMeshTag>(chunk.Entity);
+                ecb.RemoveComponent<VerticeBufferElement>(chunk);
+                ecb.RemoveComponent<TriangleBufferElement>(chunk);
+                ecb.RemoveComponent<SetChunkMeshTag>(chunk);
             }
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
         }
     }
 }

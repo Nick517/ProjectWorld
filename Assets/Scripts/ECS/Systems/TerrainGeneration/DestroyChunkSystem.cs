@@ -10,7 +10,8 @@ namespace ECS.Systems.TerrainGeneration
     public partial struct DestroyChunkSystem : ISystem
     {
         private EntityQuery _chunkQuery;
-
+        
+        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<DestroyChunkTag>();
@@ -23,12 +24,11 @@ namespace ECS.Systems.TerrainGeneration
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            using var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             ecb.DestroyEntity(_chunkQuery, EntityQueryCaptureMode.AtRecord);
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
         }
     }
 }

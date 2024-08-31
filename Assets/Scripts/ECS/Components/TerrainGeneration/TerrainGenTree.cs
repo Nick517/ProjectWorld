@@ -1,3 +1,4 @@
+using System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -24,7 +25,7 @@ namespace ECS.Components.TerrainGeneration
                 public int4 Next;
             }
 
-            public struct Traversal
+            public struct Traversal : IDisposable
             {
                 public readonly BlobAssetReference<TgTree> Blob;
                 public float4 Position;

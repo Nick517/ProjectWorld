@@ -26,11 +26,11 @@ namespace ECS.Systems.TerrainGeneration
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            using var ecb = new EntityCommandBuffer(Allocator.Temp);
             _settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
 
             // Gather Data of all existing Chunks not marked for destruction
-            var existingChunkData = new NativeHashSet<Data>(2000, Allocator.Temp);
+            using var existingChunkData = new NativeHashSet<Data>(2000, Allocator.Temp);
             foreach (var chunk in SystemAPI.Query<ChunkAspect>().WithAbsent<DestroyChunkTag>())
                 existingChunkData.Add(ChunkAspectToChunkData(chunk));
 
@@ -59,8 +59,6 @@ namespace ECS.Systems.TerrainGeneration
             foreach (var chunkData in createChunkData) CreateChunk(ecb, _settings, chunkData);
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
-            existingChunkData.Dispose();
             newChunkData.Dispose();
             destroyChunkData.Dispose();
             createChunkData.Dispose();

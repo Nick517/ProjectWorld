@@ -20,7 +20,7 @@ namespace ECS.Systems.TerrainGeneration
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            using var ecb = new EntityCommandBuffer(Allocator.Temp);
             var settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
 
             foreach (var trackPoint in SystemAPI.Query<TrackPointAspect>())
@@ -32,7 +32,6 @@ namespace ECS.Systems.TerrainGeneration
             }
 
             ecb.Playback(state.EntityManager);
-            ecb.Dispose();
         }
     }
 }
