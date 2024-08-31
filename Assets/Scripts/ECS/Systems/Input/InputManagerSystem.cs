@@ -23,8 +23,7 @@ namespace ECS.Systems.Input
 
         protected override void OnUpdate()
         {
-            var inputManager =
-                SystemAPI.GetAspect<InputManagerAspect>(SystemAPI.GetSingletonEntity<CameraInput>());
+            var inputManager = SystemAPI.GetAspect<InputManagerAspect>(SystemAPI.GetSingletonEntity<CameraInput>());
 
             inputManager.Movement = _playerControls.FlyCamera.Movement.ReadValue<Vector3>();
             inputManager.Sprint = _playerControls.FlyCamera.Sprint.IsPressed();

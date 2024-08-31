@@ -2,7 +2,7 @@ using ECS.Components.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Utility.TerrainGeneration;
+using static Utility.TerrainGeneration.SegmentOperations;
 using TrackPointAspect = ECS.Aspects.TerrainGeneration.TrackPointAspect;
 
 namespace ECS.Systems.TerrainGeneration
@@ -13,7 +13,7 @@ namespace ECS.Systems.TerrainGeneration
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<ChunkGenerationSettings>();
+            state.RequireForUpdate<TerrainSegmentGenerationSettings>();
             state.RequireForUpdate<TrackPointTag>();
         }
 
@@ -21,14 +21,13 @@ namespace ECS.Systems.TerrainGeneration
         public void OnUpdate(ref SystemState state)
         {
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
-            var settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
+            var settings = SystemAPI.GetSingleton<TerrainSegmentGenerationSettings>();
 
-            foreach (var trackPoint in SystemAPI.Query<TrackPointAspect>())
+            foreach (var point in SystemAPI.Query<TrackPointAspect>())
             {
-                var chunkPosition =
-                    ChunkOperations.GetClosestChunkPosition(settings, trackPoint.Position, settings.ReloadScale);
+                var segPos = GetClosestSegmentPosition(settings, point.Position, settings.ReloadScale);
 
-                if (!chunkPosition.Equals(trackPoint.ChunkPosition)) trackPoint.UpdateChunkPosition(ecb, chunkPosition);
+                if (!segPos.Equals(point.SegmentPosition)) point.UpdateSegmentPosition(ecb, segPos);
             }
 
             ecb.Playback(state.EntityManager);

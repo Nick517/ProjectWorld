@@ -10,20 +10,20 @@ namespace ECS.Aspects.TerrainGeneration
         public readonly Entity Entity;
 
         private readonly RefRO<LocalTransform> _localTransform;
-        private readonly RefRW<ChunkPosition> _chunkPosition;
+        private readonly RefRW<TerrainSegmentPosition> _segmentPosition;
 
         public float3 Position => _localTransform.ValueRO.Position;
 
-        public float3 ChunkPosition
+        public float3 SegmentPosition
         {
-            get => _chunkPosition.ValueRO.Position;
-            private set => _chunkPosition.ValueRW.Position = value;
+            get => _segmentPosition.ValueRO.Position;
+            private set => _segmentPosition.ValueRW.Position = value;
         }
 
-        public void UpdateChunkPosition(EntityCommandBuffer ecb, float3 newChunkPosition)
+        public void UpdateSegmentPosition(EntityCommandBuffer ecb, float3 newSegmentPosition)
         {
-            ChunkPosition = newChunkPosition;
-            ecb.AddComponent<LoadChunksPointTag>(Entity);
+            SegmentPosition = newSegmentPosition;
+            ecb.AddComponent<LoadTerrainSegmentsPointTag>(Entity);
         }
     }
 }

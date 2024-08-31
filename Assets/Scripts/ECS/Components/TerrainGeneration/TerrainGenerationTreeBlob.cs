@@ -8,11 +8,11 @@ using static Unity.Collections.Allocator;
 
 namespace ECS.Components.TerrainGeneration
 {
-    public struct TerrainGenTree : IComponentData
+    public struct TerrainGenerationTreeBlob : IComponentData
     {
-        public BlobAssetReference<TgTree> Blob;
+        public BlobAssetReference<TerrainGenerationTree> Blob;
 
-        public struct TgTree
+        public struct TerrainGenerationTree
         {
             public BlobArray<Node> Nodes;
             public BlobArray<float4> Values;
@@ -27,14 +27,14 @@ namespace ECS.Components.TerrainGeneration
 
             public struct Traversal : IDisposable
             {
-                public readonly BlobAssetReference<TgTree> Blob;
+                public readonly BlobAssetReference<TerrainGenerationTree> Blob;
                 public float4 Position;
                 public NativeArray<float4> Cache;
                 public NativeArray<bool> Cached;
 
-                public Traversal(TerrainGenTree tgTree)
+                public Traversal(TerrainGenerationTreeBlob terrainGenerationTreeBlob)
                 {
-                    Blob = tgTree.Blob;
+                    Blob = terrainGenerationTreeBlob.Blob;
                     Position = default;
                     Cache = new NativeArray<float4>(Blob.Value.CacheCount, Temp);
                     Cached = new NativeArray<bool>(Cache.Length, Temp);

@@ -23,8 +23,7 @@ namespace ECS.Systems.Input
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            _flyCamera =
-                SystemAPI.GetAspect<FlyCameraAspect>(SystemAPI.GetSingletonEntity<FlyCameraSettings>());
+            _flyCamera = SystemAPI.GetAspect<FlyCameraAspect>(SystemAPI.GetSingletonEntity<FlyCameraSettings>());
             _flyCameraInput = SystemAPI.GetSingleton<FlyCameraInput>();
             var deltaTime = SystemAPI.Time.DeltaTime;
 

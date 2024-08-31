@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace ECS.Components.TerrainGeneration
 {
-    public struct ChunkPosition : IComponentData
+    public struct TerrainSegmentPosition : IComponentData
     {
         public float3 Position;
     }

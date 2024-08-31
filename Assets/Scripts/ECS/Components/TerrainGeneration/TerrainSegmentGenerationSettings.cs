@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace ECS.Components.TerrainGeneration
 {
-    public struct ChunkGenerationSettings : IComponentData
+    public struct TerrainSegmentGenerationSettings : IComponentData
     {
-        public Entity ChunkPrefab;
+        public Entity TerrainSegmentPrefab;
         public UnityObjectRef<Material> Material;
         public float BaseCubeSize;
         public int CubeCount;
         public float MapSurface;
-        public int MaxChunkScale;
-        public int MegaChunks;
+        public int MaxSegmentScale;
+        public int MegaSegments;
         public float LOD;
         public float ReloadScale;
     }

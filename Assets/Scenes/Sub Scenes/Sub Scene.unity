@@ -170,6 +170,12 @@ PrefabInstance:
       propertyPath: terrainMaterial
       value: 
       objectReference: {fileID: 2100000, guid: 0038baef7711cff4097056b68af00ca6, type: 2}
+    - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
+        type: 3}
+      propertyPath: terrainSegmentPrefab
+      value: 
+      objectReference: {fileID: 5932196773895458033, guid: d519b212ff0182f4aa77bacb6eb4d493,
+        type: 3}
     - target: {fileID: 3940441564093856854, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

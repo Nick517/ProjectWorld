@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace ECS.Components.TerrainGeneration
 {
-    public struct DestroyChunkTag : IComponentData
+    public struct SetTerrainSegmentMeshTag : IComponentData
     {
     }
 }

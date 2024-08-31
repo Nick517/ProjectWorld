@@ -6,26 +6,27 @@ namespace Utility.TerrainGeneration
 {
     public static class TerrainGenerator
     {
-        public static NativeArray<float> PopulateMap(ChunkGenerationSettings settings, TerrainGenTree tgTree,
-            float3 chunkPosition, float chunkScale)
+        public static NativeArray<float> PopulateMap(TerrainSegmentGenerationSettings settings,
+            TerrainGenerationTreeBlob tgTreeBlob,
+            float3 segmentPosition, float segmentScale)
         {
-            var cubeSize = ChunkOperations.GetCubeSize(settings, chunkScale);
+            var cubeSize = SegmentOperations.GetCubeSize(settings, segmentScale);
             var cubeCount = settings.CubeCount + 1;
-            var offset = chunkPosition;
+            var offset = segmentPosition;
 
             var map = new NativeArray<float>((int)math.pow(cubeCount, 3), Allocator.Temp);
 
-            using var traversal = new TerrainGenTree.TgTree.Traversal(tgTree);
+            using var traversal = new TerrainGenerationTreeBlob.TerrainGenerationTree.Traversal(tgTreeBlob);
 
             for (var x = 0; x < cubeCount; x++)
             for (var y = 0; y < cubeCount; y++)
             for (var z = 0; z < cubeCount; z++)
             {
                 var index3D = new int3(x, y, z);
-                var position = index3D * cubeSize + offset;
+                var pos = index3D * cubeSize + offset;
                 var index = GetFlatIndex(cubeCount, index3D);
 
-                map[index] = traversal.Sample(position);
+                map[index] = traversal.Sample(pos);
             }
 
             return map;

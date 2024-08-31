@@ -5,19 +5,19 @@ using Unity.Entities;
 
 namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(SetChunkMeshSystem))]
+    [UpdateAfter(typeof(SetTerrainSegmentMeshSystem))]
     [BurstCompile]
-    public partial struct DestroyChunkSystem : ISystem
+    public partial struct DestroyTerrainSegmentSystem : ISystem
     {
-        private EntityQuery _chunkQuery;
+        private EntityQuery _segmentQuery;
         
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<DestroyChunkTag>();
+            state.RequireForUpdate<DestroyTerrainSegmentTag>();
 
-            _chunkQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<DestroyChunkTag>()
+            _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
+                .WithAll<DestroyTerrainSegmentTag>()
                 .Build(ref state);
         }
 
@@ -26,7 +26,7 @@ namespace ECS.Systems.TerrainGeneration
         {
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            ecb.DestroyEntity(_chunkQuery, EntityQueryCaptureMode.AtRecord);
+            ecb.DestroyEntity(_segmentQuery, EntityQueryCaptureMode.AtRecord);
 
             ecb.Playback(state.EntityManager);
         }

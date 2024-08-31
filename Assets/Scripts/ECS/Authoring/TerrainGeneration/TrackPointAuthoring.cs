@@ -15,8 +15,8 @@ namespace ECS.Authoring.TerrainGeneration
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent<TrackPointTag>(entity);
-            AddComponent(entity, new ChunkPosition { Position = authoring.transform.position });
-            AddComponent<LoadChunksPointTag>(entity);
+            AddComponent(entity, new TerrainSegmentPosition { Position = authoring.transform.position });
+            AddComponent<LoadTerrainSegmentsPointTag>(entity);
         }
     }
 }

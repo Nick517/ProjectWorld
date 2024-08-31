@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace ECS.Components.TerrainGeneration
 {
-    public struct CreateChunkMeshDataTag : IComponentData
+    public struct CreateTerrainSegmentMeshDataTag : IComponentData
     {
     }
 }

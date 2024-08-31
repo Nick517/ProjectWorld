@@ -13,28 +13,27 @@ namespace ECS.Systems.TerrainGeneration
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<TerrainGenTree>();
-            state.RequireForUpdate<ChunkGenerationSettings>();
+            state.RequireForUpdate<TerrainGenerationTreeBlob>();
+            state.RequireForUpdate<TerrainSegmentGenerationSettings>();
             state.RequireForUpdate<SamplePointTag>();
         }
 
         public void OnUpdate(ref SystemState state)
         {
-            var tgTree = SystemAPI.GetSingleton<TerrainGenTree>();
-            var settings = SystemAPI.GetSingleton<ChunkGenerationSettings>();
+            var tgTree = SystemAPI.GetSingleton<TerrainGenerationTreeBlob>();
+            var settings = SystemAPI.GetSingleton<TerrainSegmentGenerationSettings>();
 
             foreach (var point in SystemAPI.Query<RefRO<SamplePointTag>, RefRO<LocalTransform>>())
             {
-                var position = point.Item2.ValueRO.Position;
-                var cubePosition = ChunkOperations.GetClosestCubePosition(settings, position);
+                var pos = point.Item2.ValueRO.Position;
+                var cubePos = SegmentOperations.GetClosestCubePosition(settings, pos);
 
-                var traversal = new TerrainGenTree.TgTree.Traversal(tgTree);
-                var sample = traversal.Sample(cubePosition);
+                var traversal = new TerrainGenerationTreeBlob.TerrainGenerationTree.Traversal(tgTree);
+                var sample = traversal.Sample(cubePos);
                 traversal.Dispose();
 
                 if (sample >= settings.MapSurface)
-                    Debug.Log(
-                        $"Collided at {cubePosition.x}, {cubePosition.y}, {cubePosition.z} with sample of: {sample}");
+                    Debug.Log($"Collided at {cubePos.x}, {cubePos.y}, {cubePos.z} with sample of: {sample}");
             }
         }
     }
