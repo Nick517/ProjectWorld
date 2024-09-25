@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace ECS.Components.TerrainGeneration
 {
-    public struct TerrainSegmentScale : IComponentData
+    public struct SegmentScale : IComponentData
     {
         public float Scale;
     }

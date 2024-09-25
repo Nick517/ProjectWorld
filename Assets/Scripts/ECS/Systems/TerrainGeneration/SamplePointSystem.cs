@@ -14,14 +14,14 @@ namespace ECS.Systems.TerrainGeneration
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<TerrainGenerationTreeBlob>();
-            state.RequireForUpdate<TerrainSegmentGenerationSettings>();
+            state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<SamplePointTag>();
         }
 
         public void OnUpdate(ref SystemState state)
         {
             var tgTree = SystemAPI.GetSingleton<TerrainGenerationTreeBlob>();
-            var settings = SystemAPI.GetSingleton<TerrainSegmentGenerationSettings>();
+            var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
 
             foreach (var point in SystemAPI.Query<RefRO<SamplePointTag>, RefRO<LocalTransform>>())
             {

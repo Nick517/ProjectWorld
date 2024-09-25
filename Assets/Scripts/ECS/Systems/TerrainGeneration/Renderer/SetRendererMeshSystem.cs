@@ -1,6 +1,7 @@
 using ECS.Aspects.TerrainGeneration;
-using ECS.BufferElements.TerrainGeneration;
+using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
+using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -8,45 +9,45 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using UnityEngine;
 
-namespace ECS.Systems.TerrainGeneration
+namespace ECS.Systems.TerrainGeneration.Renderer
 {
-    [UpdateAfter(typeof(CreateTerrainSegmentMeshDataSystem))]
+    [UpdateAfter(typeof(CreateRendererMeshSystem))]
     [BurstCompile]
-    public partial struct SetTerrainSegmentMeshSystem : ISystem
+    public partial struct SetRendererMeshSystem : ISystem
     {
-        private BufferLookup<VerticeBufferElement> _verticeBufferLookup;
+        private BufferLookup<VertexBufferElement> _vertexBufferLookup;
         private BufferLookup<TriangleBufferElement> _triangleBufferLookup;
         private EntityQuery _chunkQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<TerrainSegmentGenerationSettings>();
-            state.RequireForUpdate<SetTerrainSegmentMeshTag>();
+            state.RequireForUpdate<BaseSegmentSettings>();
+            state.RequireForUpdate<SetRendererMeshTag>();
 
             _chunkQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAspect<TerrainSegmentAspect>()
-                .WithAll<SetTerrainSegmentMeshTag>()
+                .WithAll<SetRendererMeshTag>()
                 .Build(ref state);
 
-            _verticeBufferLookup = state.GetBufferLookup<VerticeBufferElement>(true);
+            _vertexBufferLookup = state.GetBufferLookup<VertexBufferElement>(true);
             _triangleBufferLookup = state.GetBufferLookup<TriangleBufferElement>(true);
         }
 
         public void OnUpdate(ref SystemState state)
         {
-            _verticeBufferLookup.Update(ref state);
+            _vertexBufferLookup.Update(ref state);
             _triangleBufferLookup.Update(ref state);
 
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
-            var material = SystemAPI.GetSingleton<TerrainSegmentGenerationSettings>().Material.Value;
+            var material = SystemAPI.GetSingleton<BaseSegmentSettings>().Material.Value;
 
             using var segments = _chunkQuery.ToEntityArray(Allocator.Temp);
             foreach (var seg in segments)
             {
                 var mesh = new Mesh
                 {
-                    vertices = _verticeBufferLookup[seg].Reinterpret<Vector3>().AsNativeArray().ToArray(),
+                    vertices = _vertexBufferLookup[seg].Reinterpret<Vector3>().AsNativeArray().ToArray(),
                     triangles = _triangleBufferLookup[seg].Reinterpret<int>().AsNativeArray().ToArray()
                 };
 
@@ -57,9 +58,9 @@ namespace ECS.Systems.TerrainGeneration
                 ecb.SetComponent(seg, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
                 ecb.SetComponent(seg, new RenderBounds { Value = mesh.bounds.ToAABB() });
 
-                ecb.RemoveComponent<VerticeBufferElement>(seg);
+                ecb.RemoveComponent<VertexBufferElement>(seg);
                 ecb.RemoveComponent<TriangleBufferElement>(seg);
-                ecb.RemoveComponent<SetTerrainSegmentMeshTag>(seg);
+                ecb.RemoveComponent<SetRendererMeshTag>(seg);
             }
 
             ecb.Playback(state.EntityManager);

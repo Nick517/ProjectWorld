@@ -6,7 +6,7 @@ namespace Utility.TerrainGeneration
 {
     public static class TerrainGenerator
     {
-        public static NativeArray<float> PopulateMap(TerrainSegmentGenerationSettings settings,
+        public static NativeArray<float> PopulateMap(BaseSegmentSettings settings,
             TerrainGenerationTreeBlob tgTreeBlob,
             float3 segmentPosition, float segmentScale)
         {

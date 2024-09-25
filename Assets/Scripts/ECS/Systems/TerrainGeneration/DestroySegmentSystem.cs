@@ -5,19 +5,19 @@ using Unity.Entities;
 
 namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(SetTerrainSegmentMeshSystem))]
+    [UpdateAfter(typeof(Renderer.SetRendererMeshSystem))]
     [BurstCompile]
-    public partial struct DestroyTerrainSegmentSystem : ISystem
+    public partial struct DestroySegmentSystem : ISystem
     {
         private EntityQuery _segmentQuery;
         
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<DestroyTerrainSegmentTag>();
+            state.RequireForUpdate<DestroySegmentTag>();
 
             _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<DestroyTerrainSegmentTag>()
+                .WithAll<DestroySegmentTag>()
                 .Build(ref state);
         }
 

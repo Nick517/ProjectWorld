@@ -45,10 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d3319eb3dd2a0e43bd621359a8ba3c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chunkPrefab: {fileID: 5932196773895458033, guid: d519b212ff0182f4aa77bacb6eb4d493,
+  rendererSegmentPrefab: {fileID: 5932196773895458033, guid: d519b212ff0182f4aa77bacb6eb4d493,
     type: 3}
-  chunkGenerationSettings: {fileID: 11400000, guid: 16d5691514192894ba55140b05650dda,
-    type: 2}
+  terrainMaterial: {fileID: 2100000, guid: 0038baef7711cff4097056b68af00ca6, type: 2}
+  baseCubeSize: 1
+  cubeCount: 8
+  mapSurface: 0.5
 --- !u!114 &4742380398921452179
 MonoBehaviour:
   m_ObjectHideFlags: 0

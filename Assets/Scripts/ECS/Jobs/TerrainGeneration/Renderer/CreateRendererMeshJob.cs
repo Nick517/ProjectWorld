@@ -1,5 +1,6 @@
-using ECS.BufferElements.TerrainGeneration;
+using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
+using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
@@ -10,16 +11,16 @@ using static Utility.TerrainGeneration.MarchingCubeTables;
 using static Utility.TerrainGeneration.SegmentOperations;
 using static Utility.TerrainGeneration.TerrainGenerator;
 
-namespace ECS.Jobs.TerrainGeneration
+namespace ECS.Jobs.TerrainGeneration.Renderer
 {
     [BurstCompile]
-    public struct CreateTerrainSegmentMeshDataJob : IJobChunk
+    public struct CreateRendererMeshJob : IJobChunk
     {
         public EntityCommandBuffer.ParallelWriter Ecb;
         [ReadOnly] public EntityTypeHandle EntityTypeHandle;
         [ReadOnly] public ComponentTypeHandle<LocalTransform> LocalTransformTypeHandle;
-        [ReadOnly] public ComponentTypeHandle<TerrainSegmentScale> TerrainSegmentScaleTypeHandle;
-        [ReadOnly] public TerrainSegmentGenerationSettings Settings;
+        [ReadOnly] public ComponentTypeHandle<SegmentScale> SegmentScaleTypeHandle;
+        [ReadOnly] public BaseSegmentSettings Settings;
         [ReadOnly] public TerrainGenerationTreeBlob TerrainGenerationTreeBlob;
 
         public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask,
@@ -27,7 +28,7 @@ namespace ECS.Jobs.TerrainGeneration
         {
             var entities = chunk.GetNativeArray(EntityTypeHandle);
             var localTransforms = chunk.GetNativeArray(ref LocalTransformTypeHandle);
-            var segmentScales = chunk.GetNativeArray(ref TerrainSegmentScaleTypeHandle);
+            var segmentScales = chunk.GetNativeArray(ref SegmentScaleTypeHandle);
 
             var enumerator = new ChunkEntityEnumerator(useEnabledMask, chunkEnabledMask, chunk.Count);
 
@@ -42,22 +43,22 @@ namespace ECS.Jobs.TerrainGeneration
                     Allocator.Temp);
 
                 Ecb.AddBuffer<TriangleBufferElement>(i, entity);
-                Ecb.AddBuffer<VerticeBufferElement>(i, entity);
+                Ecb.AddBuffer<VertexBufferElement>(i, entity);
 
                 for (var x = 0; x < Settings.CubeCount; x++)
                 for (var y = 0; y < Settings.CubeCount; y++)
                 for (var z = 0; z < Settings.CubeCount; z++)
                     MarchCube(i, Ecb, Settings, entity, segScale, cubeMap, new int3(x, y, z), ref verts);
 
-                foreach (var vert in verts) Ecb.AppendToBuffer<VerticeBufferElement>(i, entity, vert);
+                foreach (var vert in verts) Ecb.AppendToBuffer<VertexBufferElement>(i, entity, vert);
 
-                Ecb.RemoveComponent<CreateTerrainSegmentMeshDataTag>(i, entity);
-                Ecb.AddComponent<SetTerrainSegmentMeshTag>(i, entity);
+                Ecb.RemoveComponent<CreateRendererMeshTag>(i, entity);
+                Ecb.AddComponent<SetRendererMeshTag>(i, entity);
             }
         }
 
         private static void MarchCube(int sortKey, EntityCommandBuffer.ParallelWriter ecb,
-            TerrainSegmentGenerationSettings settings, Entity entity, float segmentScale, NativeArray<float> cubeMap,
+            BaseSegmentSettings settings, Entity entity, float segmentScale, NativeArray<float> cubeMap,
             int3 position, ref NativeList<float3> vertices)
         {
             var cubeSize = GetCubeSize(settings, segmentScale);
@@ -75,12 +76,12 @@ namespace ECS.Jobs.TerrainGeneration
 
             for (var i = 0; i < 15; i++)
             {
-                var indice = Triangle(configIndex, edgeIndex);
+                var index = Triangle(configIndex, edgeIndex);
 
-                if (indice == -1) return;
+                if (index == -1) return;
 
-                var vertPos = IndiceForVerticePosition(settings, position, ref cube, indice);
-                var vert = VerticeForIndice(vertPos * cubeSize, ref vertices);
+                var vertPos = IndexForVertexPosition(settings, position, ref cube, index);
+                var vert = VertexForIndex(vertPos * cubeSize, ref vertices);
 
                 ecb.AppendToBuffer<TriangleBufferElement>(sortKey, entity, vert);
 
@@ -88,13 +89,13 @@ namespace ECS.Jobs.TerrainGeneration
             }
         }
 
-        private static float SampleMap(TerrainSegmentGenerationSettings settings, NativeArray<float> cubeMap,
+        private static float SampleMap(BaseSegmentSettings settings, NativeArray<float> cubeMap,
             int3 point)
         {
             return GetCube(cubeMap, settings.CubeCount, point);
         }
 
-        private static int GetCubeConfiguration(TerrainSegmentGenerationSettings settings, NativeArray<float> cube)
+        private static int GetCubeConfiguration(BaseSegmentSettings settings, NativeArray<float> cube)
         {
             var configIndex = 0;
 
@@ -105,25 +106,25 @@ namespace ECS.Jobs.TerrainGeneration
             return configIndex;
         }
 
-        private static int VerticeForIndice(float3 vertice, ref NativeList<float3> vertices)
+        private static int VertexForIndex(float3 vertex, ref NativeList<float3> vertices)
         {
             for (var i = 0; i < vertices.Length; i++)
-                if (vertices[i].Equals(vertice))
+                if (vertices[i].Equals(vertex))
                     return i;
 
-            vertices.Add(vertice);
+            vertices.Add(vertex);
 
             return vertices.Length - 1;
         }
 
-        private static float3 IndiceForVerticePosition(TerrainSegmentGenerationSettings settings, int3 position,
-            ref NativeArray<float> cube, int indice)
+        private static float3 IndexForVertexPosition(BaseSegmentSettings settings, int3 position,
+            ref NativeArray<float> cube, int index)
         {
-            var vert1 = position + Corner(Edge(indice, 0));
-            var vert2 = position + Corner(Edge(indice, 1));
+            var vert1 = position + Corner(Edge(index, 0));
+            var vert2 = position + Corner(Edge(index, 1));
 
-            var sample1 = cube[Edge(indice, 0)];
-            var sample2 = cube[Edge(indice, 1)];
+            var sample1 = cube[Edge(index, 0)];
+            var sample2 = cube[Edge(index, 1)];
 
             var dif = sample2 - sample1;
 

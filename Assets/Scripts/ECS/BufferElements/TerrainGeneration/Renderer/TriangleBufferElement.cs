@@ -1,6 +1,6 @@
 using Unity.Entities;
 
-namespace ECS.BufferElements.TerrainGeneration
+namespace ECS.BufferElements.TerrainGeneration.Renderer
 {
     public struct TriangleBufferElement : IBufferElementData
     {

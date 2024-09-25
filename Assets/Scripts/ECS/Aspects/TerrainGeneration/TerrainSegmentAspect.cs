@@ -1,5 +1,6 @@
 using System;
 using ECS.Components.TerrainGeneration;
+using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -11,7 +12,7 @@ namespace ECS.Aspects.TerrainGeneration
         public readonly Entity Entity;
 
         private readonly RefRO<LocalTransform> _localTransform;
-        private readonly RefRO<TerrainSegmentScale> _segmentScale;
+        private readonly RefRO<SegmentScale> _segmentScale;
         private float3 Position => _localTransform.ValueRO.Position;
 
         private float Scale => _segmentScale.ValueRO.Scale;
@@ -30,7 +31,7 @@ namespace ECS.Aspects.TerrainGeneration
 
             public bool Equals(Data data)
             {
-                return Position.Equals(data.Position) && Math.Abs(Scale - data.Scale) == 0;
+                return math.all(Position == data.Position) && math.abs(Scale - data.Scale) == 0;
             }
 
             public readonly override int GetHashCode()
@@ -50,12 +51,12 @@ namespace ECS.Aspects.TerrainGeneration
             return new Data(terrainSegment.Position, terrainSegment.Scale);
         }
 
-        public static void Create(EntityCommandBuffer ecb, TerrainSegmentGenerationSettings settings, Data data)
+        public static void Create(EntityCommandBuffer ecb, BaseSegmentSettings settings, Data data)
         {
-            var segment = ecb.Instantiate(settings.TerrainSegmentPrefab);
+            var segment = ecb.Instantiate(settings.RendererSegmentPrefab);
             ecb.SetComponent(segment, LocalTransform.FromPosition(data.Position));
-            ecb.AddComponent(segment, new TerrainSegmentScale { Scale = data.Scale });
-            ecb.AddComponent<CreateTerrainSegmentMeshDataTag>(segment);
+            ecb.AddComponent(segment, new SegmentScale { Scale = data.Scale });
+            ecb.AddComponent<CreateRendererMeshTag>(segment);
         }
     }
 }

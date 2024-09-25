@@ -3,16 +3,12 @@ using UnityEngine;
 
 namespace ECS.Components.TerrainGeneration
 {
-    public struct TerrainSegmentGenerationSettings : IComponentData
+    public struct BaseSegmentSettings : IComponentData
     {
-        public Entity TerrainSegmentPrefab;
+        public Entity RendererSegmentPrefab;
         public UnityObjectRef<Material> Material;
         public float BaseCubeSize;
         public int CubeCount;
         public float MapSurface;
-        public int MaxSegmentScale;
-        public int MegaSegments;
-        public float LOD;
-        public float ReloadScale;
     }
 }

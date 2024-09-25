@@ -1,17 +1,21 @@
 using ECS.Components.TerrainGeneration;
+using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
 namespace ECS.Aspects.TerrainGeneration
 {
-    public readonly partial struct TrackPointAspect : IAspect
+    public readonly partial struct RendererPointAspect : IAspect
     {
         public readonly Entity Entity;
 
+        private readonly RefRO<RendererPoint> _rendererPoint;
         private readonly RefRO<LocalTransform> _localTransform;
-        private readonly RefRW<TerrainSegmentPosition> _segmentPosition;
+        private readonly RefRW<SegmentPosition> _segmentPosition;
 
+        public RendererPoint Settings => _rendererPoint.ValueRO;
+        
         public float3 Position => _localTransform.ValueRO.Position;
 
         public float3 SegmentPosition
@@ -23,7 +27,7 @@ namespace ECS.Aspects.TerrainGeneration
         public void UpdateSegmentPosition(EntityCommandBuffer ecb, float3 newSegmentPosition)
         {
             SegmentPosition = newSegmentPosition;
-            ecb.AddComponent<LoadTerrainSegmentsPointTag>(Entity);
+            ecb.AddComponent<UpdateRendererSegmentsTag>(Entity);
         }
     }
 }

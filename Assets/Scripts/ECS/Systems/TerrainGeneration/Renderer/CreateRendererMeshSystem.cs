@@ -1,38 +1,39 @@
 using ECS.Aspects.TerrainGeneration;
 using ECS.Components.TerrainGeneration;
-using ECS.Jobs.TerrainGeneration;
+using ECS.Components.TerrainGeneration.Renderer;
+using ECS.Jobs.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 
-namespace ECS.Systems.TerrainGeneration
+namespace ECS.Systems.TerrainGeneration.Renderer
 {
-    [UpdateAfter(typeof(TerrainSegmentManagerSystem))]
+    [UpdateAfter(typeof(RendererManagerSystem))]
     [BurstCompile]
-    public partial struct CreateTerrainSegmentMeshDataSystem : ISystem
+    public partial struct CreateRendererMeshSystem : ISystem
     {
         private EntityQuery _terrainSegmentQuery;
         private EntityTypeHandle _entityTypeHandle;
         private ComponentTypeHandle<LocalTransform> _localTransformTypeHandle;
-        private ComponentTypeHandle<TerrainSegmentScale> _terrainSegmentScaleTypeHandle;
+        private ComponentTypeHandle<SegmentScale> _terrainSegmentScaleTypeHandle;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<TerrainSegmentGenerationSettings>();
+            state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<TerrainGenerationTreeBlob>();
-            state.RequireForUpdate<CreateTerrainSegmentMeshDataTag>();
+            state.RequireForUpdate<CreateRendererMeshTag>();
 
             _terrainSegmentQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAspect<TerrainSegmentAspect>()
-                .WithAll<CreateTerrainSegmentMeshDataTag>()
+                .WithAll<CreateRendererMeshTag>()
                 .Build(ref state);
 
             _entityTypeHandle = state.GetEntityTypeHandle();
             _localTransformTypeHandle = state.GetComponentTypeHandle<LocalTransform>(true);
-            _terrainSegmentScaleTypeHandle = state.GetComponentTypeHandle<TerrainSegmentScale>(true);
+            _terrainSegmentScaleTypeHandle = state.GetComponentTypeHandle<SegmentScale>(true);
         }
 
         [BurstCompile]
@@ -43,15 +44,15 @@ namespace ECS.Systems.TerrainGeneration
             _terrainSegmentScaleTypeHandle.Update(ref state);
 
             using var ecb = new EntityCommandBuffer(Allocator.TempJob);
-            var settings = SystemAPI.GetSingleton<TerrainSegmentGenerationSettings>();
+            var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
             var tgGraph = SystemAPI.GetSingleton<TerrainGenerationTreeBlob>();
 
-            var jobHandle = new CreateTerrainSegmentMeshDataJob
+            var jobHandle = new CreateRendererMeshJob
             {
                 Ecb = ecb.AsParallelWriter(),
                 EntityTypeHandle = _entityTypeHandle,
                 LocalTransformTypeHandle = _localTransformTypeHandle,
-                TerrainSegmentScaleTypeHandle = _terrainSegmentScaleTypeHandle,
+                SegmentScaleTypeHandle = _terrainSegmentScaleTypeHandle,
                 Settings = settings,
                 TerrainGenerationTreeBlob = tgGraph
             }.ScheduleParallel(_terrainSegmentQuery, state.Dependency);
