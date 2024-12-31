@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DataTypes.Serializable;
 using Editor.TerrainGenerationGraph.Graph;
 using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
-using Serializable;
 using TerrainGenerationGraph;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;

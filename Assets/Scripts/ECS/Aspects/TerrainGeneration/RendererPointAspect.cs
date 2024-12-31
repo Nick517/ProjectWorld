@@ -3,6 +3,7 @@ using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using static Utility.TerrainGeneration.SegmentOperations;
 
 namespace ECS.Aspects.TerrainGeneration
 {
@@ -15,7 +16,7 @@ namespace ECS.Aspects.TerrainGeneration
         private readonly RefRW<SegmentPosition> _segmentPosition;
 
         public RendererPoint Settings => _rendererPoint.ValueRO;
-        
+
         public float3 Position => _localTransform.ValueRO.Position;
 
         public float3 SegmentPosition
@@ -24,9 +25,9 @@ namespace ECS.Aspects.TerrainGeneration
             private set => _segmentPosition.ValueRW.Position = value;
         }
 
-        public void UpdateSegmentPosition(EntityCommandBuffer ecb, float3 newSegmentPosition)
+        public void UpdateSegmentPosition(EntityCommandBuffer ecb, BaseSegmentSettings settings)
         {
-            SegmentPosition = newSegmentPosition;
+            SegmentPosition = GetClosestSegPos(Position, GetSegSize(settings.BaseSegSize, Settings.ReloadScale));
             ecb.AddComponent<UpdateRendererSegmentsTag>(Entity);
         }
     }

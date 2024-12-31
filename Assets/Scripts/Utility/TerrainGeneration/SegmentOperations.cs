@@ -1,37 +1,38 @@
-using ECS.Components.TerrainGeneration;
 using Unity.Mathematics;
+using static Unity.Mathematics.math;
 
 namespace Utility.TerrainGeneration
 {
     public static class SegmentOperations
     {
-        public static float3 GetCubeSize(BaseSegmentSettings settings, float segmentScale)
+        public static float GetCubeSize(float baseCubeSize, int segScale = 0)
         {
-            return math.pow(2, segmentScale) * settings.BaseCubeSize;
+            return baseCubeSize * ScaleMultiplier(segScale);
         }
 
-        public static float3 GetSegmentSize(BaseSegmentSettings settings, float segmentScale)
+        public static float GetSegSize(float baseSegSize, int segScale = 0)
         {
-            return GetCubeSize(settings, segmentScale) * settings.CubeCount;
+            return baseSegSize * ScaleMultiplier(segScale);
+        }
+        
+        public static float3 GetClosestSegPos(float3 pos, float segSize)
+        {
+            return floor(pos / segSize) * segSize;
         }
 
-        public static float3 GetClosestCubePosition(BaseSegmentSettings settings, float3 position)
+        public static float3 GetClosestSegCenter(float3 pos, float segSize)
         {
-            return math.floor(position / settings.BaseCubeSize) * settings.BaseCubeSize;
+            return GetClosestSegPos(pos, segSize) + segSize / 2;
         }
 
-        public static float3 GetClosestSegmentPosition(BaseSegmentSettings settings, float3 position,
-            float segmentScale)
+        public static bool PointWithinSeg(float3 point, float3 segPos, float segSize)
         {
-            var chunkSize = GetSegmentSize(settings, segmentScale);
-
-            return math.floor(position / chunkSize) * chunkSize;
+            return all(point >= segPos) && all(point < segPos + segSize);
         }
-
-        public static float3 GetClosestSegmentCenter(BaseSegmentSettings settings, float3 segmentPosition,
-            float segmentScale)
+        
+        public static float ScaleMultiplier(int scale)
         {
-            return segmentPosition + GetSegmentSize(settings, segmentScale) / 2;
+            return pow(2, scale);
         }
     }
 }

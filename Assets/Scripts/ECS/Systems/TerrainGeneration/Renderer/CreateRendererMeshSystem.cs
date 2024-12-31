@@ -14,10 +14,10 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     [BurstCompile]
     public partial struct CreateRendererMeshSystem : ISystem
     {
-        private EntityQuery _terrainSegmentQuery;
+        private EntityQuery _segmentQuery;
         private EntityTypeHandle _entityTypeHandle;
         private ComponentTypeHandle<LocalTransform> _localTransformTypeHandle;
-        private ComponentTypeHandle<SegmentScale> _terrainSegmentScaleTypeHandle;
+        private ComponentTypeHandle<SegmentScale> _segmentScaleTypeHandle;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -26,14 +26,14 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             state.RequireForUpdate<TerrainGenerationTreeBlob>();
             state.RequireForUpdate<CreateRendererMeshTag>();
 
-            _terrainSegmentQuery = new EntityQueryBuilder(Allocator.Temp)
+            _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAspect<TerrainSegmentAspect>()
                 .WithAll<CreateRendererMeshTag>()
                 .Build(ref state);
 
             _entityTypeHandle = state.GetEntityTypeHandle();
             _localTransformTypeHandle = state.GetComponentTypeHandle<LocalTransform>(true);
-            _terrainSegmentScaleTypeHandle = state.GetComponentTypeHandle<SegmentScale>(true);
+            _segmentScaleTypeHandle = state.GetComponentTypeHandle<SegmentScale>(true);
         }
 
         [BurstCompile]
@@ -41,7 +41,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         {
             _entityTypeHandle.Update(ref state);
             _localTransformTypeHandle.Update(ref state);
-            _terrainSegmentScaleTypeHandle.Update(ref state);
+            _segmentScaleTypeHandle.Update(ref state);
 
             using var ecb = new EntityCommandBuffer(Allocator.TempJob);
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
@@ -52,10 +52,10 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 Ecb = ecb.AsParallelWriter(),
                 EntityTypeHandle = _entityTypeHandle,
                 LocalTransformTypeHandle = _localTransformTypeHandle,
-                SegmentScaleTypeHandle = _terrainSegmentScaleTypeHandle,
+                SegmentScaleTypeHandle = _segmentScaleTypeHandle,
                 Settings = settings,
                 TerrainGenerationTreeBlob = tgGraph
-            }.ScheduleParallel(_terrainSegmentQuery, state.Dependency);
+            }.ScheduleParallel(_segmentQuery, state.Dependency);
 
             state.Dependency = JobHandle.CombineDependencies(state.Dependency, jobHandle);
             state.Dependency.Complete();

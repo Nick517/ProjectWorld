@@ -1,7 +1,7 @@
+using ECS.Aspects.Input;
 using ECS.Components.Input;
 using Unity.Entities;
 using UnityEngine;
-using InputManagerAspect = ECS.Aspects.Input.InputManagerAspect;
 
 namespace ECS.Systems.Input
 {

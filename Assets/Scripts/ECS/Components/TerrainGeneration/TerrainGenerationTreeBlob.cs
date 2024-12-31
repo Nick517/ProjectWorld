@@ -94,11 +94,10 @@ namespace ECS.Components.TerrainGeneration
                             Traverse(node.Next.w, traversal))
                     };
 
-                if (node.CacheIndex != -1)
-                {
-                    traversal.Cached[node.CacheIndex] = true;
-                    traversal.Cache[node.CacheIndex] = sample;
-                }
+                if (node.CacheIndex == -1) return sample;
+
+                traversal.Cached[node.CacheIndex] = true;
+                traversal.Cache[node.CacheIndex] = sample;
 
                 return sample;
             }

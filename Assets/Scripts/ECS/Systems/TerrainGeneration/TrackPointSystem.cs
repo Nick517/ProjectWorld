@@ -1,5 +1,6 @@
 using ECS.Aspects.TerrainGeneration;
 using ECS.Components.TerrainGeneration;
+using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -24,11 +25,9 @@ namespace ECS.Systems.TerrainGeneration
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
 
             foreach (var point in SystemAPI.Query<RendererPointAspect>())
-            {
-                var segPos = GetClosestSegmentPosition(settings, point.Position, point.Settings.ReloadScale);
-
-                if (!segPos.Equals(point.SegmentPosition)) point.UpdateSegmentPosition(ecb, segPos);
-            }
+                if (!PointWithinSeg(point.Position, point.SegmentPosition,
+                        settings.BaseSegSize * point.Settings.ReloadScale))
+                    point.UpdateSegmentPosition(ecb, settings);
 
             ecb.Playback(state.EntityManager);
         }

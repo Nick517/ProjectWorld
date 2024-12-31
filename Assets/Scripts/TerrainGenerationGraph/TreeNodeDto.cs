@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
+using DataTypes.Serializable;
 using Newtonsoft.Json;
-using Serializable;
 using Unity.Mathematics;
 using static Utility.TerrainGeneration.NodeOperations;
 

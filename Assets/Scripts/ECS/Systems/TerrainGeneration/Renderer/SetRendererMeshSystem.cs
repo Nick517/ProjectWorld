@@ -17,7 +17,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     {
         private BufferLookup<VertexBufferElement> _vertexBufferLookup;
         private BufferLookup<TriangleBufferElement> _triangleBufferLookup;
-        private EntityQuery _chunkQuery;
+        private EntityQuery _segmentQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -25,7 +25,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<SetRendererMeshTag>();
 
-            _chunkQuery = new EntityQueryBuilder(Allocator.Temp)
+            _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
                 .WithAspect<TerrainSegmentAspect>()
                 .WithAll<SetRendererMeshTag>()
                 .Build(ref state);
@@ -42,7 +42,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
             var material = SystemAPI.GetSingleton<BaseSegmentSettings>().Material.Value;
 
-            using var segments = _chunkQuery.ToEntityArray(Allocator.Temp);
+            using var segments = _segmentQuery.ToEntityArray(Allocator.Temp);
             foreach (var seg in segments)
             {
                 var mesh = new Mesh

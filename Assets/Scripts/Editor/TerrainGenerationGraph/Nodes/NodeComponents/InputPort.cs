@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
+using DataTypes.Serializable;
 using Editor.TerrainGenerationGraph.Graph;
-using Serializable;
 using TerrainGenerationGraph;
 using Unity.Mathematics;
 using UnityEditor.Experimental.GraphView;

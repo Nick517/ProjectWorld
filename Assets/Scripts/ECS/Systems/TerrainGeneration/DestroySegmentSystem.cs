@@ -10,7 +10,7 @@ namespace ECS.Systems.TerrainGeneration
     public partial struct DestroySegmentSystem : ISystem
     {
         private EntityQuery _segmentQuery;
-        
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -26,7 +26,7 @@ namespace ECS.Systems.TerrainGeneration
         {
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            ecb.DestroyEntity(_segmentQuery, EntityQueryCaptureMode.AtRecord);
+            ecb.DestroyEntity(_segmentQuery, EntityQueryCaptureMode.AtPlayback);
 
             ecb.Playback(state.EntityManager);
         }

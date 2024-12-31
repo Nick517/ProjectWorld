@@ -1,18 +1,17 @@
 using ECS.Components.TerrainGeneration;
 using Unity.Collections;
 using Unity.Mathematics;
+using static Utility.TerrainGeneration.SegmentOperations;
 
 namespace Utility.TerrainGeneration
 {
     public static class TerrainGenerator
     {
-        public static NativeArray<float> PopulateMap(BaseSegmentSettings settings,
-            TerrainGenerationTreeBlob tgTreeBlob,
-            float3 segmentPosition, float segmentScale)
+        public static NativeArray<float> PopulateMap(BaseSegmentSettings settings, TerrainGenerationTreeBlob tgTreeBlob,
+            float3 segmentPosition, int segmentScale)
         {
-            var cubeSize = SegmentOperations.GetCubeSize(settings, segmentScale);
+            var cubeSize = GetCubeSize(settings.BaseCubeSize, segmentScale);
             var cubeCount = settings.CubeCount + 1;
-            var offset = segmentPosition;
 
             var map = new NativeArray<float>((int)math.pow(cubeCount, 3), Allocator.Temp);
 
@@ -23,7 +22,7 @@ namespace Utility.TerrainGeneration
             for (var z = 0; z < cubeCount; z++)
             {
                 var index3D = new int3(x, y, z);
-                var pos = index3D * cubeSize + offset;
+                var pos = index3D * (int3)cubeSize + segmentPosition;
                 var index = GetFlatIndex(cubeCount, index3D);
 
                 map[index] = traversal.Sample(pos);

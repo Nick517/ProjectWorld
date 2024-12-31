@@ -1,7 +1,7 @@
 using System;
 using Unity.Mathematics;
 
-namespace Serializable
+namespace DataTypes.Serializable
 {
     [Serializable]
     public class SerializableInt4

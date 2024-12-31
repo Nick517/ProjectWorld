@@ -1,12 +1,13 @@
 using Unity.Entities;
 
-namespace ECS.Components.TerrainGeneration
+namespace ECS.Components.TerrainGeneration.Renderer
 {
     public struct RendererPoint : IComponentData
     {
         public int MaxSegmentScale;
         public int MegaSegments;
         public float LOD;
-        public float ReloadScale;
+        public int ReloadScale;
+        public float RenderDistance;
     }
 }

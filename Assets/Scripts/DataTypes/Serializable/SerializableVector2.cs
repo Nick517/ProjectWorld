@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Serializable
+namespace DataTypes.Serializable
 {
     [Serializable]
     public class SerializableVector2

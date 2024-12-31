@@ -9,9 +9,9 @@ namespace Utility.TerrainGeneration
             return CornerTable[index];
         }
 
-        public static int Edge(int indice1, int indice2)
+        public static int Edge(int index1, int index2)
         {
-            return EdgeTable[indice1 * 2 + indice2];
+            return EdgeTable[index1 * 2 + index2];
         }
 
         public static int Triangle(int configIndex, int edgeIndex)

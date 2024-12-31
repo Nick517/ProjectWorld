@@ -4,6 +4,6 @@ namespace ECS.Components.TerrainGeneration
 {
     public struct SegmentScale : IComponentData
     {
-        public float Scale;
+        public int Scale;
     }
 }

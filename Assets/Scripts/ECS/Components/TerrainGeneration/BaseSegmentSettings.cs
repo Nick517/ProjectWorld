@@ -10,5 +10,7 @@ namespace ECS.Components.TerrainGeneration
         public float BaseCubeSize;
         public int CubeCount;
         public float MapSurface;
+
+        public float BaseSegSize => BaseCubeSize * CubeCount;
     }
 }

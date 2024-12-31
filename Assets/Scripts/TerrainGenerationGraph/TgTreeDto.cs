@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Serializable;
+using DataTypes.Serializable;
 using static Utility.TerrainGeneration.NodeOperations;
 
 namespace TerrainGenerationGraph
