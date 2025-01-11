@@ -43,6 +43,8 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void SetAtPos(T value, float3 position, int scale = 0)
         {
+            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using SetAtPos.");
+
             SetAtIndex(value, PosToIndex(position, scale));
         }
 
@@ -55,7 +57,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public int PosToIndex(float3 position, int scale = 0)
+        private int PosToIndex(float3 position, int scale = 0)
         {
             var octant = GetOctant(position);
 
@@ -69,39 +71,69 @@ namespace DataTypes.Trees
             var s = node.Scale;
             var size = GetSegSize(BaseNodeSize, s);
 
-            while (s >= scale)
+            while (s-- > scale)
             {
-                node.Position = pos;
-                node.Scale = s;
+                node = Nodes[index];
+                size /= 2;
+                
+                var o = position >= pos + size;
+                var c = Bool3ToOctant[o];
+
+                if (!node.ChildIndexes.IsCreated) node.Alloc(_allocator);
+
+                if (node.ChildIndexes[c] == -1)
+                {
+                    var i = NextIndex();
+                    node.ChildIndexes[c] = i;
+
+                    Nodes[i] = new Node
+                    {
+                        Position = pos + select(0, size, o),
+                        Scale = s
+                    };
+                }
+
                 Nodes[index] = node;
 
-                if (s == scale) break;
-
-                size /= 2;
-                var o = position >= pos + size;
-                var i = Bool3ToOctant[o];
-
-                node.Alloc(_allocator);
-
-                if (node.ChildIndexes[i] == -1) node.ChildIndexes[i] = AllocNode();
-
-                index = node.ChildIndexes[i];
-                node = Nodes[index];
+                index = node.ChildIndexes[c];
                 pos += select(0, size, o);
-                s--;
             }
 
             return index;
         }
 
         [BurstCompile]
-        private int AllocNode()
+        public void Traverse(Action<Node> action)
+        {
+            using var stack = new NativeList<int>(Allocator.Temp);
+
+            for (var octant = 0; octant < 8; octant++)
+                if (RootIndexes[octant] != -1)
+                    stack.Add(RootIndexes[octant]);
+
+            while (stack.Length > 0)
+            {
+                var stackIndex = stack.Length - 1;
+                var nodeIndex = stack[stackIndex];
+                stack.RemoveAt(stackIndex);
+
+                var node = Nodes[nodeIndex];
+                action(node);
+
+                if (!node.ChildIndexes.IsCreated) continue;
+
+                for (var i = 0; i < 8; i++)
+                    if (node.ChildIndexes[i] != -1)
+                        stack.Add(node.ChildIndexes[i]);
+            }
+        }
+
+        [BurstCompile]
+        private int NextIndex()
         {
             var index = Count++;
 
             if (Count > Nodes.Length) Nodes = Nodes.SetSize(Nodes.Length * 2, _allocator);
-
-            Nodes[index] = new Node();
 
             return index;
         }
@@ -109,45 +141,57 @@ namespace DataTypes.Trees
         [BurstCompile]
         private void InitRoot(int octant, int scale = 0)
         {
-            var i = AllocNode();
-            var root = Nodes[i];
+            var i = NextIndex();
 
-            root.Position = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3[octant]);
-            root.Scale = scale;
+            Nodes[i] = new Node
+            {
+                Position = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3[octant]),
+                Scale = scale
+            };
 
-            Nodes[i] = root;
             RootIndexes[octant] = i;
         }
 
         [BurstCompile]
         private void UpscaleRoot(int octant)
         {
-            var i = AllocNode();
-            var root = Nodes[i];
+            var i = NextIndex();
+
+            var root = new Node
+            {
+                Position = Nodes[RootIndexes[octant]].Position * 2,
+                Scale = Nodes[RootIndexes[octant]].Scale + 1
+            };
 
             root.Alloc(_allocator);
-            root.Position = Nodes[RootIndexes[octant]].Position * 2;
-            root.Scale = Nodes[RootIndexes[octant]].Scale + 1;
             root.ChildIndexes[7 - octant] = RootIndexes[octant];
 
             Nodes[i] = root;
             RootIndexes[octant] = i;
         }
-        
+
         [BurstCompile]
         public void Clear()
         {
+            if (!IsCreated)
+                throw new InvalidOperationException("Octree has not been created or has already been disposed.");
+
+            Dispose();
+
             Nodes = new NativeArray<Node>(_initialSize, _allocator);
             RootIndexes = new NativeArray<int>(8, _allocator);
             Count = 0;
+            IsCreated = true;
 
             for (var i = 0; i < 8; i++) RootIndexes[i] = -1;
         }
 
+
         [BurstCompile]
         public void Dispose()
         {
-            if (!IsCreated) return;
+            if (!IsCreated)
+                throw new InvalidOperationException("Octree has already been disposed or was never initialized.");
 
             for (var i = 0; i < Count; i++) Nodes[i].Dispose();
 
@@ -156,6 +200,7 @@ namespace DataTypes.Trees
 
             IsCreated = false;
         }
+
 
         [BurstCompile]
         private bool PointWithinOctant(float3 position, int octant)
@@ -169,7 +214,7 @@ namespace DataTypes.Trees
         private int MinEncompassingScale(float3 point)
         {
             if (point.Equals(default)) return 0;
-            
+
             return (int)ceil(log2(cmax(abs(point)) / BaseNodeSize));
         }
 

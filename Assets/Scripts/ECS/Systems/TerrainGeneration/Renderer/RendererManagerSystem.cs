@@ -1,4 +1,3 @@
-using DataTypes.Trees;
 using ECS.Aspects.TerrainGeneration;
 using ECS.Components.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
@@ -78,24 +77,6 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             }
 
             return newSegData;
-        }
-
-        private void CreateSegData(RendererPointAspect point)
-        {
-            var tree = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
-            var indexes = new NativeList<int>(Allocator.Temp);
-            
-            var scale = point.Settings.MaxSegmentScale;
-            var segSize = GetSegSize(_settings.BaseSegSize, scale);
-            var segPos = GetClosestSegPos(point.Position, segSize);
-            
-            for (var x = -1; x <= 1; x++)
-            for (var y = -1; y <= 1; y++)
-            for (var z = -1; z <= 1; z++)
-            {
-                var pos = segPos + (float3)segSize * new int3(x, y, z);
-                indexes.Add(tree.PosToIndex(pos, scale));
-            }
         }
     }
 }
