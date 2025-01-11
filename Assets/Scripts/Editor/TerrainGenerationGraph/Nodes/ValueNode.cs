@@ -3,9 +3,9 @@ using Editor.TerrainGenerationGraph.Nodes.NodeComponents;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Utility.TerrainGeneration.NodeOperations;
 using static UnityEditor.EditorApplication;
 using static UnityEngine.UIElements.FlexDirection;
+using static Utility.TerrainGeneration.NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {

@@ -2,9 +2,9 @@ using System;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using static Unity.Collections.Allocator;
 using static Utility.TerrainGeneration.NodeOperations;
 using static Utility.TerrainGeneration.NodeOperations.Operation;
-using static Unity.Collections.Allocator;
 
 namespace ECS.Components.TerrainGeneration
 {

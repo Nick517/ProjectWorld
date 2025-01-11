@@ -1,3 +1,4 @@
+using System;
 using ECS.Components.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Entities;
@@ -8,7 +9,7 @@ namespace ECS.Aspects.TerrainGeneration
 {
     public readonly partial struct TerrainSegmentAspect : IAspect
     {
-        private readonly Entity _entity;
+        public readonly Entity Entity;
 
         private readonly RefRO<LocalTransform> _localTransform;
         private readonly RefRO<SegmentScale> _segmentScale;
@@ -17,15 +18,36 @@ namespace ECS.Aspects.TerrainGeneration
 
         public int Scale => _segmentScale.ValueRO.Scale;
 
-        public static Entity Create(EntityCommandBuffer ecb, BaseSegmentSettings settings, float3 position,
-            int scale = 0)
+        public static void Create(EntityCommandBuffer ecb, BaseSegmentSettings settings, SegData segData)
         {
-            var seg = ecb.Instantiate(settings.RendererSegmentPrefab);
-            ecb.SetComponent(seg, LocalTransform.FromPosition(position));
-            ecb.AddComponent(seg, new SegmentScale { Scale = scale });
-            ecb.AddComponent<CreateRendererMeshTag>(seg);
+            var entity = ecb.Instantiate(settings.RendererSegmentPrefab);
+            ecb.SetComponent(entity, LocalTransform.FromPosition(segData.Position));
+            ecb.AddComponent(entity, new SegmentScale { Scale = segData.Scale });
+            ecb.AddComponent<CreateRendererMeshTag>(entity);
+        }
 
-            return seg;
+        public struct SegData : IEquatable<SegData>
+        {
+            public float3 Position;
+            public readonly int Scale;
+            public Entity Entity;
+
+            public SegData(float3 position, int scale = 0, Entity entity = default)
+            {
+                Position = position;
+                Scale = scale;
+                Entity = entity;
+            }
+
+            public bool Equals(SegData other)
+            {
+                return Position.Equals(other.Position) && Scale == other.Scale;
+            }
+
+            public override int GetHashCode()
+            {
+                return (int)math.hash(new float4(Position, Scale));
+            }
         }
     }
 }

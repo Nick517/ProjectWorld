@@ -4,7 +4,7 @@ using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using static Utility.TerrainGeneration.SegmentOperations;
+using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace ECS.Systems.TerrainGeneration
 {

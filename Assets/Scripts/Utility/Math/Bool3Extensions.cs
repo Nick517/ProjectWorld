@@ -1,5 +1,4 @@
 using Unity.Mathematics;
-using static Unity.Mathematics.math;
 
 namespace Utility.Math
 {
@@ -32,7 +31,7 @@ namespace Utility.Math
         /// </remarks>
         public static int3 ToSign(this bool3 bool3)
         {
-            return select(-1, 1, bool3);
+            return math.select(-1, 1, bool3);
         }
 
         /// <summary>Converts a <see cref="bool3" /> to an integer index using bitwise operations.</summary>

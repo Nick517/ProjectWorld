@@ -3,7 +3,7 @@ using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using static Utility.TerrainGeneration.SegmentOperations;
+using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace ECS.Aspects.TerrainGeneration
 {

@@ -7,8 +7,8 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using static Utility.SpacialPartitioning.SegmentOperations;
 using static Utility.TerrainGeneration.MarchingCubeTables;
-using static Utility.TerrainGeneration.SegmentOperations;
 using static Utility.TerrainGeneration.TerrainGenerator;
 
 namespace ECS.Jobs.TerrainGeneration.Renderer

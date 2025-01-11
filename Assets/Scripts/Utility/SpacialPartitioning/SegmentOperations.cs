@@ -1,8 +1,10 @@
+using Unity.Burst;
 using Unity.Mathematics;
 using static Unity.Mathematics.math;
 
-namespace Utility.TerrainGeneration
+namespace Utility.SpacialPartitioning
 {
+    [BurstCompile]
     public static class SegmentOperations
     {
         public static float GetCubeSize(float baseCubeSize, int segScale = 0)

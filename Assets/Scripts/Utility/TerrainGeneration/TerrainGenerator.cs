@@ -1,7 +1,7 @@
 using ECS.Components.TerrainGeneration;
 using Unity.Collections;
 using Unity.Mathematics;
-using static Utility.TerrainGeneration.SegmentOperations;
+using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace Utility.TerrainGeneration
 {

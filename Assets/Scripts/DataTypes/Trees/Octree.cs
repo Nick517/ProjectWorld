@@ -3,33 +3,36 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using Utility.Collections;
-using Utility.Math;
-using static Utility.TerrainGeneration.SegmentOperations;
+using static Unity.Mathematics.math;
+using static Utility.SpacialPartitioning.OctantOperations;
+using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace DataTypes.Trees
 {
     [BurstCompile]
     public struct Octree<T> : IDisposable
     {
+        private const int DefaultInitialSize = 128;
+
         public NativeArray<Node> Nodes;
         public NativeArray<int> RootIndexes;
-        public NativeArray<int> RootScales;
         public readonly float BaseNodeSize;
         public int Count { get; private set; }
         public bool IsCreated { get; private set; }
 
+        private readonly int _initialSize;
         private readonly Allocator _allocator;
 
-        public Octree(float baseNodeSize, Allocator allocator) : this(baseNodeSize, 128, allocator)
+        public Octree(float baseNodeSize, Allocator allocator) : this(baseNodeSize, DefaultInitialSize, allocator)
         {
         }
 
-        private Octree(float baseNodeSize, int initialSize, Allocator allocator)
+        public Octree(float baseNodeSize, int initialSize, Allocator allocator)
         {
             Nodes = new NativeArray<Node>(initialSize, allocator);
             RootIndexes = new NativeArray<int>(8, allocator);
-            RootScales = new NativeArray<int>(8, allocator);
             BaseNodeSize = baseNodeSize;
+            _initialSize = initialSize;
             _allocator = allocator;
             Count = 0;
             IsCreated = true;
@@ -38,75 +41,13 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public T GetValueAtPos(float3 position, int scale = 0)
+        public void SetAtPos(T value, float3 position, int scale = 0)
         {
-            return Nodes[PosToIndex(position, scale)].Value;
+            SetAtIndex(value, PosToIndex(position, scale));
         }
 
         [BurstCompile]
-        public void SetValueAtPos(T value, float3 position, int scale = 0)
-        {
-            SetValueAtIndex(PosToIndex(position, scale), value);
-        }
-
-        [BurstCompile]
-        public int PosToIndex(float3 position, int scale = 0)
-        {
-            var o = position >= 0;
-            var r = o.ToIndex();
-            var c = (!o).ToIndex();
-
-            var size = GetSegSize(BaseNodeSize, RootScales[r]);
-            var pos = GetClosestSegPos(o.ToSign() * (float3)BaseNodeSize / 2, size);
-
-            if (RootIndexes[r] == -1) RootIndexes[r] = AllocNode();
-
-            while (!PointWithinSeg(position, pos, size))
-            {
-                var i = AllocNode();
-                var node = Nodes[i];
-                node.Alloc(_allocator);
-                node.ChildIndexes[c] = RootIndexes[r];
-                
-                Nodes[i] = node;
-                RootIndexes[r] = i;
-                RootScales[r]++;
-                
-                size *= 2;
-                pos *= 2;
-            }
-
-            var index = RootIndexes[r];
-            var s = RootScales[r];
-
-            while (s-- > scale)
-            {
-                size /= 2;
-
-                var b = position >= pos + size;
-                var i = b.ToIndex();
-                
-                var node = Nodes[index];
-                node.Alloc(_allocator);
-                
-                if (node.ChildIndexes[i] == -1) node.ChildIndexes[i] = AllocNode();
-
-                Nodes[index] = node;
-                index = node.ChildIndexes[i];
-                pos += math.select(0, size, b);
-            }
-
-            return index;
-        }
-
-        [BurstCompile]
-        public T GetValueAtIndex(int index)
-        {
-            return index >= 0 && index < Count ? Nodes[index].Value : default;
-        }
-
-        [BurstCompile]
-        public void SetValueAtIndex(int index, T value)
+        private void SetAtIndex(T value, int index)
         {
             var node = Nodes[index];
             node.Value = value;
@@ -114,40 +55,47 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public NativeList<int> GetChildIndexes(int index)
+        public int PosToIndex(float3 position, int scale = 0)
         {
-            var indexes = new NativeList<int>(Allocator.Temp);
+            var octant = GetOctant(position);
+
+            if (RootIndexes[octant] == -1) InitRoot(octant, MinEncompassingScale(position));
+
+            while (!PointWithinOctant(position, octant)) UpscaleRoot(octant);
+
+            var index = RootIndexes[octant];
             var node = Nodes[index];
-            
-            indexes.Add(index);
+            var pos = node.Position;
+            var s = node.Scale;
+            var size = GetSegSize(BaseNodeSize, s);
 
-            if (!node.ChildIndexes.IsCreated) return indexes;
-            
-            for (var c = 0; c < 8; c++) indexes.AddRange(GetChildIndexes(node.ChildIndexes[c]).AsArray());
-
-            return indexes;
-        }
-
-        [BurstCompile]
-        public NativeList<int> GetLeafIndexes(int index)
-        {
-            var indexes = new NativeList<int>(Allocator.Temp);
-            var node = Nodes[index];
-
-            if (!node.ChildIndexes.IsCreated)
+            while (s >= scale)
             {
-                indexes.Add(index);
-                
-                return indexes;
+                node.Position = pos;
+                node.Scale = s;
+                Nodes[index] = node;
+
+                if (s == scale) break;
+
+                size /= 2;
+                var o = position >= pos + size;
+                var i = Bool3ToOctant[o];
+
+                node.Alloc(_allocator);
+
+                if (node.ChildIndexes[i] == -1) node.ChildIndexes[i] = AllocNode();
+
+                index = node.ChildIndexes[i];
+                node = Nodes[index];
+                pos += select(0, size, o);
+                s--;
             }
-            
-            for (var c = 0; c < 8; c++) indexes.AddRange(GetLeafIndexes(node.ChildIndexes[c]).AsArray());
-            
-            return indexes;
+
+            return index;
         }
 
         [BurstCompile]
-        public int AllocNode()
+        private int AllocNode()
         {
             var index = Count++;
 
@@ -159,23 +107,78 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
+        private void InitRoot(int octant, int scale = 0)
+        {
+            var i = AllocNode();
+            var root = Nodes[i];
+
+            root.Position = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3[octant]);
+            root.Scale = scale;
+
+            Nodes[i] = root;
+            RootIndexes[octant] = i;
+        }
+
+        [BurstCompile]
+        private void UpscaleRoot(int octant)
+        {
+            var i = AllocNode();
+            var root = Nodes[i];
+
+            root.Alloc(_allocator);
+            root.Position = Nodes[RootIndexes[octant]].Position * 2;
+            root.Scale = Nodes[RootIndexes[octant]].Scale + 1;
+            root.ChildIndexes[7 - octant] = RootIndexes[octant];
+
+            Nodes[i] = root;
+            RootIndexes[octant] = i;
+        }
+        
+        [BurstCompile]
+        public void Clear()
+        {
+            Nodes = new NativeArray<Node>(_initialSize, _allocator);
+            RootIndexes = new NativeArray<int>(8, _allocator);
+            Count = 0;
+
+            for (var i = 0; i < 8; i++) RootIndexes[i] = -1;
+        }
+
+        [BurstCompile]
         public void Dispose()
         {
             if (!IsCreated) return;
-            
+
             for (var i = 0; i < Count; i++) Nodes[i].Dispose();
 
             Nodes.Dispose();
             RootIndexes.Dispose();
-            RootScales.Dispose();
-            
+
             IsCreated = false;
+        }
+
+        [BurstCompile]
+        private bool PointWithinOctant(float3 position, int octant)
+        {
+            var root = Nodes[RootIndexes[octant]];
+
+            return PointWithinSeg(position, root.Position, GetSegSize(BaseNodeSize, root.Scale));
+        }
+
+        [BurstCompile]
+        private int MinEncompassingScale(float3 point)
+        {
+            if (point.Equals(default)) return 0;
+            
+            return (int)ceil(log2(cmax(abs(point)) / BaseNodeSize));
         }
 
         [BurstCompile]
         public struct Node : IDisposable
         {
             public T Value;
+            public float3 Position;
+            public int Scale;
             public NativeArray<int> ChildIndexes;
 
             [BurstCompile]
