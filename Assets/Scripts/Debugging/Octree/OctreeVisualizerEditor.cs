@@ -26,40 +26,42 @@ namespace Debugging.Octree
             _visualizer = (OctreeVisualizer)target;
         }
 
-        private void InitializeOctree()
+        private void InitializeOctrees()
         {
-            if (!_visualizer.Octree.IsCreated)
+            if (!_visualizer.OctreeA.IsCreated)
             {
-                _visualizer.Octree = new Octree<FixedString32Bytes>(_baseNodeSize, Allocator.Persistent);
+                _visualizer.OctreeA = new Octree<FixedString32Bytes>(_baseNodeSize, Allocator.Persistent);
+                _visualizer.OctreeB = new Octree<FixedString32Bytes>(_baseNodeSize, Allocator.Persistent);
 
-                AssemblyReloadEvents.beforeAssemblyReload += CleanupOctree;
+                AssemblyReloadEvents.beforeAssemblyReload += CleanupOctrees;
                 EditorApplication.playModeStateChanged += HandlePlayModeStateChanged;
             }
         }
 
-        private void CleanupOctree()
+        private void CleanupOctrees()
         {
-            _visualizer.Octree.Dispose();
+            _visualizer.OctreeA.Dispose();
+            _visualizer.OctreeB.Dispose();
 
-            AssemblyReloadEvents.beforeAssemblyReload -= CleanupOctree;
+            AssemblyReloadEvents.beforeAssemblyReload -= CleanupOctrees;
             EditorApplication.playModeStateChanged -= HandlePlayModeStateChanged;
         }
 
-        private void ReinitializeOctree()
+        private void ReinitializeOctrees()
         {
-            CleanupOctree();
-            InitializeOctree();
+            CleanupOctrees();
+            InitializeOctrees();
         }
 
         private void HandlePlayModeStateChanged(PlayModeStateChange state)
         {
             if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.ExitingPlayMode)
-                CleanupOctree();
+                CleanupOctrees();
         }
 
         public override void OnInspectorGUI()
         {
-            InitializeOctree();
+            InitializeOctrees();
 
             DrawDefaultInspector();
 
@@ -68,7 +70,7 @@ namespace Debugging.Octree
             if (EditorGUI.EndChangeCheck() && !newBaseNodeSize.Equals(_baseNodeSize))
             {
                 _baseNodeSize = newBaseNodeSize;
-                ReinitializeOctree();
+                ReinitializeOctrees();
             }
 
             _value = EditorGUILayout.TextField("Value", _value.ToString());
@@ -79,19 +81,33 @@ namespace Debugging.Octree
 
             _scale = EditorGUILayout.IntField("Scale", _scale);
 
-            using (new EditorGUI.DisabledScope(!_visualizer.Octree.IsCreated))
+            using (new EditorGUI.DisabledScope(!_visualizer.OctreeA.IsCreated || !_visualizer.OctreeB.IsCreated))
             {
-                if (GUILayout.Button("Set"))
+                if (GUILayout.Button("Set A"))
                 {
-                    _visualizer.Octree.SetAtPos(_value, _position, _scale);
+                    _visualizer.OctreeA.SetAtPos(_value, _position, _scale);
                     SceneView.RepaintAll();
                 }
 
+                if (GUILayout.Button("Set B"))
+                {
+                    _visualizer.OctreeB.SetAtPos(_value, _position, _scale);
+                    SceneView.RepaintAll();
+                }
+
+                if (GUILayout.Button("Intersect"))
+                {
+                    _visualizer.OctreeA = _visualizer.OctreeA.Intersect(_visualizer.OctreeB, Allocator.Persistent);
+                    _visualizer.OctreeB.Clear();
+                    SceneView.RepaintAll();
+                }
+                
                 if (GUILayout.Button("Print")) PrintOctreeState();
 
                 if (GUILayout.Button("Clear"))
                 {
-                    _visualizer.Octree.Clear();
+                    _visualizer.OctreeA.Clear();
+                    _visualizer.OctreeB.Clear();
                     _position = float3.zero;
                     SceneView.RepaintAll();
                 }
@@ -100,13 +116,13 @@ namespace Debugging.Octree
 
         private void PrintOctreeState()
         {
-            var builder = new StringBuilder($"Nodes in Octree: {_visualizer.Octree.Count}");
+            var builder = new StringBuilder($"Nodes in Octree A: {_visualizer.OctreeA.Count}");
             builder.Append("\nRoot indexes: ");
-            builder.AppendJoin(", ", _visualizer.Octree.RootIndexes);
+            builder.AppendJoin(", ", _visualizer.OctreeA.RootIndexes);
 
-            for (var n = 0; n < _visualizer.Octree.Count; n++)
+            for (var n = 0; n < _visualizer.OctreeA.Count; n++)
             {
-                var node = _visualizer.Octree.Nodes[n];
+                var node = _visualizer.OctreeA.Nodes[n];
                 var p = node.Position;
                 var size = GetSegSize(_baseNodeSize, node.Scale);
                 var nodeBuilder =
@@ -125,7 +141,7 @@ namespace Debugging.Octree
 
         private void OnSceneGUI()
         {
-            if (!_visualizer.Octree.IsCreated) return;
+            if (!_visualizer.OctreeA.IsCreated) return;
 
             Handles.color = Color.white;
             var handleSize = HandleUtility.GetHandleSize(_position) * HandleSize;
@@ -140,7 +156,7 @@ namespace Debugging.Octree
 
         private void OnDestroy()
         {
-            CleanupOctree();
+            CleanupOctrees();
         }
     }
 }

@@ -175,7 +175,7 @@ namespace DataTypes.Trees
                         thisRoot = Nodes[thisRoot.ChildIndexes[oppOct]];
                 else
                     while (otherRoot.Scale > thisRoot.Scale)
-                        otherRoot = Nodes[otherRoot.ChildIndexes[oppOct]];
+                        otherRoot = other.Nodes[otherRoot.ChildIndexes[oppOct]];
 
                 // Set the result root to have the same position and scale as the roots.
                 var resultRoot = new Node(thisRoot.Position, thisRoot.Scale);

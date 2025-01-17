@@ -9,18 +9,29 @@ namespace Debugging.Octree
 {
     public class OctreeVisualizer : MonoBehaviour
     {
-        public Octree<FixedString32Bytes> Octree;
+        public Octree<FixedString32Bytes> OctreeA;
+        public Octree<FixedString32Bytes> OctreeB;
 
         public void OnDrawGizmos()
         {
-            if (!Octree.IsCreated) return;
+            if (!OctreeA.IsCreated || !OctreeB.IsCreated) return;
 
             Gizmos.color = Color.white;
-            Handles.color = Color.white;
 
-            Octree.Traverse(node =>
+            OctreeA.Traverse(node =>
             {
-                var size = GetSegSize(Octree.BaseNodeSize, node.Scale);
+                var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);
+                var center = GetClosestSegCenter(node.Position, size);
+
+                Gizmos.DrawWireCube(center, (float3)size);
+                Handles.Label(center, node.Value.ToString());
+            });
+
+            Gizmos.color = Color.yellow;
+
+            OctreeB.Traverse(node =>
+            {
+                var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);
                 var center = GetClosestSegCenter(node.Position, size);
 
                 Gizmos.DrawWireCube(center, (float3)size);
