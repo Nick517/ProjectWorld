@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Mathematics;
 
@@ -9,31 +8,33 @@ namespace Utility.SpacialPartitioning
     {
         public static int GetOctant(float3 point)
         {
-            return (point.x >= 0 ? 1 : 0) | (point.y >= 0 ? 2 : 0) | (point.z >= 0 ? 4 : 0);
+            return (point.x >= 0 ? 1 : 0) |
+                   (point.y >= 0 ? 2 : 0) |
+                   (point.z >= 0 ? 4 : 0);
         }
 
-        public static readonly Dictionary<int, bool3> OctantToBool3 = new()
+        public static int Bool3ToOctant(bool3 bool3)
         {
-            { 0, new bool3(false, false, false) },
-            { 1, new bool3(true, false, false) },
-            { 2, new bool3(false, true, false) },
-            { 3, new bool3(true, true, false) },
-            { 4, new bool3(false, false, true) },
-            { 5, new bool3(true, false, true) },
-            { 6, new bool3(false, true, true) },
-            { 7, new bool3(true, true, true) }
-        };
+            return (bool3.x ? 1 : 0) |
+                   (bool3.y ? 2 : 0) |
+                   (bool3.z ? 4 : 0);
+        }
 
-        public static readonly Dictionary<bool3, int> Bool3ToOctant = new()
+        public static bool3 OctantToBool3(int octant)
         {
-            { new bool3(false, false, false), 0 },
-            { new bool3(true, false, false), 1 },
-            { new bool3(false, true, false), 2 },
-            { new bool3(true, true, false), 3 },
-            { new bool3(false, false, true), 4 },
-            { new bool3(true, false, true), 5 },
-            { new bool3(false, true, true), 6 },
-            { new bool3(true, true, true), 7 }
+            return OctantToBool3Array[octant];
+        }
+
+        private static readonly bool3[] OctantToBool3Array =
+        {
+            new(false, false, false),
+            new(true, false, false),
+            new(false, true, false),
+            new(true, true, false),
+            new(false, false, true),
+            new(true, false, true),
+            new(false, true, true),
+            new(true, true, true)
         };
     }
 }

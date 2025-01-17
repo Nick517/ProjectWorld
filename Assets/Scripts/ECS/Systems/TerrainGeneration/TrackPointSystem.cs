@@ -25,8 +25,7 @@ namespace ECS.Systems.TerrainGeneration
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
 
             foreach (var point in SystemAPI.Query<RendererPointAspect>())
-                if (!PointWithinSeg(point.Position, point.SegmentPosition,
-                        settings.BaseSegSize * point.Settings.ReloadScale))
+                if (!PointWithinSeg(point.Position, point.SegmentPosition, settings.BaseSegSize * point.Settings.ReloadScale))
                     point.UpdateSegmentPosition(ecb, settings);
 
             ecb.Playback(state.EntityManager);

@@ -181,7 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2230b9579bdaf478336e8c7899f591, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSegmentScale: 0
+  maxSegmentScale: 2
   megaSegments: 2
   lod: 2
   reloadScale: 1
@@ -195,7 +195,7 @@ Transform:
   m_GameObject: {fileID: 319980300}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -78.7, y: -1.08, z: 18.7}
+  m_LocalPosition: {x: -559, y: 0, z: 908}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -279,12 +279,12 @@ PrefabInstance:
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}

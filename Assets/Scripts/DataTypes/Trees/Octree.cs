@@ -1,11 +1,11 @@
 using System;
 using Unity.Burst;
 using Unity.Collections;
-using Unity.Mathematics;
 using Utility.Collections;
 using static Unity.Mathematics.math;
 using static Utility.SpacialPartitioning.OctantOperations;
 using static Utility.SpacialPartitioning.SegmentOperations;
+using float3 = Unity.Mathematics.float3;
 
 namespace DataTypes.Trees
 {
@@ -22,6 +22,11 @@ namespace DataTypes.Trees
 
         private readonly int _initialSize;
         private readonly Allocator _allocator;
+
+        private Node RootNode(int octant)
+        {
+            return Nodes[RootIndexes[octant]];
+        }
 
         public Octree(float baseNodeSize, Allocator allocator) : this(baseNodeSize, DefaultInitialSize, allocator)
         {
@@ -49,23 +54,39 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private void SetAtIndex(T value, int index)
+        public T GetAtPos(float3 position, int scale = 0)
         {
+            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using GetAtPos.");
+
+            return GetAtIndex(PosToIndex(position, scale));
+        }
+
+        [BurstCompile]
+        public void SetAtIndex(T value, int index)
+        {
+            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using SetAtIndex.");
+
             var node = Nodes[index];
             node.Value = value;
             Nodes[index] = node;
         }
 
         [BurstCompile]
-        private int PosToIndex(float3 position, int scale = 0)
+        public T GetAtIndex(int index)
         {
-            var octant = GetOctant(position);
+            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using GetAtIndex.");
 
-            if (RootIndexes[octant] == -1) InitRoot(octant, MinEncompassingScale(position));
+            if (index < 0 || index > Count) throw new IndexOutOfRangeException("Index is out of range.");
 
-            while (!PointWithinOctant(position, octant)) UpscaleRoot(octant);
+            return Nodes[index].Value;
+        }
 
-            var index = RootIndexes[octant];
+        [BurstCompile]
+        public int PosToIndex(float3 position, int scale = 0)
+        {
+            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using PosToIndex.");
+
+            var index = EncompassPoint(position);
             var node = Nodes[index];
             var pos = node.Position;
             var s = node.Scale;
@@ -75,27 +96,23 @@ namespace DataTypes.Trees
             {
                 node = Nodes[index];
                 size /= 2;
-                
+
                 var o = position >= pos + size;
-                var c = Bool3ToOctant[o];
+                var oct = Bool3ToOctant(o);
 
-                if (!node.ChildIndexes.IsCreated) node.Alloc(_allocator);
+                if (node.IsLeaf) node.Alloc(_allocator);
 
-                if (node.ChildIndexes[c] == -1)
+                if (node.ChildIndexes[oct] == -1)
                 {
                     var i = NextIndex();
-                    node.ChildIndexes[c] = i;
+                    var childPos = pos + select(0, size, o);
+                    node.ChildIndexes[oct] = i;
 
-                    Nodes[i] = new Node
-                    {
-                        Position = pos + select(0, size, o),
-                        Scale = s
-                    };
+                    Nodes[i] = new Node(childPos, s);
                 }
 
                 Nodes[index] = node;
-
-                index = node.ChildIndexes[c];
+                index = node.ChildIndexes[oct];
                 pos += select(0, size, o);
             }
 
@@ -105,22 +122,23 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void Traverse(Action<Node> action)
         {
-            using var stack = new NativeList<int>(Allocator.Temp);
+            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using Traverse.");
 
-            for (var octant = 0; octant < 8; octant++)
-                if (RootIndexes[octant] != -1)
-                    stack.Add(RootIndexes[octant]);
+            using var stack = new NativeList<int>(Count, Allocator.Temp);
+
+            for (var i = 0; i < 8; i++)
+                if (RootIndexes[i] != -1)
+                    stack.Add(RootIndexes[i]);
 
             while (stack.Length > 0)
             {
                 var stackIndex = stack.Length - 1;
-                var nodeIndex = stack[stackIndex];
+                var node = Nodes[stack[stackIndex]];
                 stack.RemoveAt(stackIndex);
 
-                var node = Nodes[nodeIndex];
                 action(node);
 
-                if (!node.ChildIndexes.IsCreated) continue;
+                if (node.IsLeaf) continue;
 
                 for (var i = 0; i < 8; i++)
                     if (node.ChildIndexes[i] != -1)
@@ -129,45 +147,130 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private int NextIndex()
+        public Octree<T> Intersect(Octree<T> other, Allocator allocator)
         {
-            var index = Count++;
+            if (!IsCreated || !other.IsCreated)
+                throw new InvalidOperationException("Both octrees must be initialized before intersection.");
 
-            if (Count > Nodes.Length) Nodes = Nodes.SetSize(Nodes.Length * 2, _allocator);
+            if (!BaseNodeSize.Equals(other.BaseNodeSize))
+                throw new ArgumentException("Cannot intersect octrees with different base node sizes.");
 
-            return index;
+            var result = new Octree<T>(BaseNodeSize, allocator);
+
+            // Iterate over every octant.
+            for (var oct = 0; oct < 8; oct++)
+            {
+                // Skip this octant if either root does not exist.
+                if (RootIndexes[oct] == -1 || other.RootIndexes[oct] == -1) continue;
+
+                // Do not keep the result node by default.
+                var keep = false;
+                var oppOct = 7 - oct;
+                var thisRoot = RootNode(oct);
+                var otherRoot = other.RootNode(oct);
+
+                // Traverse the larger root, setting it to its child until it is the same scale as the smaller root.
+                if (thisRoot.Scale >= otherRoot.Scale)
+                    while (thisRoot.Scale > otherRoot.Scale)
+                        thisRoot = Nodes[thisRoot.ChildIndexes[oppOct]];
+                else
+                    while (otherRoot.Scale > thisRoot.Scale)
+                        otherRoot = Nodes[otherRoot.ChildIndexes[oppOct]];
+
+                // Set the result root to have the same position and scale as the roots.
+                var resultRoot = new Node(thisRoot.Position, thisRoot.Scale);
+
+                // If the roots are not default and both roots have the same value, set the result root's value to theirs, and keep the root.
+                if (!thisRoot.IsDefault & thisRoot.Value.Equals(otherRoot.Value))
+                {
+                    resultRoot.Value = thisRoot.Value;
+                    keep = true;
+                }
+
+                // If both roots have children, continue.
+                if (!thisRoot.IsLeaf && !otherRoot.IsLeaf)
+                {
+                    resultRoot.Alloc(_allocator);
+
+                    // Iterate over every octant.
+                    for (var i = 0; i < 8; i++)
+                    {
+                        var childIndex =
+                            IntersectNode(thisRoot.ChildIndexes[i], otherRoot.ChildIndexes[i],
+                                other, ref result, allocator);
+                        resultRoot.ChildIndexes[i] = childIndex;
+
+                        if (childIndex != -1) keep = true;
+                    }
+                }
+
+                // Keep the root node.
+                if (keep)
+                {
+                    var index = result.NextIndex();
+                    result.Nodes[index] = resultRoot;
+                    result.RootIndexes[oct] = index;
+                }
+                else
+                {
+                    resultRoot.Dispose();
+                }
+            }
+
+            return result;
         }
 
         [BurstCompile]
-        private void InitRoot(int octant, int scale = 0)
+        private int IntersectNode(int thisIndex, int otherIndex,
+            Octree<T> other, ref Octree<T> result, Allocator allocator)
         {
-            var i = NextIndex();
+            // Return -1 if either index is invalid.
+            if (thisIndex == -1 || otherIndex == -1) return -1;
 
-            Nodes[i] = new Node
+            // Do not keep the result node by default.
+            var keep = false;
+
+            var thisNode = Nodes[thisIndex];
+            var otherNode = other.Nodes[otherIndex];
+            var resultNode = new Node(thisNode.Position, thisNode.Scale);
+
+            // If nodes are not default and both nodes have equal values, set the result node's value theirs, and keep the node.
+            if (!thisNode.IsDefault && thisNode.Value.Equals(otherNode.Value))
             {
-                Position = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3[octant]),
-                Scale = scale
-            };
+                resultNode.Value = thisNode.Value;
+                keep = true;
+            }
 
-            RootIndexes[octant] = i;
-        }
-
-        [BurstCompile]
-        private void UpscaleRoot(int octant)
-        {
-            var i = NextIndex();
-
-            var root = new Node
+            // If both nodes have children, continue.
+            if (!thisNode.IsLeaf && !otherNode.IsLeaf)
             {
-                Position = Nodes[RootIndexes[octant]].Position * 2,
-                Scale = Nodes[RootIndexes[octant]].Scale + 1
-            };
+                resultNode.Alloc(allocator);
 
-            root.Alloc(_allocator);
-            root.ChildIndexes[7 - octant] = RootIndexes[octant];
+                // Iterate over every octant, keeping the indexes of each child's result.
+                for (var i = 0; i < 8; i++)
+                {
+                    var childIndex =
+                        IntersectNode(thisNode.ChildIndexes[i], otherNode.ChildIndexes[i],
+                            other, ref result, allocator);
+                    resultNode.ChildIndexes[i] = childIndex;
 
-            Nodes[i] = root;
-            RootIndexes[octant] = i;
+                    if (childIndex != -1) keep = true;
+                }
+            }
+
+            // If the result node is to be kept, get the next index and add the node to the result.
+            if (keep)
+            {
+                var index = result.NextIndex();
+                result.Nodes[index] = resultNode;
+
+                return index;
+            }
+
+            resultNode.Dispose();
+
+            // Return -1 if nodes do not intersect, and if no child nodes intersect.
+            return -1;
         }
 
         [BurstCompile]
@@ -186,7 +289,6 @@ namespace DataTypes.Trees
             for (var i = 0; i < 8; i++) RootIndexes[i] = -1;
         }
 
-
         [BurstCompile]
         public void Dispose()
         {
@@ -201,11 +303,58 @@ namespace DataTypes.Trees
             IsCreated = false;
         }
 
+        [BurstCompile]
+        private int NextIndex()
+        {
+            var index = Count++;
+
+            if (Count > Nodes.Length) Nodes = Nodes.SetSize(Nodes.Length * 2, _allocator);
+
+            return index;
+        }
+
+        [BurstCompile]
+        private int InitRoot(int octant, int scale = 0)
+        {
+            var i = NextIndex();
+            var pos = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3(octant));
+
+            Nodes[i] = new Node(pos, scale);
+            RootIndexes[octant] = i;
+
+            return i;
+        }
+
+        [BurstCompile]
+        private void UpscaleRoot(int octant)
+        {
+            var i = NextIndex();
+            var oldRoot = RootNode(octant);
+            var newRoot = new Node(oldRoot.Position * 2, oldRoot.Scale + 1);
+
+            newRoot.Alloc(_allocator);
+            newRoot.ChildIndexes[7 - octant] = RootIndexes[octant];
+
+            Nodes[i] = newRoot;
+            RootIndexes[octant] = i;
+        }
+
+        [BurstCompile]
+        private int EncompassPoint(float3 position)
+        {
+            var oct = GetOctant(position);
+
+            if (RootIndexes[oct] == -1) InitRoot(oct, MinEncompassingScale(position));
+
+            while (!PointWithinOctant(position, oct)) UpscaleRoot(oct);
+
+            return RootIndexes[oct];
+        }
 
         [BurstCompile]
         private bool PointWithinOctant(float3 position, int octant)
         {
-            var root = Nodes[RootIndexes[octant]];
+            var root = RootNode(octant);
 
             return PointWithinSeg(position, root.Position, GetSegSize(BaseNodeSize, root.Scale));
         }
@@ -222,15 +371,25 @@ namespace DataTypes.Trees
         public struct Node : IDisposable
         {
             public T Value;
-            public float3 Position;
-            public int Scale;
+            public readonly float3 Position;
+            public readonly int Scale;
             public NativeArray<int> ChildIndexes;
+            
+            public bool IsDefault => Value.Equals(default(T));
+
+            public bool IsLeaf => !ChildIndexes.IsCreated;
+
+            public Node(float3 position, int scale)
+            {
+                Value = default;
+                Position = position;
+                Scale = scale;
+                ChildIndexes = default;
+            }
 
             [BurstCompile]
             public void Alloc(Allocator allocator)
             {
-                if (ChildIndexes.IsCreated) return;
-
                 ChildIndexes = new NativeArray<int>(8, allocator);
 
                 for (var i = 0; i < 8; i++) ChildIndexes[i] = -1;
@@ -239,7 +398,7 @@ namespace DataTypes.Trees
             [BurstCompile]
             public void Dispose()
             {
-                if (ChildIndexes.IsCreated) ChildIndexes.Dispose();
+                if (!IsLeaf) ChildIndexes.Dispose();
             }
         }
     }

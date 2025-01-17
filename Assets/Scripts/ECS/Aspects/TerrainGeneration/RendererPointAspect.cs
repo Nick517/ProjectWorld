@@ -27,7 +27,7 @@ namespace ECS.Aspects.TerrainGeneration
 
         public void UpdateSegmentPosition(EntityCommandBuffer ecb, BaseSegmentSettings settings)
         {
-            SegmentPosition = GetClosestSegPos(Position, GetSegSize(settings.BaseSegSize, Settings.ReloadScale));
+            SegmentPosition = GetClosestSegPos(Position, settings.BaseSegSize);
             ecb.AddComponent<UpdateRendererSegmentsTag>(Entity);
         }
     }

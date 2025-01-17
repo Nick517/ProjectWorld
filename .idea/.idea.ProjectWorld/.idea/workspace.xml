@@ -5,11 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeIntersectVisualizer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeIntersectVisualizer.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeIntersectVisualizerEditor.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeIntersectVisualizerEditor.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Octree Test.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Octree Test.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/RendererPointAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/RendererPointAspect.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/TerrainSegmentAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/TerrainSegmentAspect.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/TrackPointSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/TrackPointSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/OctantOperations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/OctantOperations.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,6 +309,19 @@
       <workItem from="1736406600471" duration="6111000" />
       <workItem from="1736413262055" duration="888000" />
       <workItem from="1736570076448" duration="1068000" />
+      <workItem from="1736655393366" duration="1298000" />
+      <workItem from="1736728889458" duration="935000" />
+      <workItem from="1736800352125" duration="13269000" />
+      <workItem from="1736832491281" duration="3259000" />
+      <workItem from="1736838153840" duration="1671000" />
+      <workItem from="1736842626375" duration="10117000" />
+      <workItem from="1736902806675" duration="614000" />
+      <workItem from="1736904592946" duration="1266000" />
+      <workItem from="1736971603915" duration="2136000" />
+      <workItem from="1736979891698" duration="3351000" />
+      <workItem from="1737054967947" duration="3426000" />
+      <workItem from="1737064193792" duration="12125000" />
+      <workItem from="1737086580835" duration="959000" />
     </task>
     <servers />
   </component>
