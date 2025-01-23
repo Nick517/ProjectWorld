@@ -94,6 +94,13 @@ namespace Debugging.Octree
                     _visualizer.OctreeB.SetAtPos(_value, _position, _scale);
                     SceneView.RepaintAll();
                 }
+                
+                if (GUILayout.Button("Union"))
+                {
+                    _visualizer.OctreeA = _visualizer.OctreeA.Union(_visualizer.OctreeB, Allocator.Persistent);
+                    _visualizer.OctreeB.Clear();
+                    SceneView.RepaintAll();
+                }
 
                 if (GUILayout.Button("Intersect"))
                 {
@@ -101,7 +108,18 @@ namespace Debugging.Octree
                     _visualizer.OctreeB.Clear();
                     SceneView.RepaintAll();
                 }
-                
+
+                if (GUILayout.Button("Copy"))
+                {
+                    for (var oct = 0; oct < 8; oct++)
+                        if (_visualizer.OctreeB.RootIndexes[oct] != -1)
+                            _visualizer.OctreeB.CopyBranchTo(_visualizer.OctreeB.RootIndexes[oct],
+                                ref _visualizer.OctreeA, Allocator.Persistent);
+
+                    _visualizer.OctreeB.Clear();
+                    SceneView.RepaintAll();
+                }
+
                 if (GUILayout.Button("Print")) PrintOctreeState();
 
                 if (GUILayout.Button("Clear"))

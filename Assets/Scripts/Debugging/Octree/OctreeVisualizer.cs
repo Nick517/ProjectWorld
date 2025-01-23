@@ -17,7 +17,7 @@ namespace Debugging.Octree
             if (!OctreeA.IsCreated || !OctreeB.IsCreated) return;
 
             Gizmos.color = Color.white;
-
+            
             OctreeA.Traverse(node =>
             {
                 var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);

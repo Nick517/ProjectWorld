@@ -1,11 +1,11 @@
 using System;
 using Unity.Burst;
 using Unity.Collections;
+using Unity.Mathematics;
 using Utility.Collections;
 using static Unity.Mathematics.math;
 using static Utility.SpacialPartitioning.OctantOperations;
 using static Utility.SpacialPartitioning.SegmentOperations;
-using float3 = Unity.Mathematics.float3;
 
 namespace DataTypes.Trees
 {
@@ -124,11 +124,22 @@ namespace DataTypes.Trees
         {
             if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using Traverse.");
 
-            using var stack = new NativeList<int>(Count, Allocator.Temp);
-
             for (var i = 0; i < 8; i++)
                 if (RootIndexes[i] != -1)
-                    stack.Add(RootIndexes[i]);
+                    TraverseFromIndex(RootIndexes[i], action);
+        }
+
+        [BurstCompile]
+        private void TraverseFromIndex(int index, Action<Node> action)
+        {
+            if (!IsCreated)
+                throw new InvalidOperationException("Octree must be initialized before using TraverseFromIndex.");
+
+            if (index < 0 || index > Count) throw new IndexOutOfRangeException("Index is out of range.");
+
+            using var stack = new NativeList<int>(Allocator.Temp);
+
+            stack.Add(index);
 
             while (stack.Length > 0)
             {
@@ -147,6 +158,76 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
+        public Octree<T> Union(Octree<T> other, Allocator allocator)
+        {
+            if (!IsCreated || !other.IsCreated)
+                throw new InvalidOperationException("Both octrees must be initialized before unionising.");
+
+            if (!BaseNodeSize.Equals(other.BaseNodeSize))
+                throw new ArgumentException("Cannot union octrees with different base node sizes.");
+
+            var result = new Octree<T>(BaseNodeSize, allocator);
+
+            for (var oct = 0; oct < 8; oct++)
+            {
+                var thisIndex = RootIndexes[oct];
+                var otherIndex = other.RootIndexes[oct];
+
+                if (thisIndex != -1 && otherIndex != -1)
+                {
+                    while (RootNode(oct).Scale < other.RootNode(oct).Scale) thisIndex = UpscaleRoot(oct);
+
+                    while (other.RootNode(oct).Scale < RootNode(oct).Scale) otherIndex = other.UpscaleRoot(oct);
+
+                    result.RootIndexes[oct] = UnionNodes(thisIndex, otherIndex, other, ref result, allocator);
+
+                    continue;
+                }
+
+                if (thisIndex != -1) CopyBranchTo(thisIndex, ref result, allocator);
+
+                else if (otherIndex != -1) other.CopyBranchTo(otherIndex, ref result, allocator);
+            }
+
+            return result;
+        }
+
+        [BurstCompile]
+        private int UnionNodes(int thisIndex, int otherIndex,
+            Octree<T> other, ref Octree<T> result, Allocator allocator)
+        {
+            if (thisIndex == -1 && otherIndex == -1) return -1;
+
+            if (thisIndex == -1) return other.CopyBranchToIndex(otherIndex, result.NextIndex(), ref result, allocator);
+
+            if (otherIndex == -1) return CopyBranchToIndex(thisIndex, result.NextIndex(), ref result, allocator);
+
+            var thisNode = Nodes[thisIndex];
+            var otherNode = other.Nodes[otherIndex];
+            var resultIndex = result.NextIndex();
+            var resultNode = new Node(thisNode.Position, thisNode.Scale);
+
+            resultNode.Value = !thisNode.IsDefault ? thisNode.Value : otherNode.Value;
+
+            if (thisNode.IsLeaf && otherNode.IsLeaf)
+            {
+                result.Nodes[resultIndex] = resultNode;
+
+                return resultIndex;
+            }
+
+            resultNode.Alloc(allocator);
+
+            for (var oct = 0; oct < 8; oct++)
+                resultNode.ChildIndexes[oct] =
+                    UnionNodes(thisNode.ChildIndexes[oct], otherNode.ChildIndexes[oct], other, ref result, allocator);
+
+            result.Nodes[resultIndex] = resultNode;
+
+            return resultIndex;
+        }
+
+        [BurstCompile]
         public Octree<T> Intersect(Octree<T> other, Allocator allocator)
         {
             if (!IsCreated || !other.IsCreated)
@@ -157,19 +238,15 @@ namespace DataTypes.Trees
 
             var result = new Octree<T>(BaseNodeSize, allocator);
 
-            // Iterate over every octant.
             for (var oct = 0; oct < 8; oct++)
             {
-                // Skip this octant if either root does not exist.
                 if (RootIndexes[oct] == -1 || other.RootIndexes[oct] == -1) continue;
 
-                // Do not keep the result node by default.
                 var keep = false;
                 var oppOct = 7 - oct;
                 var thisRoot = RootNode(oct);
                 var otherRoot = other.RootNode(oct);
 
-                // Traverse the larger root, setting it to its child until it is the same scale as the smaller root.
                 if (thisRoot.Scale >= otherRoot.Scale)
                     while (thisRoot.Scale > otherRoot.Scale)
                         thisRoot = Nodes[thisRoot.ChildIndexes[oppOct]];
@@ -177,26 +254,22 @@ namespace DataTypes.Trees
                     while (otherRoot.Scale > thisRoot.Scale)
                         otherRoot = other.Nodes[otherRoot.ChildIndexes[oppOct]];
 
-                // Set the result root to have the same position and scale as the roots.
                 var resultRoot = new Node(thisRoot.Position, thisRoot.Scale);
 
-                // If the roots are not default and both roots have the same value, set the result root's value to theirs, and keep the root.
                 if (!thisRoot.IsDefault & thisRoot.Value.Equals(otherRoot.Value))
                 {
                     resultRoot.Value = thisRoot.Value;
                     keep = true;
                 }
 
-                // If both roots have children, continue.
                 if (!thisRoot.IsLeaf && !otherRoot.IsLeaf)
                 {
                     resultRoot.Alloc(_allocator);
 
-                    // Iterate over every octant.
                     for (var i = 0; i < 8; i++)
                     {
                         var childIndex =
-                            IntersectNode(thisRoot.ChildIndexes[i], otherRoot.ChildIndexes[i],
+                            IntersectNodes(thisRoot.ChildIndexes[i], otherRoot.ChildIndexes[i],
                                 other, ref result, allocator);
                         resultRoot.ChildIndexes[i] = childIndex;
 
@@ -204,7 +277,6 @@ namespace DataTypes.Trees
                     }
                 }
 
-                // Keep the root node.
                 if (keep)
                 {
                     var index = result.NextIndex();
@@ -221,44 +293,38 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private int IntersectNode(int thisIndex, int otherIndex,
+        private int IntersectNodes(int thisIndex, int otherIndex,
             Octree<T> other, ref Octree<T> result, Allocator allocator)
         {
-            // Return -1 if either index is invalid.
             if (thisIndex == -1 || otherIndex == -1) return -1;
 
-            // Do not keep the result node by default.
             var keep = false;
-
             var thisNode = Nodes[thisIndex];
             var otherNode = other.Nodes[otherIndex];
             var resultNode = new Node(thisNode.Position, thisNode.Scale);
 
-            // If nodes are not default and both nodes have equal values, set the result node's value theirs, and keep the node.
             if (!thisNode.IsDefault && thisNode.Value.Equals(otherNode.Value))
             {
                 resultNode.Value = thisNode.Value;
                 keep = true;
             }
 
-            // If both nodes have children, continue.
             if (!thisNode.IsLeaf && !otherNode.IsLeaf)
             {
                 resultNode.Alloc(allocator);
 
-                // Iterate over every octant, keeping the indexes of each child's result.
                 for (var i = 0; i < 8; i++)
                 {
                     var childIndex =
-                        IntersectNode(thisNode.ChildIndexes[i], otherNode.ChildIndexes[i],
+                        IntersectNodes(thisNode.ChildIndexes[i], otherNode.ChildIndexes[i],
                             other, ref result, allocator);
+
                     resultNode.ChildIndexes[i] = childIndex;
 
                     if (childIndex != -1) keep = true;
                 }
             }
 
-            // If the result node is to be kept, get the next index and add the node to the result.
             if (keep)
             {
                 var index = result.NextIndex();
@@ -269,8 +335,43 @@ namespace DataTypes.Trees
 
             resultNode.Dispose();
 
-            // Return -1 if nodes do not intersect, and if no child nodes intersect.
             return -1;
+        }
+
+        [BurstCompile]
+        public void CopyBranchTo(int startIndex, ref Octree<T> other, Allocator allocator)
+        {
+            var rootIndex = -1;
+
+            for (var oct = 0; oct < 8; oct++)
+                if (RootIndexes[oct] == startIndex)
+                {
+                    rootIndex = oct;
+                    break;
+                }
+
+            var otherIndex = rootIndex != -1 ? other.InitRoot(rootIndex, RootNode(rootIndex).Scale) : other.NextIndex();
+
+            CopyBranchToIndex(startIndex, otherIndex, ref other, allocator);
+        }
+
+        [BurstCompile]
+        private int CopyBranchToIndex(int startIndex, int otherStartIndex, ref Octree<T> other, Allocator allocator)
+        {
+            var startNode = Nodes[startIndex];
+            var copiedNode = new Node(startNode.Position, startNode.Scale);
+            copiedNode.Value = startNode.Value;
+            copiedNode.Alloc(allocator);
+
+            if (!startNode.IsLeaf)
+                for (var oct = 0; oct < 8; oct++)
+                    if (startNode.ChildIndexes[oct] != -1)
+                        copiedNode.ChildIndexes[oct] =
+                            CopyBranchToIndex(startNode.ChildIndexes[oct], other.NextIndex(), ref other, allocator);
+
+            other.Nodes[otherStartIndex] = copiedNode;
+
+            return otherStartIndex;
         }
 
         [BurstCompile]
@@ -314,29 +415,39 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private int InitRoot(int octant, int scale = 0)
+        private int InitNode(float3 position, int scale = 0)
         {
-            var i = NextIndex();
-            var pos = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3(octant));
+            var index = NextIndex();
+            Nodes[index] = new Node(position, scale);
 
-            Nodes[i] = new Node(pos, scale);
-            RootIndexes[octant] = i;
-
-            return i;
+            return index;
         }
 
         [BurstCompile]
-        private void UpscaleRoot(int octant)
+        private int InitRoot(int octant, int scale = 0)
         {
-            var i = NextIndex();
+            var pos = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3(octant));
+
+            var index = InitNode(pos, scale);
+            RootIndexes[octant] = index;
+
+            return index;
+        }
+
+        [BurstCompile]
+        private int UpscaleRoot(int octant)
+        {
+            var index = NextIndex();
             var oldRoot = RootNode(octant);
             var newRoot = new Node(oldRoot.Position * 2, oldRoot.Scale + 1);
 
             newRoot.Alloc(_allocator);
             newRoot.ChildIndexes[7 - octant] = RootIndexes[octant];
 
-            Nodes[i] = newRoot;
-            RootIndexes[octant] = i;
+            Nodes[index] = newRoot;
+            RootIndexes[octant] = index;
+
+            return index;
         }
 
         [BurstCompile]
@@ -374,7 +485,7 @@ namespace DataTypes.Trees
             public readonly float3 Position;
             public readonly int Scale;
             public NativeArray<int> ChildIndexes;
-            
+
             public bool IsDefault => Value.Equals(default(T));
 
             public bool IsLeaf => !ChildIndexes.IsCreated;
