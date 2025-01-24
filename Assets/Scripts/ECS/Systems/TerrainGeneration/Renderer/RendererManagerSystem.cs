@@ -55,7 +55,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
 
                 ecb.RemoveComponent<UpdateRendererSegmentsTag>(point.Entity);
             }
-            
+
             ecb.Playback(state.EntityManager);
         }
 

@@ -51,7 +51,7 @@ namespace ECS.Authoring.TerrainGeneration
             AddBlobAsset(ref blobReference, out _);
             var entity = GetEntity(TransformUsageFlags.None);
 
-            AddComponent(entity,  new TerrainGenerationTreeBlob { Blob = blobReference });
+            AddComponent(entity, new TerrainGenerationTreeBlob { Blob = blobReference });
         }
     }
 }

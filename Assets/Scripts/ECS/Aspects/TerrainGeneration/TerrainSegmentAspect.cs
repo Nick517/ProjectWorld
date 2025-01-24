@@ -17,14 +17,15 @@ namespace ECS.Aspects.TerrainGeneration
 
         public int Scale => _segmentScale.ValueRO.Scale;
 
-        public static Entity CreateSegment(EntityCommandBuffer ecb, BaseSegmentSettings settings, float3 position, int scale)
+        public static Entity CreateSegment(EntityCommandBuffer ecb, BaseSegmentSettings settings, float3 position,
+            int scale)
         {
             var entity = ecb.Instantiate(settings.RendererSegmentPrefab);
-            
+
             ecb.SetComponent(entity, LocalTransform.FromPosition(position));
             ecb.AddComponent(entity, new SegmentScale { Scale = scale });
             ecb.AddComponent<CreateRendererMeshTag>(entity);
-            
+
             return entity;
         }
     }

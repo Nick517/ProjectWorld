@@ -42,7 +42,7 @@ namespace DataTypes.Trees
             Count = 0;
             IsCreated = true;
 
-            for (var i = 0; i < RootIndexes.Length; i++) RootIndexes[i] = -1;
+            for (var i = 0; i < 8; i++) RootIndexes[i] = -1;
         }
 
         [BurstCompile]
@@ -247,16 +247,29 @@ namespace DataTypes.Trees
                 var thisRoot = RootNode(oct);
                 var otherRoot = other.RootNode(oct);
 
-                if (thisRoot.Scale >= otherRoot.Scale)
-                    while (thisRoot.Scale > otherRoot.Scale)
-                        thisRoot = Nodes[thisRoot.ChildIndexes[oppOct]];
-                else
-                    while (otherRoot.Scale > thisRoot.Scale)
-                        otherRoot = other.Nodes[otherRoot.ChildIndexes[oppOct]];
+                while (thisRoot.Scale != otherRoot.Scale)
+                {
+                    if (thisRoot.Scale > otherRoot.Scale)
+                    {
+                        var childIndex = thisRoot.ChildIndexes[oppOct];
+                        
+                        if (childIndex == -1) return result;
+                        
+                        thisRoot = Nodes[childIndex];
+                    }
+                    else
+                    {
+                        var childIndex = otherRoot.ChildIndexes[oppOct];
+                        
+                        if (childIndex == -1) return result;
+                        
+                        otherRoot = other.Nodes[childIndex];
+                    }
+                }
 
                 var resultRoot = new Node(thisRoot.Position, thisRoot.Scale);
 
-                if (!thisRoot.IsDefault & thisRoot.Value.Equals(otherRoot.Value))
+                if (!thisRoot.IsDefault && thisRoot.Value.Equals(otherRoot.Value))
                 {
                     resultRoot.Value = thisRoot.Value;
                     keep = true;
