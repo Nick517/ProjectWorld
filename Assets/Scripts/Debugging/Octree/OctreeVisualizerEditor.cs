@@ -101,6 +101,13 @@ namespace Debugging.Octree
                     _visualizer.OctreeB.Clear();
                     SceneView.RepaintAll();
                 }
+                
+                if (GUILayout.Button("Except"))
+                {
+                    _visualizer.OctreeA = _visualizer.OctreeA.Except(_visualizer.OctreeB, Allocator.Persistent);
+                    _visualizer.OctreeB.Clear();
+                    SceneView.RepaintAll();
+                }
 
                 if (GUILayout.Button("Intersect"))
                 {
