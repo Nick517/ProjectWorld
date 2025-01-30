@@ -12,31 +12,36 @@ namespace Debugging.Octree
         public Octree<FixedString32Bytes> OctreeA;
         public Octree<FixedString32Bytes> OctreeB;
 
+        [HideInInspector] public bool drawA = true;
+        [HideInInspector] public bool drawB = true;
+
         public void OnDrawGizmos()
         {
             if (!OctreeA.IsCreated || !OctreeB.IsCreated) return;
 
             Gizmos.color = Color.white;
 
-            OctreeA.Traverse(node =>
-            {
-                var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);
-                var center = GetClosestSegCenter(node.Position, size);
+            if (drawA)
+                OctreeA.Traverse(node =>
+                {
+                    var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);
+                    var center = GetClosestSegCenter(node.Position, size);
 
-                Gizmos.DrawWireCube(center, (float3)size);
-                Handles.Label(center, node.Value.ToString());
-            });
+                    Gizmos.DrawWireCube(center, (float3)size);
+                    Handles.Label(center, node.Value.ToString());
+                });
 
             Gizmos.color = Color.yellow;
 
-            OctreeB.Traverse(node =>
-            {
-                var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);
-                var center = GetClosestSegCenter(node.Position, size);
+            if (drawB)
+                OctreeB.Traverse(node =>
+                {
+                    var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);
+                    var center = GetClosestSegCenter(node.Position, size);
 
-                Gizmos.DrawWireCube(center, (float3)size);
-                Handles.Label(center, node.Value.ToString());
-            });
+                    Gizmos.DrawWireCube(center, (float3)size);
+                    Handles.Label(center, node.Value.ToString());
+                });
         }
     }
 }

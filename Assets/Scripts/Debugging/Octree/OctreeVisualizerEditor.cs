@@ -13,10 +13,10 @@ namespace Debugging.Octree
     [BurstCompile]
     public class OctreeVisualizerEditor : Editor
     {
+        private const float BaseNodeSize = 1;
         private const float HandleSize = 0.2f;
+        
         private OctreeVisualizer _visualizer;
-
-        private float _baseNodeSize = 8;
         private float3 _position;
         private FixedString32Bytes _value = "";
         private int _scale;
@@ -30,8 +30,8 @@ namespace Debugging.Octree
         {
             if (!_visualizer.OctreeA.IsCreated)
             {
-                _visualizer.OctreeA = new Octree<FixedString32Bytes>(_baseNodeSize, Allocator.Persistent);
-                _visualizer.OctreeB = new Octree<FixedString32Bytes>(_baseNodeSize, Allocator.Persistent);
+                _visualizer.OctreeA = new Octree<FixedString32Bytes>(BaseNodeSize, Allocator.Persistent);
+                _visualizer.OctreeB = new Octree<FixedString32Bytes>(BaseNodeSize, Allocator.Persistent);
 
                 AssemblyReloadEvents.beforeAssemblyReload += CleanupOctrees;
                 EditorApplication.playModeStateChanged += HandlePlayModeStateChanged;
@@ -47,12 +47,6 @@ namespace Debugging.Octree
             EditorApplication.playModeStateChanged -= HandlePlayModeStateChanged;
         }
 
-        private void ReinitializeOctrees()
-        {
-            CleanupOctrees();
-            InitializeOctrees();
-        }
-
         private void HandlePlayModeStateChanged(PlayModeStateChange state)
         {
             if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.ExitingPlayMode)
@@ -65,14 +59,6 @@ namespace Debugging.Octree
 
             DrawDefaultInspector();
 
-            EditorGUI.BeginChangeCheck();
-            var newBaseNodeSize = EditorGUILayout.FloatField("Base Node Size", _baseNodeSize);
-            if (EditorGUI.EndChangeCheck() && !newBaseNodeSize.Equals(_baseNodeSize))
-            {
-                _baseNodeSize = newBaseNodeSize;
-                ReinitializeOctrees();
-            }
-
             _value = EditorGUILayout.TextField("Value", _value.ToString());
 
             EditorGUI.BeginChangeCheck();
@@ -83,73 +69,68 @@ namespace Debugging.Octree
 
             using (new EditorGUI.DisabledScope(!_visualizer.OctreeA.IsCreated || !_visualizer.OctreeB.IsCreated))
             {
-                if (GUILayout.Button("Set A"))
-                {
-                    _visualizer.OctreeA.SetAtPos(_value, _position, _scale);
-                    SceneView.RepaintAll();
-                }
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Set A")) _visualizer.OctreeA.SetAtPos(_value, _position, _scale);
+                if (GUILayout.Button("Set B")) _visualizer.OctreeB.SetAtPos(_value, _position, _scale);
+                EditorGUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Set B"))
-                {
-                    _visualizer.OctreeB.SetAtPos(_value, _position, _scale);
-                    SceneView.RepaintAll();
-                }
-                
-                if (GUILayout.Button("Union"))
-                {
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Union A"))
                     _visualizer.OctreeA = _visualizer.OctreeA.Union(_visualizer.OctreeB, Allocator.Persistent);
-                    _visualizer.OctreeB.Clear();
-                    SceneView.RepaintAll();
-                }
-                
-                if (GUILayout.Button("Except"))
-                {
+                if (GUILayout.Button("Union B"))
+                    _visualizer.OctreeB = _visualizer.OctreeB.Union(_visualizer.OctreeA, Allocator.Persistent);
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Except A"))
                     _visualizer.OctreeA = _visualizer.OctreeA.Except(_visualizer.OctreeB, Allocator.Persistent);
-                    _visualizer.OctreeB.Clear();
-                    SceneView.RepaintAll();
-                }
+                if (GUILayout.Button("Except B"))
+                    _visualizer.OctreeB = _visualizer.OctreeB.Except(_visualizer.OctreeA, Allocator.Persistent);
+                EditorGUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Intersect"))
-                {
+                EditorGUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("Intersect A"))
                     _visualizer.OctreeA = _visualizer.OctreeA.Intersect(_visualizer.OctreeB, Allocator.Persistent);
-                    _visualizer.OctreeB.Clear();
-                    SceneView.RepaintAll();
-                }
+                if (GUILayout.Button("Intersect B"))
+                    _visualizer.OctreeB = _visualizer.OctreeB.Intersect(_visualizer.OctreeA, Allocator.Persistent);
+                EditorGUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Copy"))
-                {
-                    for (var oct = 0; oct < 8; oct++)
-                        if (_visualizer.OctreeB.RootIndexes[oct] != -1)
-                            _visualizer.OctreeB.CopyBranchTo(_visualizer.OctreeB.RootIndexes[oct],
-                                ref _visualizer.OctreeA, Allocator.Persistent);
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Copy A")) _visualizer.OctreeA.Copy(ref _visualizer.OctreeB);
+                if (GUILayout.Button("Copy B")) _visualizer.OctreeB.Copy(ref _visualizer.OctreeA);
+                EditorGUILayout.EndHorizontal();
 
-                    _visualizer.OctreeB.Clear();
-                    SceneView.RepaintAll();
-                }
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Print A")) PrintOctreeState(_visualizer.OctreeA, "Octree A");
+                if (GUILayout.Button("Print B")) PrintOctreeState(_visualizer.OctreeB, "Octree B");
+                EditorGUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Print")) PrintOctreeState();
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("Clear A")) _visualizer.OctreeA.Clear();
+                if (GUILayout.Button("Clear B")) _visualizer.OctreeB.Clear();
+                EditorGUILayout.EndHorizontal();
 
-                if (GUILayout.Button("Clear"))
-                {
-                    _visualizer.OctreeA.Clear();
-                    _visualizer.OctreeB.Clear();
-                    _position = float3.zero;
-                    SceneView.RepaintAll();
-                }
+                EditorGUILayout.BeginHorizontal();
+                _visualizer.drawA = GUILayout.Toggle(_visualizer.drawA, "Draw A");
+                _visualizer.drawB = GUILayout.Toggle(_visualizer.drawB, "Draw B");
+                EditorGUILayout.EndHorizontal();
+
+                if (GUI.changed) SceneView.RepaintAll();
             }
         }
 
-        private void PrintOctreeState()
+        private void PrintOctreeState(Octree<FixedString32Bytes> octree, string octreeName)
         {
-            var builder = new StringBuilder($"Nodes in Octree A: {_visualizer.OctreeA.Count}");
+            var builder = new StringBuilder($"Nodes in {octreeName}: {octree.Count}");
             builder.Append("\nRoot indexes: ");
-            builder.AppendJoin(", ", _visualizer.OctreeA.RootIndexes);
+            builder.AppendJoin(", ", octree.RootIndexes);
 
-            for (var n = 0; n < _visualizer.OctreeA.Count; n++)
+            for (var n = 0; n < octree.Count; n++)
             {
-                var node = _visualizer.OctreeA.Nodes[n];
+                var node = octree.Nodes[n];
                 var p = node.Position;
-                var size = GetSegSize(_baseNodeSize, node.Scale);
+                var size = GetSegSize(BaseNodeSize, node.Scale);
                 var nodeBuilder =
                     new StringBuilder(
                         $"\nNode {n}, Position: ({p.x}, {p.y}, {p.z}), Scale: {node.Scale}, Size: {size}, Children: ");

@@ -163,6 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0e2cbf230a475b9f46f1b80cc6bf14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawA: 1
+  drawB: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

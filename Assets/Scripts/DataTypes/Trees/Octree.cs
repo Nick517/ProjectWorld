@@ -418,6 +418,14 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
+        public void Copy(ref Octree<T> octree)
+        {
+            for (var oct = 0; oct < 8; oct++)
+                if (octree.RootIndexes[oct] != -1)
+                    octree.CopyBranchTo(octree.RootIndexes[oct],ref this, _allocator);
+        }
+
+        [BurstCompile]
         public void CopyBranchTo(int startIndex, ref Octree<T> other, Allocator allocator)
         {
             var rootIndex = NodeIndexToRootIndex(startIndex);
