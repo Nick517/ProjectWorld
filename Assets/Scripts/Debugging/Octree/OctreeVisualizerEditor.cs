@@ -75,25 +75,19 @@ namespace Debugging.Octree
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Union A"))
-                    _visualizer.OctreeA = _visualizer.OctreeA.Union(_visualizer.OctreeB, Allocator.Persistent);
-                if (GUILayout.Button("Union B"))
-                    _visualizer.OctreeB = _visualizer.OctreeB.Union(_visualizer.OctreeA, Allocator.Persistent);
+                if (GUILayout.Button("Union A")) _visualizer.OctreeA.Union(_visualizer.OctreeB);
+                if (GUILayout.Button("Union B")) _visualizer.OctreeB.Union(_visualizer.OctreeA);
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Except A"))
-                    _visualizer.OctreeA = _visualizer.OctreeA.Except(_visualizer.OctreeB, Allocator.Persistent);
-                if (GUILayout.Button("Except B"))
-                    _visualizer.OctreeB = _visualizer.OctreeB.Except(_visualizer.OctreeA, Allocator.Persistent);
+                if (GUILayout.Button("Except A")) _visualizer.OctreeA.Except(_visualizer.OctreeB);
+                if (GUILayout.Button("Except B")) _visualizer.OctreeB.Except(_visualizer.OctreeA);
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
 
-                if (GUILayout.Button("Intersect A"))
-                    _visualizer.OctreeA = _visualizer.OctreeA.Intersect(_visualizer.OctreeB, Allocator.Persistent);
-                if (GUILayout.Button("Intersect B"))
-                    _visualizer.OctreeB = _visualizer.OctreeB.Intersect(_visualizer.OctreeA, Allocator.Persistent);
+                if (GUILayout.Button("Intersect A")) _visualizer.OctreeA.Intersect(_visualizer.OctreeB);
+                if (GUILayout.Button("Intersect B")) _visualizer.OctreeB.Intersect(_visualizer.OctreeA);
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
