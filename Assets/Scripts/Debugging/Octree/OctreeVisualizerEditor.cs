@@ -5,7 +5,6 @@ using Unity.Collections;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
-using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace Debugging.Octree
 {
@@ -15,7 +14,7 @@ namespace Debugging.Octree
     {
         private const float BaseNodeSize = 1;
         private const float HandleSize = 0.2f;
-        
+
         private OctreeVisualizer _visualizer;
         private float3 _position;
         private FixedString32Bytes _value = "";
@@ -91,8 +90,8 @@ namespace Debugging.Octree
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Copy A")) _visualizer.OctreeA.Copy(ref _visualizer.OctreeB);
-                if (GUILayout.Button("Copy B")) _visualizer.OctreeB.Copy(ref _visualizer.OctreeA);
+                if (GUILayout.Button("Copy A")) _visualizer.OctreeA.Copy(_visualizer.OctreeB);
+                if (GUILayout.Button("Copy B")) _visualizer.OctreeB.Copy(_visualizer.OctreeA);
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUILayout.BeginHorizontal();
@@ -116,25 +115,10 @@ namespace Debugging.Octree
 
         private void PrintOctreeState(Octree<FixedString32Bytes> octree, string octreeName)
         {
-            var builder = new StringBuilder($"Nodes in {octreeName}: {octree.Count}");
-            builder.Append("\nRoot indexes: ");
-            builder.AppendJoin(", ", octree.RootIndexes);
+            var builder = new StringBuilder($"{octreeName}: {octree.ToString()}");
+            builder.AppendLine();
 
-            for (var n = 0; n < octree.Count; n++)
-            {
-                var node = octree.Nodes[n];
-                var p = node.Position;
-                var size = GetSegSize(BaseNodeSize, node.Scale);
-                var nodeBuilder =
-                    new StringBuilder(
-                        $"\nNode {n}, Position: ({p.x}, {p.y}, {p.z}), Scale: {node.Scale}, Size: {size}, Children: ");
-
-                if (node.ChildIndexes.IsCreated) nodeBuilder.AppendJoin(", ", node.ChildIndexes);
-                else nodeBuilder.Append("N/A");
-
-                nodeBuilder.Append($", Value: {node.Value}");
-                builder.Append(nodeBuilder.ToString());
-            }
+            for (var n = 0; n < octree.Count; n++) builder.AppendLine($"{n}: {octree.Nodes[n].ToString()}");
 
             Debug.Log(builder.ToString());
         }
