@@ -9,9 +9,9 @@ namespace Utility.Collections
             where T : struct
         {
             var newArray = new NativeArray<T>(size, allocator);
-            var elementCount = math.min(nativeArray.Length, size);
+            var count = math.min(nativeArray.Length, size);
 
-            for (var i = 0; i < elementCount; i++) newArray[i] = nativeArray[i];
+            for (var i = 0; i < count; i++) newArray[i] = nativeArray[i];
 
             nativeArray.Dispose();
 

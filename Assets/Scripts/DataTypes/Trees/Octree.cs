@@ -11,9 +11,9 @@ using static Utility.SpacialPartitioning.SegmentOperations;
 namespace DataTypes.Trees
 {
     [BurstCompile]
-    public struct Octree<T> : IDisposable
+    public struct Octree<T> : IDisposable where T : struct, IEquatable<T>
     {
-        private const int DefaultInitialSize = 128;
+        private const int DefaultInitialSize = 2048;
 
         public NativeArray<Node> Nodes;
         public readonly float BaseNodeSize;
@@ -49,44 +49,32 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void SetAtPos(T value, float3 position, int scale = 0)
         {
-            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using SetAtPos.");
-
             SetAtIndex(value, PosToIndex(position, scale));
         }
 
         [BurstCompile]
         public T GetAtPos(float3 position, int scale = 0)
         {
-            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using GetAtPos.");
-
             return GetAtIndex(PosToIndex(position, scale));
         }
 
         [BurstCompile]
-        public void SetAtIndex(T value, int index)
+        private void SetAtIndex(T value, int index)
         {
-            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using SetAtIndex.");
-
             var node = Nodes[index];
             node.Value = value;
             Nodes[index] = node;
         }
 
         [BurstCompile]
-        public T GetAtIndex(int index)
+        private T GetAtIndex(int index)
         {
-            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using GetAtIndex.");
-
-            if (index < 0 || index > Count) throw new IndexOutOfRangeException("Index is out of range.");
-
             return Nodes[index].Value;
         }
 
         [BurstCompile]
         public int PosToIndex(float3 position, int scale = 0)
         {
-            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using PosToIndex.");
-
             var index = EncompassPoint(position);
             var node = Nodes[index];
             var pos = node.Position;
@@ -113,53 +101,73 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
-        public void Traverse(Action<Node> action)
+        public interface ITraverseAction
         {
-            if (!IsCreated) throw new InvalidOperationException("Octree must be initialized before using Traverse.");
+            void Execute(in Octree<T> octree, in Node node);
+        }
 
+        [BurstCompile]
+        public void Traverse<TAction>(TAction action) where TAction : struct, ITraverseAction
+        {
             for (var i = 0; i < 8; i++)
                 if (_rootIndexes[i] != -1)
                     TraverseByIndex(_rootIndexes[i], action);
         }
 
         [BurstCompile]
-        private void TraverseByIndex(int index, Action<Node> action)
+        private void TraverseByIndex<TAction>(int index, TAction action) where TAction : struct, ITraverseAction
         {
-            if (!IsCreated)
-                throw new InvalidOperationException("Octree must be initialized before using TraverseFromIndex.");
-
-            if (index < 0 || index > Count) throw new IndexOutOfRangeException("Index is out of range.");
-
             using var stack = new NativeList<int>(Allocator.Temp);
-
             stack.Add(index);
 
             while (stack.Length > 0)
             {
-                var stackIndex = stack.Length - 1;
-                var node = Nodes[stack[stackIndex]];
-                stack.RemoveAt(stackIndex);
+                var node = Nodes[stack[^1]];
+                stack.RemoveAt(stack.Length - 1);
 
-                action(node);
+                action.Execute(this, node);
 
                 if (node.IsLeaf) continue;
-
+                    
                 for (var i = 0; i < 8; i++)
                     if (node.ChildIndexes[i] != -1)
                         stack.Add(node.ChildIndexes[i]);
             }
         }
+        
+        [BurstCompile]
+        public void Copy(in Octree<T> other)
+        {
+            Clear();
+
+            for (var oct = 0; oct < 8; oct++)
+                if (other._rootIndexes[oct] != -1)
+                    _rootIndexes[oct] = CopyByIndex(NextIndex(), other._rootIndexes[oct], other);
+        }
+
+        [BurstCompile]
+        private int CopyByIndex(int thisIndex, int otherIndex, in Octree<T> other)
+        {
+            var otherNode = other.Nodes[otherIndex];
+            var newNode = new Node(otherNode, true);
+
+            if (!otherNode.IsLeaf)
+            {
+                newNode.Alloc(_allocator);
+
+                for (var oct = 0; oct < 8; oct++)
+                    if (otherNode.ChildIndexes[oct] != -1)
+                        newNode.ChildIndexes[oct] = CopyByIndex(NextIndex(), otherNode.ChildIndexes[oct], other);
+            }
+
+            Nodes[thisIndex] = newNode;
+
+            return thisIndex;
+        }
 
         [BurstCompile]
         public void Union(in Octree<T> other)
         {
-            if (!IsCreated || !other.IsCreated)
-                throw new InvalidOperationException("Both octrees must be initialized before unionising.");
-
-            if (!BaseNodeSize.Equals(other.BaseNodeSize))
-                throw new ArgumentException("Cannot union octrees with different base node sizes.");
-
             var result = new Octree<T>(BaseNodeSize, _allocator);
 
             for (var oct = 0; oct < 8; oct++)
@@ -233,12 +241,6 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void Except(in Octree<T> other)
         {
-            if (!IsCreated || !other.IsCreated)
-                throw new InvalidOperationException("Both octrees must be initialized before exception.");
-
-            if (!BaseNodeSize.Equals(other.BaseNodeSize))
-                throw new ArgumentException("Cannot except octrees with different base node sizes.");
-
             var result = new Octree<T>(BaseNodeSize, _allocator);
 
             for (var oct = 0; oct < 8; oct++)
@@ -296,12 +298,6 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void Intersect(in Octree<T> other)
         {
-            if (!IsCreated || !other.IsCreated)
-                throw new InvalidOperationException("Both octrees must be initialized before intersection.");
-
-            if (!BaseNodeSize.Equals(other.BaseNodeSize))
-                throw new ArgumentException("Cannot intersect octrees with different base node sizes.");
-
             var result = new Octree<T>(BaseNodeSize, _allocator);
 
             for (var oct = 0; oct < 8; oct++)
@@ -422,44 +418,8 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public void Copy(in Octree<T> other)
-        {
-            if (!IsCreated)
-                throw new InvalidOperationException("Cannot copy an octree that has not been initialized.");
-
-            Clear();
-
-            for (var oct = 0; oct < 8; oct++)
-                if (other._rootIndexes[oct] != -1)
-                    _rootIndexes[oct] = CopyByIndex(NextIndex(), other._rootIndexes[oct], other);
-        }
-
-        [BurstCompile]
-        private int CopyByIndex(int index, int otherIndex, in Octree<T> other)
-        {
-            var otherNode = other.Nodes[otherIndex];
-            var newNode = new Node(otherNode, true);
-
-            if (!otherNode.IsLeaf)
-            {
-                newNode.Alloc(_allocator);
-
-                for (var oct = 0; oct < 8; oct++)
-                    if (otherNode.ChildIndexes[oct] != -1)
-                        newNode.ChildIndexes[oct] = CopyByIndex(NextIndex(), otherNode.ChildIndexes[oct], other);
-            }
-
-            Nodes[index] = newNode;
-
-            return index;
-        }
-
-        [BurstCompile]
         public void Clear()
         {
-            if (!IsCreated)
-                throw new InvalidOperationException("Octree has not been created or has already been disposed.");
-
             Dispose();
 
             Nodes = new NativeArray<Node>(_initialSize, _allocator);
@@ -473,9 +433,6 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void Dispose()
         {
-            if (!IsCreated)
-                throw new InvalidOperationException("Octree has already been disposed or was never initialized.");
-
             for (var i = 0; i < Count; i++) Nodes[i].Dispose();
 
             Nodes.Dispose();
@@ -582,7 +539,7 @@ namespace DataTypes.Trees
             public readonly int Scale;
             public NativeArray<int> ChildIndexes;
 
-            public bool IsDefault => Value.Equals(default(T));
+            public bool IsDefault => Value.Equals(default);
 
             public bool IsLeaf => !ChildIndexes.IsCreated;
 

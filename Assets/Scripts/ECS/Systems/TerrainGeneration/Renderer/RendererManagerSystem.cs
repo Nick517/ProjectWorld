@@ -6,7 +6,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using static ECS.Aspects.TerrainGeneration.TerrainSegmentAspect;
 using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
@@ -16,7 +15,6 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     public partial struct RendererManagerSystem : ISystem
     {
         private BaseSegmentSettings _settings;
-        private Octree<Entity> _octree;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -29,40 +27,59 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            using var ecb = new EntityCommandBuffer(Allocator.Temp);
+            /*using var ecb = new EntityCommandBuffer(Allocator.Temp);
             _settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
-
-            if (!_octree.IsCreated) _octree = new Octree<Entity>(_settings.BaseSegSize, Allocator.Persistent);
-
+            
+            var existingSegs = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
+            foreach (var seg in SystemAPI.Query<TerrainSegmentAspect>())
+                existingSegs.SetAtPos(seg.Entity, seg.Position, seg.Scale);
+            
+            var segsToCreate = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
             foreach (var point in SystemAPI.Query<RendererPointAspect>().WithAll<UpdateRendererSegmentsTag>())
             {
-                var scale = point.Settings.MaxSegmentScale;
-                var size = GetSegSize(_settings.BaseSegSize, scale);
-                var pointPos = GetClosestSegPos(point.Position, size);
-
-                for (var x = -1; x <= 1; x++)
-                for (var y = -1; y <= 1; y++)
-                for (var z = -1; z <= 1; z++)
-                {
-                    var segPos = pointPos + new float3(x, y, z) * size;
-                    var index = _octree.PosToIndex(segPos, scale);
-
-                    if (_octree.GetAtIndex(index) != default) continue;
-
-                    var seg = CreateSegment(ecb, _settings, segPos, scale);
-                    _octree.SetAtIndex(seg, index);
-                }
-
+                Populate(point, ref segsToCreate);
                 ecb.RemoveComponent<UpdateRendererSegmentsTag>(point.Entity);
             }
 
-            ecb.Playback(state.EntityManager);
+            var intersect = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
+            intersect.Copy(existingSegs);
+            intersect.Intersect(segsToCreate);
+
+            var segsToDestroy = new Octree<bool>(_settings.BaseSegSize, Allocator.Temp);
+            segsToDestroy.Copy(_existingSegs);
+            segsToDestroy.Except(intersect);
+
+            segsToCreate.Except(intersect);
+
+            for (var i = 0; i < segsToCreate.Count; i++)
+            {
+                var node = segsToCreate.Nodes[i];
+
+                if (node.Value) TerrainSegmentAspect.CreateSegment(ecb, _settings, node.Position, node.Scale);
+            }
+            
+            
+            segsToCreate.Dispose();
+            segsToDestroy.Dispose();
+            ecb.Playback(state.EntityManager);*/
         }
 
         [BurstCompile]
-        public void OnDestroy(ref SystemState state)
+        private void Populate(RendererPointAspect point, ref Octree<Entity> octree)
         {
-            _octree.Dispose();
+            var scale = 0;
+            var size = GetSegSize(_settings.BaseSegSize, scale);
+            var pointPos = GetClosestSegPos(point.Position, size);
+
+            for (var x = -1; x <= 1; x++)
+            for (var y = -1; y <= 1; y++)
+            for (var z = -1; z <= 1; z++)
+            {
+                var segPos = pointPos + new float3(x, y, z) * size;
+                octree.SetAtPos(Placeholder, segPos, scale);
+            }
         }
+
+        private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };
     }
 }

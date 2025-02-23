@@ -55,8 +55,13 @@ namespace Debugging.Octree
         public override void OnInspectorGUI()
         {
             InitializeOctrees();
-
             DrawDefaultInspector();
+
+            ref var octreeA = ref _visualizer.OctreeA;
+            ref var octreeB = ref _visualizer.OctreeB;
+
+            var buttonWidth = EditorGUIUtility.currentViewWidth / 2 - 12;
+            var options = new[] { GUILayout.Width(buttonWidth) };
 
             _value = EditorGUILayout.TextField("Value", _value.ToString());
 
@@ -66,51 +71,53 @@ namespace Debugging.Octree
 
             _scale = EditorGUILayout.IntField("Scale", _scale);
 
-            using (new EditorGUI.DisabledScope(!_visualizer.OctreeA.IsCreated || !_visualizer.OctreeB.IsCreated))
-            {
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Set A")) _visualizer.OctreeA.SetAtPos(_value, _position, _scale);
-                if (GUILayout.Button("Set B")) _visualizer.OctreeB.SetAtPos(_value, _position, _scale);
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Space();
 
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Union A")) _visualizer.OctreeA.Union(_visualizer.OctreeB);
-                if (GUILayout.Button("Union B")) _visualizer.OctreeB.Union(_visualizer.OctreeA);
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Set A", options)) octreeA.SetAtPos(_value, _position, _scale);
+            if (GUILayout.Button("Set B", options)) octreeB.SetAtPos(_value, _position, _scale);
+            EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Except A")) _visualizer.OctreeA.Except(_visualizer.OctreeB);
-                if (GUILayout.Button("Except B")) _visualizer.OctreeB.Except(_visualizer.OctreeA);
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Clear A", options)) octreeA.Clear();
+            if (GUILayout.Button("Clear B", options)) octreeB.Clear();
+            EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.Space();
 
-                if (GUILayout.Button("Intersect A")) _visualizer.OctreeA.Intersect(_visualizer.OctreeB);
-                if (GUILayout.Button("Intersect B")) _visualizer.OctreeB.Intersect(_visualizer.OctreeA);
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Print A", options)) PrintOctreeState(octreeA, "Octree A");
+            if (GUILayout.Button("Print B", options)) PrintOctreeState(octreeB, "Octree B");
+            EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Copy A")) _visualizer.OctreeA.Copy(_visualizer.OctreeB);
-                if (GUILayout.Button("Copy B")) _visualizer.OctreeB.Copy(_visualizer.OctreeA);
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Copy A", options)) octreeA.Copy(octreeB);
+            if (GUILayout.Button("Copy B", options)) octreeB.Copy(octreeA);
+            EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Print A")) PrintOctreeState(_visualizer.OctreeA, "Octree A");
-                if (GUILayout.Button("Print B")) PrintOctreeState(_visualizer.OctreeB, "Octree B");
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Union A", options)) octreeA.Union(octreeB);
+            if (GUILayout.Button("Union B", options)) octreeB.Union(octreeA);
+            EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Clear A")) _visualizer.OctreeA.Clear();
-                if (GUILayout.Button("Clear B")) _visualizer.OctreeB.Clear();
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Except A", options)) octreeA.Except(octreeB);
+            if (GUILayout.Button("Except B", options)) octreeB.Except(octreeA);
+            EditorGUILayout.EndHorizontal();
 
-                EditorGUILayout.BeginHorizontal();
-                _visualizer.drawA = GUILayout.Toggle(_visualizer.drawA, "Draw A");
-                _visualizer.drawB = GUILayout.Toggle(_visualizer.drawB, "Draw B");
-                EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Intersect A", options)) octreeA.Intersect(octreeB);
+            if (GUILayout.Button("Intersect B", options)) octreeB.Intersect(octreeA);
+            EditorGUILayout.EndHorizontal();
 
-                if (GUI.changed) SceneView.RepaintAll();
-            }
+            EditorGUILayout.Space();
+
+            EditorGUILayout.BeginHorizontal();
+            _visualizer.drawA = GUILayout.Toggle(_visualizer.drawA, "Draw A");
+            _visualizer.drawB = GUILayout.Toggle(_visualizer.drawB, "Draw B");
+            EditorGUILayout.EndHorizontal();
+
+            if (GUI.changed) SceneView.RepaintAll();
         }
 
         private void PrintOctreeState(Octree<FixedString32Bytes> octree, string octreeName)
@@ -118,10 +125,11 @@ namespace Debugging.Octree
             var builder = new StringBuilder($"{octreeName}: {octree.ToString()}");
             builder.AppendLine();
 
-            for (var n = 0; n < octree.Count; n++) builder.AppendLine($"{n}: {octree.Nodes[n].ToString()}");
+            for (var i = 0; i < octree.Count; i++) builder.AppendLine($"{i}: {octree.Nodes[i].ToString()}");
 
             Debug.Log(builder.ToString());
         }
+
 
         private void OnSceneGUI()
         {
@@ -131,10 +139,8 @@ namespace Debugging.Octree
             var handleSize = HandleUtility.GetHandleSize(_position) * HandleSize;
 
             EditorGUI.BeginChangeCheck();
-            var newPosition = Handles.FreeMoveHandle(_position, handleSize, float3.zero, Handles.SphereHandleCap);
-            if (!EditorGUI.EndChangeCheck()) return;
+            _position = Handles.FreeMoveHandle(_position, handleSize, float3.zero, Handles.SphereHandleCap);
 
-            _position = newPosition;
             Repaint();
         }
 

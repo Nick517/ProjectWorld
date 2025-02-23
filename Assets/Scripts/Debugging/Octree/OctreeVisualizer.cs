@@ -1,4 +1,5 @@
 using DataTypes.Trees;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEditor;
@@ -7,6 +8,7 @@ using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace Debugging.Octree
 {
+    [BurstCompile]
     public class OctreeVisualizer : MonoBehaviour
     {
         public Octree<FixedString32Bytes> OctreeA;
@@ -15,33 +17,33 @@ namespace Debugging.Octree
         [HideInInspector] public bool drawA = true;
         [HideInInspector] public bool drawB = true;
 
+        [BurstCompile]
         public void OnDrawGizmos()
         {
             if (!OctreeA.IsCreated || !OctreeB.IsCreated) return;
 
-            Gizmos.color = Color.white;
+            if (drawA) OctreeA.Traverse(new DrawOctreeAction { Color = Color.white });
 
-            if (drawA)
-                OctreeA.Traverse(node =>
-                {
-                    var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);
-                    var center = GetClosestSegCenter(node.Position, size);
+            if (drawB) OctreeB.Traverse(new DrawOctreeAction { Color = Color.yellow });
+        }
 
-                    Gizmos.DrawWireCube(center, (float3)size);
-                    Handles.Label(center, node.Value.ToString());
-                });
+        [BurstCompile]
 
-            Gizmos.color = Color.yellow;
+        private struct DrawOctreeAction : Octree<FixedString32Bytes>.ITraverseAction
+        {
+            public Color Color;
 
-            if (drawB)
-                OctreeB.Traverse(node =>
-                {
-                    var size = GetSegSize(OctreeA.BaseNodeSize, node.Scale);
-                    var center = GetClosestSegCenter(node.Position, size);
+            [BurstCompile]
+            public void Execute(in Octree<FixedString32Bytes> octree, in Octree<FixedString32Bytes>.Node node)
+            {
+                Gizmos.color = Color;
 
-                    Gizmos.DrawWireCube(center, (float3)size);
-                    Handles.Label(center, node.Value.ToString());
-                });
+                var size = GetSegSize(octree.BaseNodeSize, node.Scale);
+                var center = GetClosestSegCenter(node.Position, size);
+
+                Gizmos.DrawWireCube(center, (float3)size);
+                Handles.Label(center, node.Value.ToString());
+            }
         }
     }
 }
