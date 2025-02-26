@@ -28,7 +28,6 @@ namespace Debugging.Octree
         }
 
         [BurstCompile]
-
         private struct DrawOctreeAction : Octree<FixedString32Bytes>.ITraverseAction
         {
             public Color Color;

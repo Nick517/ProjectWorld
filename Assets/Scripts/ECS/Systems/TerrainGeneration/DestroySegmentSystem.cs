@@ -2,6 +2,7 @@ using ECS.Components.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
 
 namespace ECS.Systems.TerrainGeneration
 {
@@ -25,7 +26,7 @@ namespace ECS.Systems.TerrainGeneration
         public void OnUpdate(ref SystemState state)
         {
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
-
+            
             ecb.DestroyEntity(_segmentQuery, EntityQueryCaptureMode.AtPlayback);
 
             ecb.Playback(state.EntityManager);

@@ -11,7 +11,7 @@ using static Utility.SpacialPartitioning.SegmentOperations;
 namespace DataTypes.Trees
 {
     [BurstCompile]
-    public struct Octree<T> : IDisposable where T : struct, IEquatable<T>
+    public struct Octree<T> : IDisposable where T : unmanaged, IEquatable<T>
     {
         private const int DefaultInitialSize = 2048;
 
@@ -23,11 +23,6 @@ namespace DataTypes.Trees
         private NativeArray<int> _rootIndexes;
         private readonly int _initialSize;
         private readonly Allocator _allocator;
-
-        private readonly Node RootNode(int octant)
-        {
-            return Nodes[_rootIndexes[octant]];
-        }
 
         public Octree(float baseNodeSize, Allocator allocator) : this(baseNodeSize, DefaultInitialSize, allocator)
         {
@@ -44,6 +39,11 @@ namespace DataTypes.Trees
             _allocator = allocator;
 
             for (var i = 0; i < 8; i++) _rootIndexes[i] = -1;
+        }
+
+        private readonly Node RootNode(int octant)
+        {
+            return Nodes[_rootIndexes[octant]];
         }
 
         [BurstCompile]
@@ -67,7 +67,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private T GetAtIndex(int index)
+        private readonly T GetAtIndex(int index)
         {
             return Nodes[index].Value;
         }
@@ -101,13 +101,48 @@ namespace DataTypes.Trees
             return index;
         }
 
+        [BurstCompile]
+        public readonly int GetIndexAtPos(float3 position, int scale = 0)
+        {
+            var octant = GetOctant(position);
+            var index = _rootIndexes[octant];
+
+            if (index == -1) return -1;
+
+            var node = Nodes[index];
+            var pos = node.Position;
+            var s = node.Scale;
+
+            if (s < scale) return -1;
+
+            var size = GetSegSize(BaseNodeSize, s);
+
+            while (s-- > scale)
+            {
+                node = Nodes[index];
+                size /= 2;
+
+                var o = position >= pos + size;
+                var oct = Bool3ToOctant(o);
+
+                pos += select(0, size, o);
+
+                if (node.IsLeaf) return -1;
+                if (node.ChildIndexes[oct] == -1) return -1;
+
+                index = node.ChildIndexes[oct];
+            }
+
+            return index;
+        }
+
         public interface ITraverseAction
         {
-            void Execute(in Octree<T> octree, in Node node);
+            public void Execute(in Octree<T> octree, in Node node);
         }
 
         [BurstCompile]
-        public void Traverse<TAction>(TAction action) where TAction : struct, ITraverseAction
+        public void Traverse<TAction>(in TAction action) where TAction : struct, ITraverseAction
         {
             for (var i = 0; i < 8; i++)
                 if (_rootIndexes[i] != -1)
@@ -128,13 +163,13 @@ namespace DataTypes.Trees
                 action.Execute(this, node);
 
                 if (node.IsLeaf) continue;
-                    
+
                 for (var i = 0; i < 8; i++)
                     if (node.ChildIndexes[i] != -1)
                         stack.Add(node.ChildIndexes[i]);
             }
         }
-        
+
         [BurstCompile]
         public void Copy(in Octree<T> other)
         {
@@ -298,6 +333,29 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void Intersect(in Octree<T> other)
         {
+            Intersect(other,
+                new DefaultComparison(),
+                new DefaultIntersectAction()
+            );
+        }
+
+        [BurstCompile]
+        public void Intersect<TComparison>(in Octree<T> other, TComparison comparison)
+            where TComparison : struct, IComparison
+        {
+            Intersect(other,
+                comparison,
+                new DefaultIntersectAction()
+            );
+        }
+
+        [BurstCompile]
+        public void Intersect<TComparison, TIntersectAction>(in Octree<T> other,
+            TComparison comparison,
+            TIntersectAction action)
+            where TComparison : struct, IComparison
+            where TIntersectAction : struct, IIntersectAction
+        {
             var result = new Octree<T>(BaseNodeSize, _allocator);
 
             for (var oct = 0; oct < 8; oct++)
@@ -329,9 +387,9 @@ namespace DataTypes.Trees
 
                 var resultRoot = new Node(thisRoot);
 
-                if (!thisRoot.IsDefault && thisRoot.Value.Equals(otherRoot.Value))
+                if (!thisRoot.IsDefault && comparison.Evaluate(thisRoot.Value, otherRoot.Value))
                 {
-                    resultRoot.Value = thisRoot.Value;
+                    resultRoot.Value = action.Execute(thisRoot.Value, otherRoot.Value);
                     keep = true;
                 }
 
@@ -345,7 +403,9 @@ namespace DataTypes.Trees
                             thisRoot.ChildIndexes[i],
                             otherRoot.ChildIndexes[i],
                             other,
-                            ref result);
+                            ref result,
+                            comparison,
+                            action);
 
                         resultRoot.ChildIndexes[i] = childIndex;
 
@@ -370,7 +430,12 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private int IntersectByIndex(int thisIndex, int otherIndex, in Octree<T> other, ref Octree<T> result)
+        private int IntersectByIndex<TComparison, TIntersectAction>(int thisIndex, int otherIndex,
+            in Octree<T> other, ref Octree<T> result,
+            TComparison comparison,
+            TIntersectAction action)
+            where TComparison : struct, IComparison
+            where TIntersectAction : struct, IIntersectAction
         {
             if (thisIndex == -1 || otherIndex == -1) return -1;
 
@@ -379,9 +444,9 @@ namespace DataTypes.Trees
             var otherNode = other.Nodes[otherIndex];
             var resultNode = new Node(thisNode);
 
-            if (!thisNode.IsDefault && thisNode.Value.Equals(otherNode.Value))
+            if (!thisNode.IsDefault && comparison.Evaluate(thisNode.Value, otherNode.Value))
             {
-                resultNode.Value = thisNode.Value;
+                resultNode.Value = action.Execute(thisNode.Value, otherNode.Value);
                 keep = true;
             }
 
@@ -395,7 +460,9 @@ namespace DataTypes.Trees
                         thisNode.ChildIndexes[i],
                         otherNode.ChildIndexes[i],
                         other,
-                        ref result);
+                        ref result,
+                        comparison,
+                        action);
 
                     resultNode.ChildIndexes[i] = childIndex;
 
@@ -507,7 +574,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private bool PointWithinOctant(float3 position, int octant)
+        private readonly bool PointWithinOctant(float3 position, int octant)
         {
             var root = RootNode(octant);
 
@@ -515,7 +582,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private int MinEncompassingScale(float3 point)
+        private readonly int MinEncompassingScale(float3 point)
         {
             return point.Equals(default) ? 0 : (int)ceil(log2(cmax(abs(point)) / BaseNodeSize));
         }
@@ -529,6 +596,36 @@ namespace DataTypes.Trees
             var rootInfo = $"roots=[{string.Join(",", _rootIndexes.Select(i => i == -1 ? "_" : i.ToString()))}]";
 
             return $"Octree({typeInfo}, {sizeInfo}, {countInfo}, {rootInfo})";
+        }
+
+        public interface IComparison
+        {
+            public bool Evaluate(in T a, in T b);
+        }
+
+        public interface IIntersectAction
+        {
+            public T Execute(in T a, in T b);
+        }
+
+        [BurstCompile]
+        private struct DefaultComparison : IComparison
+        {
+            [BurstCompile]
+            public bool Evaluate(in T a, in T b)
+            {
+                return a.Equals(b);
+            }
+        }
+
+        [BurstCompile]
+        private struct DefaultIntersectAction : IIntersectAction
+        {
+            [BurstCompile]
+            public T Execute(in T a, in T b)
+            {
+                return a;
+            }
         }
 
         [BurstCompile]

@@ -86,8 +86,13 @@ namespace Debugging.Octree
             EditorGUILayout.Space();
 
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Print A", options)) PrintOctreeState(octreeA, "Octree A");
-            if (GUILayout.Button("Print B", options)) PrintOctreeState(octreeB, "Octree B");
+            if (GUILayout.Button("Print Octree A", options)) PrintOctreeState(octreeA, "Octree A");
+            if (GUILayout.Button("Print Octree B", options)) PrintOctreeState(octreeB, "Octree B");
+            EditorGUILayout.EndHorizontal();
+            
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Print Node A", options)) PrintNodeState(octreeA, "Octree A");
+            if (GUILayout.Button("Print Node B", options)) PrintNodeState(octreeB, "Octree B");
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginHorizontal();
@@ -120,17 +125,34 @@ namespace Debugging.Octree
             if (GUI.changed) SceneView.RepaintAll();
         }
 
-        private void PrintOctreeState(Octree<FixedString32Bytes> octree, string octreeName)
+        private void PrintOctreeState(in Octree<FixedString32Bytes> octree, string octreeName)
         {
-            var builder = new StringBuilder($"{octreeName}: {octree.ToString()}");
-            builder.AppendLine();
+            var result = $"{octreeName}: {octree.ToString()}\n";
 
-            for (var i = 0; i < octree.Count; i++) builder.AppendLine($"{i}: {octree.Nodes[i].ToString()}");
+            for (var i = 0; i < octree.Count; i++) result += $"{i}: {octree.Nodes[i].ToString()}\n";
 
-            Debug.Log(builder.ToString());
+            Debug.Log(result);
         }
 
+        private void PrintNodeState(in Octree<FixedString32Bytes> octree, string octreeName)
+        {
+            var result = $"{octreeName}: ";
+            var index = octree.GetIndexAtPos(_position, _scale);
 
+            if (index == -1)
+            {
+                var posInfo = $"pos=({_position.x:F2}, {_position.y:F2}, {_position.z:F2})";
+                var scaleInfo = $"scale={_scale}";
+                result += $"No node at {posInfo}, {scaleInfo}";
+            }
+            else
+            {
+                result += $"{index}: {octree.Nodes[index].ToString()}\n";
+            }
+
+            Debug.Log(result);
+        }
+        
         private void OnSceneGUI()
         {
             if (!_visualizer.OctreeA.IsCreated) return;

@@ -15,6 +15,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     public partial struct RendererManagerSystem : ISystem
     {
         private BaseSegmentSettings _settings;
+        private Comparison _comparison;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -22,18 +23,20 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<RendererPoint>();
             state.RequireForUpdate<UpdateRendererSegmentsTag>();
+            
+            _comparison = new Comparison();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            /*using var ecb = new EntityCommandBuffer(Allocator.Temp);
+            using var ecb = new EntityCommandBuffer(Allocator.Temp);
             _settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
-            
-            var existingSegs = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
+
+            using var existingSegs = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
             foreach (var seg in SystemAPI.Query<TerrainSegmentAspect>())
                 existingSegs.SetAtPos(seg.Entity, seg.Position, seg.Scale);
-            
+
             var segsToCreate = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
             foreach (var point in SystemAPI.Query<RendererPointAspect>().WithAll<UpdateRendererSegmentsTag>())
             {
@@ -41,12 +44,12 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 ecb.RemoveComponent<UpdateRendererSegmentsTag>(point.Entity);
             }
 
-            var intersect = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
+            using var intersect = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
             intersect.Copy(existingSegs);
-            intersect.Intersect(segsToCreate);
+            intersect.Intersect(segsToCreate, _comparison);
 
-            var segsToDestroy = new Octree<bool>(_settings.BaseSegSize, Allocator.Temp);
-            segsToDestroy.Copy(_existingSegs);
+            using var segsToDestroy = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
+            segsToDestroy.Copy(existingSegs);
             segsToDestroy.Except(intersect);
 
             segsToCreate.Except(intersect);
@@ -54,14 +57,24 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             for (var i = 0; i < segsToCreate.Count; i++)
             {
                 var node = segsToCreate.Nodes[i];
+                if (node.Value == Placeholder)
+                    TerrainSegmentAspect.CreateSegment(ecb, _settings, node.Position, node.Scale);
+            }
 
-                if (node.Value) TerrainSegmentAspect.CreateSegment(ecb, _settings, node.Position, node.Scale);
+            for (var i = 0; i < segsToDestroy.Count; i++)
+            {
+                var node = segsToDestroy.Nodes[i];
+                if (node.Value == default) continue;
+
+                var index = existingSegs.GetIndexAtPos(node.Position, node.Scale);
+                if (index == -1) continue;
+
+                ecb.AddComponent<DestroySegmentTag>(existingSegs.Nodes[index].Value);
             }
             
-            
             segsToCreate.Dispose();
-            segsToDestroy.Dispose();
-            ecb.Playback(state.EntityManager);*/
+
+            ecb.Playback(state.EntityManager);
         }
 
         [BurstCompile]
@@ -81,5 +94,15 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         }
 
         private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };
+
+        [BurstCompile]
+        private struct Comparison : Octree<Entity>.IComparison
+        {
+            [BurstCompile]
+            public bool Evaluate(in Entity a, in Entity b)
+            {
+                return a != default && b != default;
+            }
+        }
     }
 }
