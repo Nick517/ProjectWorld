@@ -1,127 +1,62 @@
 using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Nodes;
+using TerrainGenerationGraph;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static TerrainGenerationGraph.NodeDefinitions;
 
 namespace Editor.TerrainGenerationGraph.Graph
 {
     public class TggSearchWindow : ScriptableObject, ISearchWindowProvider
     {
-        #region Fields
+        private TggGraphView _graphView;
 
-        private TerrainGenGraphView _graphView;
-
-        #endregion
-
-        #region Methods
-
-        public void Initialize(TerrainGenGraphView graphView)
+        public void Init(TggGraphView graphView)
         {
             _graphView = graphView;
         }
 
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context)
         {
-            List<SearchTreeEntry> entries = new()
+            return new List<SearchTreeEntry>
             {
                 new SearchTreeGroupEntry(new GUIContent("Create Node")),
-
                 new SearchTreeGroupEntry(new GUIContent("Channel"), 1),
-
-                new SearchTreeEntry(new GUIContent("Split"))
-                {
-                    level = 2,
-                    userData = "Split"
-                },
-
+                new(new GUIContent("Split")) { level = 2, userData = Type.Split },
                 new SearchTreeGroupEntry(new GUIContent("Input"), 1),
-
                 new SearchTreeGroupEntry(new GUIContent("Basic"), 2),
-
-                new SearchTreeEntry(new GUIContent("Float"))
-                {
-                    level = 3,
-                    userData = "Float"
-                },
-                
-                new SearchTreeEntry(new GUIContent("Float 2"))
-                {
-                    level = 3,
-                    userData = "Float 2"
-                },
-                
-                new SearchTreeEntry(new GUIContent("Float 3"))
-                {
-                    level = 3,
-                    userData = "Float 3"
-                },
-                
-                new SearchTreeEntry(new GUIContent("Float 4"))
-                {
-                    level = 3,
-                    userData = "Float 4"
-                },
-
+                new(new GUIContent("Float")) { level = 3, userData = Type.Float },
+                new(new GUIContent("Float 2")) { level = 3, userData = Type.Float2 },
+                new(new GUIContent("Float 3")) { level = 3, userData = Type.Float3 },
+                new(new GUIContent("Float 4")) { level = 3, userData = Type.Float3 },
                 new SearchTreeGroupEntry(new GUIContent("Geometry"), 2),
-
-                new SearchTreeEntry(new GUIContent("Position"))
-                {
-                    level = 3,
-                    userData = "Position"
-                },
-
+                new(new GUIContent("Position")) { level = 3, userData = Type.Position },
                 new SearchTreeGroupEntry(new GUIContent("Math"), 1),
-
+                new SearchTreeGroupEntry(new GUIContent("Advanced"), 2),
+                new(new GUIContent("Negate")) { level = 3, userData = Type.Negate },
                 new SearchTreeGroupEntry(new GUIContent("Basic"), 2),
-
-                new SearchTreeEntry(new GUIContent("Add"))
-                {
-                    level = 3,
-                    userData = "Add"
-                },
-                
-                new SearchTreeEntry(new GUIContent("Subtract"))
-                {
-                    level = 3,
-                    userData = "Subtract"
-                },
-
-                new SearchTreeEntry(new GUIContent("Multiply"))
-                {
-                    level = 3,
-                    userData = "Multiply"
-                },
-                
-                new SearchTreeEntry(new GUIContent("Divide"))
-                {
-                    level = 3,
-                    userData = "Divide"
-                },
-
+                new(new GUIContent("Add")) { level = 3, userData = Type.Add },
+                new(new GUIContent("Subtract")) { level = 3, userData = Type.Subtract },
+                new(new GUIContent("Multiply")) { level = 3, userData = Type.Multiply },
+                new(new GUIContent("Divide")) { level = 3, userData = Type.Divide },
                 new SearchTreeGroupEntry(new GUIContent("Procedural"), 1),
-
                 new SearchTreeGroupEntry(new GUIContent("Noise"), 2),
-
-                new SearchTreeEntry(new GUIContent("Perlin 3D"))
-                {
-                    level = 3,
-                    userData = "Perlin 3D"
-                }
+                new(new GUIContent("Perlin 3D")) { level = 3, userData = Type.Perlin3D }
             };
-
-            return entries;
         }
 
         public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context)
         {
-            var nodeType = (string)entry.userData;
-            var node = new TggNode(_graphView, nodeType);
+            var node = new TggNode(_graphView,
+                new TgGraph.Node
+                {
+                    type = (Type)entry.userData,
+                    position = context.screenMousePosition
+                });
+
             node.Update();
-            node.Position = context.screenMousePosition;
 
             return true;
         }
-
-        #endregion
     }
 }

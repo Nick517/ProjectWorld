@@ -21,7 +21,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
         [ReadOnly] public ComponentTypeHandle<LocalTransform> LocalTransformTypeHandle;
         [ReadOnly] public ComponentTypeHandle<SegmentScale> SegmentScaleTypeHandle;
         [ReadOnly] public BaseSegmentSettings Settings;
-        [ReadOnly] public TerrainGenerationTreeBlob TerrainGenerationTreeBlob;
+        [ReadOnly] public TgTreeBlob TgTreeBlob;
 
         public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask,
             in v128 chunkEnabledMask)
@@ -39,7 +39,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                 var scale = segmentScales[i].Scale;
 
                 var vertexes = new NativeList<float3>(Allocator.Temp);
-                var cubeMap = new NativeArray<float>(PopulateMap(Settings, TerrainGenerationTreeBlob, pos, scale),
+                var cubeMap = new NativeArray<float>(PopulateMap(Settings, TgTreeBlob, pos, scale),
                     Allocator.Temp);
 
                 Ecb.AddBuffer<TriangleBufferElement>(i, entity);

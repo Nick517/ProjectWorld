@@ -5,13 +5,12 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEditor.EditorApplication;
 using static UnityEngine.UIElements.FlexDirection;
-using static Utility.TerrainGeneration.NodeOperations;
 
 namespace Editor.TerrainGenerationGraph.Nodes
 {
-    public sealed class ValueNode : TggNode
+    public sealed class ConstNode : TggNode
     {
-        #region Fields
+        private const float OffsetX = -15;
 
         public readonly OutputPort OutputPort;
         public int Dimensions;
@@ -21,13 +20,8 @@ namespace Editor.TerrainGenerationGraph.Nodes
         private readonly FloatField _floatFieldZ;
         private readonly FloatField _floatFieldW;
         private readonly InputPort _parentingInputPort;
-        private const float OffsetX = -15;
 
-        #endregion
-
-        #region Methods
-
-        public ValueNode(TerrainGenGraphView graphView, InputPort parentingInputPort)
+        public ConstNode(TggGraphView graphView, InputPort parentingInputPort)
         {
             GraphView = graphView;
             _parentingInputPort = parentingInputPort;
@@ -38,7 +32,7 @@ namespace Editor.TerrainGenerationGraph.Nodes
             _floatFieldY = CreateFloatField();
             _floatFieldZ = CreateFloatField();
             _floatFieldW = CreateFloatField();
-            OutputPort = new OutputPort(GraphView, this, null, typeof(float), Operation.Value);
+            OutputPort = new OutputPort(GraphView, this, null, typeof(float));
             capabilities = 0;
         }
 
@@ -91,24 +85,22 @@ namespace Editor.TerrainGenerationGraph.Nodes
             if (float.IsNaN(GetPosition().width))
             {
                 update += Reposition;
-
                 return;
             }
 
-            var newPosition = _parentingInputPort.Position - ParentingNode.Position;
+            var newPos = _parentingInputPort.Position - ParentingNode.Position;
             var size = GetPosition().size;
             var offset = new Vector2(size.x, size.y / 2);
             offset.x -= OffsetX;
-            newPosition -= offset;
+            newPos -= offset;
 
-            SetPosition(new Rect(newPosition, Vector2.zero));
+            SetPosition(new Rect(newPos, Vector2.zero));
         }
 
         private FloatField CreateFloatField()
         {
             var floatField = new FloatField();
-            floatField.RegisterValueChangedCallback(_ => { _parentingInputPort.Value = Value; });
-
+            floatField.RegisterValueChangedCallback(_ => { _parentingInputPort.ConstVal = Value; });
             return floatField;
         }
 
@@ -126,7 +118,5 @@ namespace Editor.TerrainGenerationGraph.Nodes
         }
 
         private TggNode ParentingNode => _parentingInputPort.ParentNode;
-
-        #endregion
     }
 }

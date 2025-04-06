@@ -1,113 +1,54 @@
-using Newtonsoft.Json;
 using TerrainGenerationGraph;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Utility.Serialization;
 
 namespace Editor.TerrainGenerationGraph.Graph
 {
     public class TggEditorWindow : EditorWindow
     {
-        #region Fields
-
-        private TerrainGenGraphView _graphView;
-
-        #endregion
-
-        #region Methods
+        private TggGraphView _graphView;
 
         [OnOpenAsset]
         public static bool OnOpenAsset(int instanceID, int line)
         {
             var tgGraph = EditorUtility.InstanceIDToObject(instanceID) as TgGraph;
 
-            // Does not do anything if the clicked object is not a TerrainGenTree
-            if (tgGraph == null) return false;
+            if (!tgGraph) return false;
 
-            var windows = Resources.FindObjectsOfTypeAll<TggEditorWindow>();
-            var name = tgGraph.name;
-
-            // If an editor window with a reference to the TerrainGenTree is already open, focuses on that window
-            foreach (var window in windows)
-                if (window._graphView.TgGraph == tgGraph)
+            foreach (var window in Resources.FindObjectsOfTypeAll<TggEditorWindow>())
+                if (window._graphView.Graph == tgGraph)
                 {
                     window.Focus();
-
                     return true;
                 }
 
-            // Creates a new editor window with the clicked TerrainGenTree
-            var newWindow = CreateWindow<TggEditorWindow>(name, typeof(SceneView));
-
-            // If the opened TerrainGenTree does not have any saved data, add default data
-            if (string.IsNullOrEmpty(tgGraph.serializedGraphData)) InitializeTgGraph(ref tgGraph);
-
-            newWindow._graphView.TgGraph = tgGraph;
-            newWindow.Load();
+            var newWindow = CreateWindow<TggEditorWindow>(tgGraph.name, typeof(SceneView));
+            newWindow._graphView.Graph = tgGraph;
+            newWindow._graphView.Load();
 
             return true;
         }
 
-        private static void InitializeTgGraph(ref TgGraph tgGraph)
-        {
-            var tgGraphView = new TerrainGenGraphView { TgGraph = tgGraph };
-
-            tgGraphView.SerializeToTgGraph();
-        }
-
         private void OnEnable()
         {
-            AddGraphView();
-            AddStyles();
-            AddToolbar();
+            rootVisualElement.styleSheets.Add(
+                EditorGUIUtility.Load("TerrainGenerationGraph/TgGraphVariables.uss") as StyleSheet);
+
+            _graphView = new TggGraphView();
+            _graphView.StretchToParentSize();
+            rootVisualElement.Add(_graphView);
+
+            var toolbar = new Toolbar();
+            toolbar.Add(new Button(_graphView.Save) { text = "Save" });
+            rootVisualElement.Add(toolbar);
         }
 
         private void OnDisable()
         {
             rootVisualElement.Remove(_graphView);
         }
-
-        private void AddGraphView()
-        {
-            _graphView = new TerrainGenGraphView();
-
-            _graphView.StretchToParentSize();
-            rootVisualElement.Add(_graphView);
-        }
-
-        private void AddStyles()
-        {
-            var styleSheet = (StyleSheet)EditorGUIUtility.Load("TerrainGenerationGraph/TgGraphVariables.uss");
-            rootVisualElement.styleSheets.Add(styleSheet);
-        }
-
-        private void AddToolbar()
-        {
-            Toolbar toolbar = new();
-
-            var saveButton = GraphUtil.CreateButton("Save", Save);
-
-            toolbar.Add(saveButton);
-
-            rootVisualElement.Add(toolbar);
-        }
-
-        private void Save()
-        {
-            _graphView.SerializeToTgGraph();
-        }
-
-        private void Load()
-        {
-            var tgGraphJson = _graphView.TgGraph.serializedGraphData;
-            var tgGraphViewDto =
-                JsonConvert.DeserializeObject<TerrainGenGraphView.Dto>(tgGraphJson, JsonSettings.Formatted);
-            tgGraphViewDto.Deserialize(_graphView);
-        }
-
-        #endregion
     }
 }

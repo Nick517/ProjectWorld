@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Editor.TerrainGenerationGraph.Graph;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,35 +11,25 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {
     public abstract class TggPort : Port
     {
-        #region Fields
-
-        protected readonly TerrainGenGraphView GraphView;
+        protected readonly TggGraphView GraphView;
 
         public readonly TggNode ParentNode;
         public string ID;
         private readonly string _defaultName;
 
-        #endregion
-
-        #region Constructors
-
-        protected TggPort(TerrainGenGraphView graphView, TggNode parentNode, string defaultName, Direction direction,
+        protected TggPort(TggGraphView graphView, TggNode parentNode, string defaultName, Direction direction,
             Capacity capacity, Type type)
             : base(Orientation.Horizontal, direction, capacity, type)
         {
             GraphView = graphView;
             ParentNode = parentNode;
-            ID = GraphUtil.NewID;
+            ID = GUID.Generate().ToString();
             _defaultName = defaultName;
             SetDimensions(DimensionsFromType(type));
 
             this.AddManipulator(new EdgeConnector<TggEdge>(new TggEdgeConnectorListener(graphView)));
         }
-
-        #endregion
-
-        #region Methods
-
+        
         public void SetDimensions(int dimensions)
         {
             portType = PortTypes.ElementAt(dimensions - 1);
@@ -63,7 +54,7 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 
         public List<TggEdge> ConnectedEdges =>
             GraphView.Edges
-                .Where(edge => !edge.IsValueNodeEdge && edge.TggPorts.Contains(this))
+                .Where(edge => !edge.IsConstantEdge && edge.TggPorts.Contains(this))
                 .ToList();
 
         public List<TggEdge> AllConnectedEdges =>
@@ -96,7 +87,5 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         {
             typeof(float), typeof(Vector2), typeof(Vector3), typeof(Vector4)
         };
-
-        #endregion
     }
 }

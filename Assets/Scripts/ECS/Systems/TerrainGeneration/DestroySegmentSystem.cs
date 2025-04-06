@@ -2,7 +2,6 @@ using ECS.Components.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using UnityEngine;
 
 namespace ECS.Systems.TerrainGeneration
 {

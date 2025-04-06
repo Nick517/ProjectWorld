@@ -7,7 +7,7 @@ namespace Utility.TerrainGeneration
 {
     public static class TerrainGenerator
     {
-        public static NativeArray<float> PopulateMap(BaseSegmentSettings settings, TerrainGenerationTreeBlob tgTreeBlob,
+        public static NativeArray<float> PopulateMap(BaseSegmentSettings settings, TgTreeBlob tgTreeBlob,
             float3 segmentPosition, int segmentScale)
         {
             var cubeSize = GetCubeSize(settings.BaseCubeSize, segmentScale);
@@ -15,7 +15,7 @@ namespace Utility.TerrainGeneration
 
             var map = new NativeArray<float>((int)math.pow(cubeCount, 3), Allocator.Temp);
 
-            using var traversal = new TerrainGenerationTreeBlob.TerrainGenerationTree.Traversal(tgTreeBlob);
+            using var traversal = new TgTreeBlob.Traversal(tgTreeBlob);
 
             for (var x = 0; x < cubeCount; x++)
             for (var y = 0; y < cubeCount; y++)

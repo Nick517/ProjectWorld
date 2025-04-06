@@ -12,5 +12,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6844e0b4959a1b14fab25025de9a81ef, type: 3}
   m_Name: Perlin
   m_EditorClassIdentifier: 
-  serializedTreeData: 
-  serializedGraphData: 
+  nodes:
+  - type: 0
+    position: {x: 0, y: 0}
+    inputPorts:
+    - id: c202c2c4657ff224386849472eb2293a
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    outputPorts: []
+  - type: 6
+    position: {x: -644.8, y: 0}
+    inputPorts: []
+    outputPorts:
+    - id: 00af3f14ef066eb4aa654ad8375346ae
+  - type: 12
+    position: {x: -479.19998, y: 0}
+    inputPorts:
+    - id: 5f5f2484270559d4ca036ce2691addf9
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 6ef37094528a4354daccb3cb3bdc3b38
+      constVal:
+        x: 10
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 344c4a240f18f15488ab54997dd8dd7d
+  - type: 10
+    position: {x: -219.2, y: 0}
+    inputPorts:
+    - id: 5fbe4041f525cc14daa2316c88c7feb1
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 449f3b6d5a0683a429c498d0d97b18d9
+      constVal:
+        x: 10
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 4b697d6c1f70fb444a82f1f0dca5b669
+  edges:
+  - inputPortId: 5fbe4041f525cc14daa2316c88c7feb1
+    outputPortId: 344c4a240f18f15488ab54997dd8dd7d
+  - inputPortId: c202c2c4657ff224386849472eb2293a
+    outputPortId: 4b697d6c1f70fb444a82f1f0dca5b669
+  - inputPortId: 5f5f2484270559d4ca036ce2691addf9
+    outputPortId: 00af3f14ef066eb4aa654ad8375346ae

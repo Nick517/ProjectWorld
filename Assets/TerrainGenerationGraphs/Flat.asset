@@ -12,51 +12,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6844e0b4959a1b14fab25025de9a81ef, type: 3}
   m_Name: Flat
   m_EditorClassIdentifier: 
-  serializedTreeData: "{\r\n  \"nodes\": [\r\n    {\r\n      \"operation\": 12,\r\n     
-    \"nextIndex\": {\r\n        \"x\": 1,\r\n        \"y\": 3,\r\n        \"z\":
-    -1,\r\n        \"w\": -1\r\n      },\r\n      \"cached\": false\r\n    },\r\n   
-    {\r\n      \"operation\": 3,\r\n      \"nextIndex\": {\r\n        \"x\": 2,\r\n       
-    \"y\": -1,\r\n        \"z\": -1,\r\n        \"w\": -1\r\n      },\r\n      \"cached\":
-    false\r\n    },\r\n    {\r\n      \"operation\": 9,\r\n      \"nextIndex\": {\r\n       
-    \"x\": -1,\r\n        \"y\": -1,\r\n        \"z\": -1,\r\n        \"w\": -1\r\n     
-    },\r\n      \"cached\": false\r\n    },\r\n    {\r\n      \"operation\": 1,\r\n     
-    \"nextIndex\": {\r\n        \"x\": 0,\r\n        \"y\": -1,\r\n        \"z\":
-    -1,\r\n        \"w\": -1\r\n      },\r\n      \"cached\": false\r\n    }\r\n 
-    ],\r\n  \"values\": [\r\n    {\r\n      \"x\": -1.0,\r\n      \"y\": 0.0,\r\n     
-    \"z\": 0.0,\r\n      \"w\": 0.0\r\n    }\r\n  ]\r\n}"
-  serializedGraphData: "{\r\n  \"nodeDtoList\": [\r\n    {\r\n      \"nodeType\":
-    \"Sample\",\r\n      \"id\": \"7852da24-e349-4f22-ab2a-70b920b89ccd\",\r\n     
-    \"position\": {\r\n        \"x\": 0.0,\r\n        \"y\": 0.0\r\n      },\r\n     
-    \"inputPortDtoList\": [\r\n        {\r\n          \"id\": \"a57ae788-c85b-4632-a01b-32e74de01cc6\",\r\n         
-    \"defaultValue\": {\r\n            \"x\": 0.0,\r\n            \"y\": 0.0,\r\n           
-    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        }\r\n      ],\r\n     
-    \"outputPortDtoList\": []\r\n    },\r\n    {\r\n      \"nodeType\": \"Multiply\",\r\n     
-    \"id\": \"2580ae38-764d-40ae-a2e2-64b9f0a3f3dd\",\r\n      \"position\": {\r\n       
-    \"x\": -178.400009,\r\n        \"y\": 0.0\r\n      },\r\n      \"inputPortDtoList\":
-    [\r\n        {\r\n          \"id\": \"88ff5951-0bd9-4d0b-9a17-0a9338fe2cb7\",\r\n         
-    \"defaultValue\": {\r\n            \"x\": 0.0,\r\n            \"y\": 0.0,\r\n           
-    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        },\r\n       
-    {\r\n          \"id\": \"9328b4d7-416c-442f-a512-382a117b7074\",\r\n         
-    \"defaultValue\": {\r\n            \"x\": -1.0,\r\n            \"y\": 0.0,\r\n           
-    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        }\r\n      ],\r\n     
-    \"outputPortDtoList\": [\r\n        {\r\n          \"id\": \"e06cb9e9-5b97-400f-9233-8a5756577650\"\r\n       
-    }\r\n      ]\r\n    },\r\n    {\r\n      \"nodeType\": \"Split\",\r\n      \"id\":
-    \"c2d74271-1eb8-46f3-a77e-16057e236df6\",\r\n      \"position\": {\r\n       
-    \"x\": -372.8,\r\n        \"y\": 2.39999962\r\n      },\r\n      \"inputPortDtoList\":
-    [\r\n        {\r\n          \"id\": \"097be343-b14f-4358-a5fb-963f9eca26ba\",\r\n         
-    \"defaultValue\": {\r\n            \"x\": 0.0,\r\n            \"y\": 0.0,\r\n           
-    \"z\": 0.0,\r\n            \"w\": 0.0\r\n          }\r\n        }\r\n      ],\r\n     
-    \"outputPortDtoList\": [\r\n        {\r\n          \"id\": \"e07e41e1-b8ed-48ba-bbb6-195b88d634a9\"\r\n       
-    },\r\n        {\r\n          \"id\": \"2e17ddc1-51b0-4298-aac7-207f8f0d0d88\"\r\n       
-    },\r\n        {\r\n          \"id\": \"b6987b50-5b9c-4629-a982-32777a08c64c\"\r\n       
-    },\r\n        {\r\n          \"id\": \"9c6144c8-0ac3-494f-baa7-491ff10ec6c9\"\r\n       
-    }\r\n      ]\r\n    },\r\n    {\r\n      \"nodeType\": \"Position\",\r\n     
-    \"id\": \"4f75ac23-4c76-4623-88c0-a3b9a4423499\",\r\n      \"position\": {\r\n       
-    \"x\": -510.4,\r\n        \"y\": 0.0\r\n      },\r\n      \"inputPortDtoList\":
-    [],\r\n      \"outputPortDtoList\": [\r\n        {\r\n          \"id\": \"d0d571f3-f368-4c49-96b9-8b1fa7c51dc9\"\r\n       
-    }\r\n      ]\r\n    }\r\n  ],\r\n  \"edgeDtoList\": [\r\n    {\r\n      \"outputPortId\":
-    \"e06cb9e9-5b97-400f-9233-8a5756577650\",\r\n      \"inputPortId\": \"a57ae788-c85b-4632-a01b-32e74de01cc6\"\r\n   
-    },\r\n    {\r\n      \"outputPortId\": \"2e17ddc1-51b0-4298-aac7-207f8f0d0d88\",\r\n     
-    \"inputPortId\": \"88ff5951-0bd9-4d0b-9a17-0a9338fe2cb7\"\r\n    },\r\n    {\r\n     
-    \"outputPortId\": \"d0d571f3-f368-4c49-96b9-8b1fa7c51dc9\",\r\n      \"inputPortId\":
-    \"097be343-b14f-4358-a5fb-963f9eca26ba\"\r\n    }\r\n  ]\r\n}"
+  nodes:
+  - type: 0
+    position: {x: 0, y: 0}
+    inputPorts:
+    - id: 08464d5ba2cca014b8f0ce57e0f2fbdd
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    outputPorts: []
+  - type: 6
+    position: {x: -701.6, y: 2.3999996}
+    inputPorts: []
+    outputPorts:
+    - id: a7ea50e0f5c768c418afc3d98990cb4c
+  - type: 1
+    position: {x: -534.39996, y: 4.799999}
+    inputPorts:
+    - id: 5476f1f660b06b04aa70833a945720f0
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 25c3f6b966a17d348a78ba14a57783e1
+    - id: 1ed6f4a2664abb64883cf14e8b1e2315
+    - id: 6424fab4d49f16742a3fd329f5864f2e
+    - id: bfceb219191248c418f96aa60d694bca
+  - type: 7
+    position: {x: -259.19998, y: 4.799999}
+    inputPorts:
+    - id: 45eee4ef46f38e1449e7957bc1488d0e
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 2b86abb2437ebba41ad6b63388216746
+  edges:
+  - inputPortId: 5476f1f660b06b04aa70833a945720f0
+    outputPortId: a7ea50e0f5c768c418afc3d98990cb4c
+  - inputPortId: 45eee4ef46f38e1449e7957bc1488d0e
+    outputPortId: 1ed6f4a2664abb64883cf14e8b1e2315
+  - inputPortId: 08464d5ba2cca014b8f0ce57e0f2fbdd
+    outputPortId: 2b86abb2437ebba41ad6b63388216746

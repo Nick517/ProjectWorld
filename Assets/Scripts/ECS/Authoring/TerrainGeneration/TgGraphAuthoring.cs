@@ -3,7 +3,6 @@ using TerrainGenerationGraph;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
-using static ECS.Components.TerrainGeneration.TerrainGenerationTreeBlob;
 
 namespace ECS.Authoring.TerrainGeneration
 {
@@ -17,41 +16,24 @@ namespace ECS.Authoring.TerrainGeneration
     {
         public override void Bake(TgGraphAuthoring authoring)
         {
-            var tgTree = authoring.tgGraph.DeserializeTree();
+            var treeBuilder = new TreeBuilder(authoring.tgGraph);
 
-            var builder = new BlobBuilder(Allocator.Temp);
-            ref var tgGraph = ref builder.ConstructRoot<TerrainGenerationTree>();
+            using var builder = new BlobBuilder(Allocator.Temp);
+            ref var tgTree = ref builder.ConstructRoot<TgTree>();
 
-            var nodeArrayBuilder = builder.Allocate(ref tgGraph.Nodes, tgTree.nodes.Count);
+            var nodeArrayBuilder = builder.Allocate(ref tgTree.Nodes, treeBuilder.Nodes.Count);
+            var constValArrayBuilder = builder.Allocate(ref tgTree.ConstVals, treeBuilder.constVals.Count);
 
-            var cacheCount = 0;
+            for (var i = 0; i < treeBuilder.Nodes.Count; i++) nodeArrayBuilder[i] = treeBuilder.Nodes[i];
+            for (var i = 0; i < treeBuilder.constVals.Count; i++) constValArrayBuilder[i] = treeBuilder.constVals[i];
 
-            for (var i = 0; i < tgTree.nodes.Count; i++)
-            {
-                var dto = tgTree.nodes[i];
-                ref var node = ref builder.ConstructRoot<TerrainGenerationTree.Node>();
-
-                node.Type = dto.operation;
-                node.CacheIndex = dto.cached ? cacheCount : -1;
-                if (dto.cached) cacheCount++;
-                node.Next = dto.nextIndex;
-
-                nodeArrayBuilder[i] = node;
-            }
-
-            var valueArrayBuilder = builder.Allocate(ref tgGraph.Values, tgTree.values.Count);
-
-            for (var i = 0; i < tgTree.values.Count; i++) valueArrayBuilder[i] = tgTree.values[i];
-
-            var blobReference = builder.CreateBlobAssetReference<TerrainGenerationTree>(Allocator.Persistent);
-            blobReference.Value.CacheCount = cacheCount;
-
-            builder.Dispose();
+            var blobReference = builder.CreateBlobAssetReference<TgTree>(Allocator.Persistent);
+            blobReference.Value.CacheCount = treeBuilder.cacheCount;
 
             AddBlobAsset(ref blobReference, out _);
-            var entity = GetEntity(TransformUsageFlags.None);
 
-            AddComponent(entity, new TerrainGenerationTreeBlob { Blob = blobReference });
+            var entity = GetEntity(TransformUsageFlags.None);
+            AddComponent(entity, new TgTreeBlob { Blob = blobReference });
         }
     }
 }

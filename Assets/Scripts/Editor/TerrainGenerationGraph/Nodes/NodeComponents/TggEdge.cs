@@ -1,26 +1,21 @@
 using System;
 using System.Collections.Generic;
 using Editor.TerrainGenerationGraph.Graph;
+using TerrainGenerationGraph;
 using UnityEditor.Experimental.GraphView;
 
 namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
 {
     public class TggEdge : Edge
     {
-        #region Fields
-
-        public TerrainGenGraphView GraphView;
-        public readonly bool IsValueNodeEdge;
-
-        #endregion
+        public TggGraphView GraphView;
+        public readonly bool IsConstantEdge;
 
         public TggEdge()
         {
         }
 
-        #region Constructors
-
-        public TggEdge(TerrainGenGraphView graphView, Edge edge)
+        public TggEdge(TggGraphView graphView, Edge edge)
         {
             GraphView = graphView;
             output = edge.output;
@@ -30,35 +25,29 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
             InputPort?.Update();
         }
 
-        public TggEdge(TerrainGenGraphView graphView, ValueNode valueNode, InputPort parentingInputPort)
+        public TggEdge(TggGraphView graphView, ConstNode constNode, InputPort inputPort)
         {
             GraphView = graphView;
-            output = valueNode.OutputPort;
-            input = parentingInputPort;
-            IsValueNodeEdge = true;
+            output = constNode.OutputPort;
+            input = inputPort;
+            IsConstantEdge = true;
 
             graphView.AddElement(this);
         }
 
-        private TggEdge(TerrainGenGraphView graphView, OutputPort outputPort, InputPort parentingInputPort,
-            bool isValueNodeEdge = false)
+        public TggEdge(TggGraphView graphView, OutputPort outputPort, InputPort inputPort)
         {
             GraphView = graphView;
             output = outputPort;
-            input = parentingInputPort;
-            IsValueNodeEdge = isValueNodeEdge;
+            input = inputPort;
 
             graphView.AddElement(this);
-            parentingInputPort.Update();
+            InputPort.Update();
         }
-
-        #endregion
-
-        #region Methods
 
         public void Destroy()
         {
-            if (!IsValueNodeEdge)
+            if (!IsConstantEdge)
             {
                 GraphView.RemoveElement(this);
                 InputPort?.Update();
@@ -69,51 +58,18 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
                 GraphView.RemoveElement(this);
             }
         }
-        
+
         public List<TggPort> TggPorts => new() { OutputPort, InputPort };
 
         private OutputPort OutputPort => output as OutputPort;
 
         public InputPort InputPort => input as InputPort;
-        
+
         public TggPort PortOfType(Type type)
         {
             return type == typeof(OutputPort) ? OutputPort : InputPort;
         }
 
-        #endregion
-
-        #region Serialization
-
-        public Dto ToDto()
-        {
-            return new Dto(this);
-        }
-
-        [Serializable]
-        public class Dto
-        {
-            public string outputPortId;
-            public string inputPortId;
-
-            public Dto()
-            {
-            }
-
-            public Dto(TggEdge edge)
-            {
-                outputPortId = edge.OutputPort.ID;
-                inputPortId = edge.InputPort.ID;
-            }
-
-            public virtual void Deserialize(TerrainGenGraphView graphView)
-            {
-                var outputPort = graphView.GetTggPort(outputPortId) as OutputPort;
-                var inputPort = graphView.GetTggPort(inputPortId) as InputPort;
-                _ = new TggEdge(graphView, outputPort, inputPort);
-            }
-        }
-
-        #endregion
+        public TgGraph.Edge Dto => new() { inputPortId = InputPort.ID, outputPortId = OutputPort.ID };
     }
 }
