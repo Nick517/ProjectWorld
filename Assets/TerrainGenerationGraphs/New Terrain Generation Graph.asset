@@ -1,0 +1,189 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6844e0b4959a1b14fab25025de9a81ef, type: 3}
+  m_Name: New Terrain Generation Graph
+  m_EditorClassIdentifier: 
+  nodes:
+  - type: 0
+    position: {x: 0, y: 0}
+    inputPorts:
+    - id: 33601d8ed6347274eaffc19407a195e1
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    outputPorts: []
+  - type: 8
+    position: {x: -278.4, y: 0}
+    inputPorts:
+    - id: a8275809322841142adb8938aaeb528a
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 86d195c39079bb442943b455b5670096
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 17ee7798e14449b4593a5644171575bb
+  - type: 12
+    position: {x: -1132, y: 0}
+    inputPorts:
+    - id: 9757505a31e110f40ba959553d26ca3c
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 469e042b2f878024e8ece101abdd0cdd
+      constVal:
+        x: 64
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: cff83b5ae405d2c4f94e969cf64f6ab7
+  - type: 12
+    position: {x: -1132, y: 159.2}
+    inputPorts:
+    - id: afff60b7d7712f443a41f1bc689fa9d3
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: e159b16f0674ea94dbf5bda79278d5c7
+      constVal:
+        x: 16
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 9a231991bb6eaa9439012644b310da2d
+  - type: 12
+    position: {x: -1132, y: 330.4}
+    inputPorts:
+    - id: c3c5c7d1ab36c2048b495507efda8a04
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 30c0be44552f2f747a85813e234b95b8
+      constVal:
+        x: 4
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: a4c73b4550cbc0d46912291ac9dfe6b0
+  - type: 10
+    position: {x: -768.8, y: 0}
+    inputPorts:
+    - id: 6f362ce42db61284bafd45b7c4e4bf28
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 2d1d8fdb60c82974f835d57fbf49e87d
+      constVal:
+        x: 32
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 157e8ea61d8111f40b313ec8d32757fc
+  - type: 10
+    position: {x: -768.8, y: 159.2}
+    inputPorts:
+    - id: bc3a2914d5888644c9d0ace933f89fce
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 3476181885704884eb3b6cf17443bbc0
+      constVal:
+        x: 8
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: df157573e952c924dbab9169357cb543
+  - type: 10
+    position: {x: -768.8, y: 330.4}
+    inputPorts:
+    - id: c2a663af9c7fa8b42b20ec9cf0c225f0
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 479076a3a101ef244b90bc51e43a4c71
+      constVal:
+        x: 2
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 2a9463476416de74dad461c17334dd73
+  - type: 8
+    position: {x: -478.4, y: 159.2}
+    inputPorts:
+    - id: 1009e2d140f424d4eb08b22140bdd27f
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 52b71e2919b13ad41b5d647d4a14d4f9
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 1752bd32eaf7ec541a494008bf4920b2
+  - type: 6
+    position: {x: -1472, y: 0}
+    inputPorts: []
+    outputPorts:
+    - id: 9dd527387d71758469b1b60b6d849f41
+  edges:
+  - inputPortId: 33601d8ed6347274eaffc19407a195e1
+    outputPortId: 17ee7798e14449b4593a5644171575bb
+  - inputPortId: 6f362ce42db61284bafd45b7c4e4bf28
+    outputPortId: cff83b5ae405d2c4f94e969cf64f6ab7
+  - inputPortId: bc3a2914d5888644c9d0ace933f89fce
+    outputPortId: 9a231991bb6eaa9439012644b310da2d
+  - inputPortId: c2a663af9c7fa8b42b20ec9cf0c225f0
+    outputPortId: a4c73b4550cbc0d46912291ac9dfe6b0
+  - inputPortId: 52b71e2919b13ad41b5d647d4a14d4f9
+    outputPortId: 2a9463476416de74dad461c17334dd73
+  - inputPortId: 1009e2d140f424d4eb08b22140bdd27f
+    outputPortId: df157573e952c924dbab9169357cb543
+  - inputPortId: a8275809322841142adb8938aaeb528a
+    outputPortId: 157e8ea61d8111f40b313ec8d32757fc
+  - inputPortId: 86d195c39079bb442943b455b5670096
+    outputPortId: 1752bd32eaf7ec541a494008bf4920b2
+  - inputPortId: 9757505a31e110f40ba959553d26ca3c
+    outputPortId: 9dd527387d71758469b1b60b6d849f41
+  - inputPortId: afff60b7d7712f443a41f1bc689fa9d3
+    outputPortId: 9dd527387d71758469b1b60b6d849f41
+  - inputPortId: c3c5c7d1ab36c2048b495507efda8a04
+    outputPortId: 9dd527387d71758469b1b60b6d849f41

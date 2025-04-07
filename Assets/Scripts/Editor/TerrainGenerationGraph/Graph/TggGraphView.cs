@@ -59,7 +59,9 @@ namespace Editor.TerrainGenerationGraph.Graph
 
         private List<TggNode> Nodes => nodes.OfType<TggNode>().Where(node => node is not ConstNode).ToList();
 
-        public List<TggEdge> Edges => edges.OfType<TggEdge>().Where(edge => !edge.IsConstantEdge).ToList();
+        public List<TggEdge> Edges => AllEdges.Where(edge => !edge.IsConstantEdge).ToList();
+        
+        public List<TggEdge> AllEdges => edges.OfType<TggEdge>().ToList();
 
         public void Save()
         {

@@ -41,24 +41,17 @@ namespace Editor.TerrainGenerationGraph.Nodes.NodeComponents
         {
             ConnectedEdges.ForEach(edge => edge.Destroy());
         }
-
-        public TggPort ConnectedPort => ConnectedPorts.First();
-
         public List<TggPort> ConnectedPorts =>
             ConnectedEdges
                 .Select(edge => edge.PortOfType(OppositePortDirection)).ToList();
 
-        protected List<TggPort> AllConnectedPorts =>
-            AllConnectedEdges
-                .Select(edge => edge.PortOfType(OppositePortDirection)).ToList();
-
         public List<TggEdge> ConnectedEdges =>
             GraphView.Edges
-                .Where(edge => !edge.IsConstantEdge && edge.TggPorts.Contains(this))
+                .Where(edge => edge.TggPorts.Contains(this))
                 .ToList();
 
         public List<TggEdge> AllConnectedEdges =>
-            GraphView.Edges
+            GraphView.AllEdges
                 .Where(edge => edge.TggPorts.Contains(this))
                 .ToList();
 
