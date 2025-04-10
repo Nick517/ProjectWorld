@@ -23,7 +23,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<RendererPoint>();
             state.RequireForUpdate<UpdateRendererSegmentsTag>();
-            
+
             _comparison = new Comparison();
         }
 
@@ -44,15 +44,15 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 ecb.RemoveComponent<UpdateRendererSegmentsTag>(point.Entity);
             }
 
-            using var intersect = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
-            intersect.Copy(existingSegs);
-            intersect.Intersect(segsToCreate, _comparison);
+            using var segsToIgnore = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
+            segsToIgnore.Copy(existingSegs);
+            segsToIgnore.Intersect(segsToCreate, _comparison);
 
             using var segsToDestroy = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
             segsToDestroy.Copy(existingSegs);
-            segsToDestroy.Except(intersect);
+            segsToDestroy.Except(segsToIgnore);
 
-            segsToCreate.Except(intersect);
+            segsToCreate.Except(segsToIgnore, _comparison);
 
             for (var i = 0; i < segsToCreate.Count; i++)
             {
@@ -69,11 +69,10 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 var index = existingSegs.GetIndexAtPos(node.Position, node.Scale);
                 if (index == -1) continue;
 
-                ecb.AddComponent<DestroySegmentTag>(existingSegs.Nodes[index].Value);
+                ecb.DestroyEntity(existingSegs.Nodes[index].Value);
             }
-            
-            segsToCreate.Dispose();
 
+            segsToCreate.Dispose();
             ecb.Playback(state.EntityManager);
         }
 

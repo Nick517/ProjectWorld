@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
 {
-    [UpdateAfter(typeof(CreateRendererMeshSystem))]
+    [UpdateAfter(typeof(RendererManagerSystem))]
     [BurstCompile]
     public partial struct SetRendererMeshSystem : ISystem
     {
@@ -42,8 +42,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
             var material = SystemAPI.GetSingleton<BaseSegmentSettings>().Material.Value;
 
-            using var segments = _segmentQuery.ToEntityArray(Allocator.Temp);
-            foreach (var seg in segments)
+            foreach (var seg in _segmentQuery.ToEntityArray(Allocator.Temp))
             {
                 var mesh = new Mesh
                 {

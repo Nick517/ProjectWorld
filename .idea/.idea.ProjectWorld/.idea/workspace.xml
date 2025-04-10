@@ -5,14 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph 1.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph 1.asset.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph.asset" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph.asset.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Graph/TggGraphView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Graph/TggGraphView.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggPort.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Nodes/NodeComponents/TggPort.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/TgGraph.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/TgGraph.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Test Terrain.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Test Terrain.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/DestroySegmentTag.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/DestroySegmentTag.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/DestroySegmentSystem.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/DestroySegmentSystem.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,9 +26,9 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/DataTypes/Serializable/SerializableVector2.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Graph/TggGraphView.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/MarchingCubeTables.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@b749ad90954b/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@8017b507cc74/Unity.Mathematics/float4x4.gen.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/08b6666d108d4c9796450fb85df4d5b29b9200/cc/7e7c3e33/GUID.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2431722e3e3e41d78b6718bb39ab91111df400/47/d0aa78c1/ScriptableObject.cs" root0="FORCE_HIGHLIGHTING" />
@@ -120,10 +123,10 @@
     </configuration>
     <configuration name="Unity.exe (AssetImportWorker1)" type="UnityPlayer" factoryName="UnityAttachToPlayer" temporary="true">
       <option name="host" value="127.0.0.1" />
-      <option name="pid" value="26336" />
+      <option name="pid" value="15452" />
       <option name="playerId" value="EditorHelper(Unity.exe-AssetImportWorker1-ProjectWorld)" />
       <option name="playerInstanceId" value="ProjectWorld" />
-      <option name="port" value="56336" />
+      <option name="port" value="56452" />
       <option name="projectName" value="ProjectWorld" />
       <option name="roleName" value="AssetImportWorker1" />
       <method v="2" />
@@ -440,6 +443,16 @@
       <workItem from="1743800567730" duration="4662000" />
       <workItem from="1743827751572" duration="3592000" />
       <workItem from="1743845121057" duration="14131000" />
+      <workItem from="1744003808502" duration="5402000" />
+      <workItem from="1744037814852" duration="2372000" />
+      <workItem from="1744083368966" duration="624000" />
+      <workItem from="1744101220451" duration="892000" />
+      <workItem from="1744143357767" duration="5265000" />
+      <workItem from="1744148690439" duration="1977000" />
+      <workItem from="1744151074267" duration="90000" />
+      <workItem from="1744151191359" duration="355000" />
+      <workItem from="1744171204932" duration="3181000" />
+      <workItem from="1744187392651" duration="10313000" />
     </task>
     <servers />
   </component>

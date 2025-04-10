@@ -136,11 +136,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        public interface ITraverseAction
-        {
-            public void Execute(in Octree<T> octree, in Node node);
-        }
-
         [BurstCompile]
         public void Traverse<TAction>(in TAction action) where TAction : struct, ITraverseAction
         {
@@ -276,28 +271,55 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void Except(in Octree<T> other)
         {
+            Except(other,
+                new DefaultComparison(),
+                new DefaultCollisionAction()
+            );
+        }
+
+        [BurstCompile]
+        public void Except<TComparison>(in Octree<T> other, TComparison comparison)
+            where TComparison : struct, IComparison
+        {
+            Except(other,
+                comparison,
+                new DefaultCollisionAction()
+            );
+        }
+
+        [BurstCompile]
+        public void Except<TComparison, TAction>(in Octree<T> other, TComparison comparison, TAction action)
+            where TComparison : struct, IComparison
+            where TAction : struct, ICollisionAction
+        {
             var result = new Octree<T>(BaseNodeSize, _allocator);
 
             for (var oct = 0; oct < 8; oct++)
                 result._rootIndexes[oct] =
-                    ExceptByIndex(_rootIndexes[oct], other._rootIndexes[oct], other, ref result);
+                    ExceptByIndex(_rootIndexes[oct], other._rootIndexes[oct], other, ref result, comparison, action);
 
             this = result;
         }
 
         [BurstCompile]
-        private int ExceptByIndex(int thisIndex, int otherIndex, in Octree<T> other, ref Octree<T> result)
+        private int ExceptByIndex<TComparison, TCollisionAction>(int thisIndex, int otherIndex,
+            in Octree<T> other, ref Octree<T> result,
+            TComparison comparison,
+            TCollisionAction action)
+            where TComparison : struct, IComparison
+            where TCollisionAction : struct, ICollisionAction
         {
             if (thisIndex == -1) return -1;
             if (otherIndex == -1) return result.CopyByIndex(result.NextIndex(), thisIndex, this);
 
             var thisNode = Nodes[thisIndex];
             var otherNode = other.Nodes[otherIndex];
-            var keep = !thisNode.IsDefault && !thisNode.Value.Equals(otherNode.Value);
+            var keep = !thisNode.IsDefault && !comparison.Evaluate(thisNode.Value, otherNode.Value);
 
             if (thisNode.IsLeaf && otherNode.IsLeaf) return !keep ? -1 : result.InitNode(thisNode);
 
-            var resultNode = new Node(thisNode, keep);
+            var resultNode = new Node(thisNode);
+            resultNode.Value = keep ? action.Execute(thisNode.Value, otherNode.Value) : default;
 
             resultNode.Alloc(_allocator);
 
@@ -309,7 +331,7 @@ namespace DataTypes.Trees
                     thisNode.IsLeaf ? -1 : thisNode.ChildIndexes[oct],
                     otherNode.IsLeaf ? -1 : otherNode.ChildIndexes[oct],
                     other,
-                    ref result);
+                    ref result, comparison, action);
 
                 resultNode.ChildIndexes[oct] = index;
 
@@ -335,7 +357,7 @@ namespace DataTypes.Trees
         {
             Intersect(other,
                 new DefaultComparison(),
-                new DefaultIntersectAction()
+                new DefaultCollisionAction()
             );
         }
 
@@ -345,16 +367,16 @@ namespace DataTypes.Trees
         {
             Intersect(other,
                 comparison,
-                new DefaultIntersectAction()
+                new DefaultCollisionAction()
             );
         }
 
         [BurstCompile]
-        public void Intersect<TComparison, TIntersectAction>(in Octree<T> other,
+        public void Intersect<TComparison, TCollisionAction>(in Octree<T> other,
             TComparison comparison,
-            TIntersectAction action)
+            TCollisionAction action)
             where TComparison : struct, IComparison
-            where TIntersectAction : struct, IIntersectAction
+            where TCollisionAction : struct, ICollisionAction
         {
             var result = new Octree<T>(BaseNodeSize, _allocator);
 
@@ -430,12 +452,12 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private int IntersectByIndex<TComparison, TIntersectAction>(int thisIndex, int otherIndex,
+        private int IntersectByIndex<TComparison, TCollisionAction>(int thisIndex, int otherIndex,
             in Octree<T> other, ref Octree<T> result,
             TComparison comparison,
-            TIntersectAction action)
+            TCollisionAction action)
             where TComparison : struct, IComparison
-            where TIntersectAction : struct, IIntersectAction
+            where TCollisionAction : struct, ICollisionAction
         {
             if (thisIndex == -1 || otherIndex == -1) return -1;
 
@@ -588,7 +610,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public override string ToString()
+        public readonly override string ToString()
         {
             var typeInfo = $"type={typeof(T)}";
             var sizeInfo = $"baseNodeSize={BaseNodeSize}";
@@ -597,13 +619,18 @@ namespace DataTypes.Trees
 
             return $"Octree({typeInfo}, {sizeInfo}, {countInfo}, {rootInfo})";
         }
+        
+        public interface ITraverseAction
+        {
+            public void Execute(in Octree<T> octree, in Node node);
+        }
 
         public interface IComparison
         {
             public bool Evaluate(in T a, in T b);
         }
 
-        public interface IIntersectAction
+        public interface ICollisionAction
         {
             public T Execute(in T a, in T b);
         }
@@ -619,7 +646,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private struct DefaultIntersectAction : IIntersectAction
+        private struct DefaultCollisionAction : ICollisionAction
         {
             [BurstCompile]
             public T Execute(in T a, in T b)
@@ -636,9 +663,9 @@ namespace DataTypes.Trees
             public readonly int Scale;
             public NativeArray<int> ChildIndexes;
 
-            public bool IsDefault => Value.Equals(default);
+            public readonly bool IsDefault => Value.Equals(default);
 
-            public bool IsLeaf => !ChildIndexes.IsCreated;
+            public readonly bool IsLeaf => !ChildIndexes.IsCreated;
 
             public Node(Node node, bool copyValue = false)
             {
@@ -671,7 +698,7 @@ namespace DataTypes.Trees
             }
 
             [BurstCompile]
-            public override string ToString()
+            public readonly override string ToString()
             {
                 var posInfo = $"pos=({Position.x:F2}, {Position.y:F2}, {Position.z:F2})";
                 var scaleInfo = $"scale={Scale}";

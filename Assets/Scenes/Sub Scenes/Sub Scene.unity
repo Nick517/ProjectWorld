@@ -195,7 +195,7 @@ Transform:
   m_GameObject: {fileID: 319980300}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.6, y: 39.9, z: -28.9}
+  m_LocalPosition: {x: 237.3, y: 0, z: 23.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -219,7 +219,7 @@ PrefabInstance:
         type: 3}
       propertyPath: terrainMaterial
       value: 
-      objectReference: {fileID: 2100000, guid: 0038baef7711cff4097056b68af00ca6, type: 2}
+      objectReference: {fileID: 2100000, guid: 085b2137f5bab0b4f89655d617972288, type: 2}
     - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
       propertyPath: terrainSegmentPrefab
@@ -279,12 +279,12 @@ PrefabInstance:
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: -39
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3
+      value: 17.1
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -329,7 +329,7 @@ PrefabInstance:
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -361,7 +361,8 @@ PrefabInstance:
       propertyPath: acceleration
       value: 0.1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
