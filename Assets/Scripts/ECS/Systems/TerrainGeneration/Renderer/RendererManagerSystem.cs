@@ -38,19 +38,14 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 existingSegs.SetAtPos(seg.Entity, seg.Position, seg.Scale);
 
             var segsToCreate = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
-            foreach (var point in SystemAPI.Query<RendererPointAspect>().WithAll<UpdateRendererSegmentsTag>())
+            foreach (var point in SystemAPI.Query<RendererPointAspect>())
             {
                 Populate(point, ref segsToCreate);
                 ecb.RemoveComponent<UpdateRendererSegmentsTag>(point.Entity);
             }
 
-            using var segsToIgnore = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
-            segsToIgnore.Copy(existingSegs);
-            segsToIgnore.Intersect(segsToCreate, _comparison);
-
-            using var segsToDestroy = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
-            segsToDestroy.Copy(existingSegs);
-            segsToDestroy.Except(segsToIgnore);
+            using var segsToIgnore = Octree<Entity>.Intersect(existingSegs, segsToCreate, Allocator.Temp, _comparison);
+            using var segsToDestroy = Octree<Entity>.Except(existingSegs, segsToIgnore, Allocator.Temp, _comparison);
 
             segsToCreate.Except(segsToIgnore, _comparison);
 
@@ -95,7 +90,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };
 
         [BurstCompile]
-        private struct Comparison : Octree<Entity>.IComparison
+        private readonly struct Comparison : Octree<Entity>.IComparison
         {
             [BurstCompile]
             public bool Evaluate(in Entity a, in Entity b)

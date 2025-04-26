@@ -84,7 +84,6 @@ namespace TerrainGenerationGraph
                         Operation = Operation.CacheGet,
                         Next = new int4(outputPort.CacheIndex, yzw: -1)
                     });
-                    
                     node.Next.x = index++;
                 }
             }

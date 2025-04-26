@@ -16,19 +16,18 @@ namespace Debugging.Octree
 
         [HideInInspector] public bool drawA = true;
         [HideInInspector] public bool drawB = true;
-
+        
         [BurstCompile]
         public void OnDrawGizmos()
         {
             if (!OctreeA.IsCreated || !OctreeB.IsCreated) return;
 
-            if (drawA) OctreeA.Traverse(new DrawOctreeAction { Color = Color.white });
-
-            if (drawB) OctreeB.Traverse(new DrawOctreeAction { Color = Color.yellow });
+            if (drawA) OctreeA.Traverse(new DrawOctree { Color = Color.white });
+            if (drawB) OctreeB.Traverse(new DrawOctree { Color = Color.yellow });
         }
 
         [BurstCompile]
-        private struct DrawOctreeAction : Octree<FixedString32Bytes>.ITraverseAction
+        private struct DrawOctree : Octree<FixedString32Bytes>.ITraverseAction
         {
             public Color Color;
 

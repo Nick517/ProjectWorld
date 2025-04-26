@@ -6,16 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Materials/Test Terrain.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Test Terrain.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/DestroySegmentTag.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/DestroySegmentTag.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/DestroySegmentSystem.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/DestroySegmentSystem.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/TreeBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/TreeBuilder.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +25,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Graph/TggGraphView.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/MarchingCubeTables.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@b749ad90954b/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@b749ad90954b/Unity.Entities/Types/Entity.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@8017b507cc74/Unity.Mathematics/float4x4.gen.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/08b6666d108d4c9796450fb85df4d5b29b9200/cc/7e7c3e33/GUID.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2431722e3e3e41d78b6718bb39ab91111df400/47/d0aa78c1/ScriptableObject.cs" root0="FORCE_HIGHLIGHTING" />
@@ -452,7 +449,28 @@
       <workItem from="1744151074267" duration="90000" />
       <workItem from="1744151191359" duration="355000" />
       <workItem from="1744171204932" duration="3181000" />
-      <workItem from="1744187392651" duration="10313000" />
+      <workItem from="1744187392651" duration="11251000" />
+      <workItem from="1744248177763" duration="165000" />
+      <workItem from="1744264137906" duration="1503000" />
+      <workItem from="1744322762015" duration="535000" />
+      <workItem from="1744349529504" duration="312000" />
+      <workItem from="1744428189934" duration="1182000" />
+      <workItem from="1744506950395" duration="7133000" />
+      <workItem from="1744525113420" duration="12827000" />
+      <workItem from="1744600557625" duration="690000" />
+      <workItem from="1744779376819" duration="31274000" />
+      <workItem from="1744859353477" duration="2426000" />
+      <workItem from="1744879505780" duration="8730000" />
+      <workItem from="1744967388530" duration="13175000" />
+      <workItem from="1745030118571" duration="645000" />
+      <workItem from="1745036048103" duration="632000" />
+      <workItem from="1745053978199" duration="4296000" />
+      <workItem from="1745162010489" duration="3364000" />
+      <workItem from="1745381665468" duration="4783000" />
+      <workItem from="1745395620443" duration="5866000" />
+      <workItem from="1745462154353" duration="1089000" />
+      <workItem from="1745617200450" duration="3238000" />
+      <workItem from="1745625474709" duration="10086000" />
     </task>
     <servers />
   </component>
