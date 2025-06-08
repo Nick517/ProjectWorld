@@ -25,6 +25,24 @@ namespace Utility.SpacialPartitioning
             return OctantToBool3Array[octant];
         }
 
+        public static int3 OctantToSign(int octant)
+        {
+            return OctantToSignArray[octant];
+        }
+
+        private static readonly int3[] OctantToSignArray =
+        {
+            new(-1, -1, -1),
+            new(1, -1, -1),
+            new(-1, 1, -1),
+            new(1, 1, -1),
+            new(-1, -1, 1),
+            new(1, -1, 1),
+            new(-1, 1, 1),
+            new(1, 1, 1)
+        };
+
+
         private static readonly bool3[] OctantToBool3Array =
         {
             new(false, false, false),

@@ -5,27 +5,50 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/Terrain.asset" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/Terrain.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/projectSettingsUpdater.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/projectSettingsUpdater.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Terrain.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Terrain.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/TerrainSegmentAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/TerrainSegmentAspect.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/Renderer/RendererPointAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/Renderer/RendererPointAuthoring.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/RendererPoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/RendererPoint.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/TerrainGeneration/Renderer/CreateRendererMeshJob.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/TerrainGeneration/Renderer/CreateRendererMeshJob.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/OctantOperations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/OctantOperations.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/SegmentOperations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/SegmentOperations.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/TerrainGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/TerrainGenerator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/TerrainGenerationGraphs/New Terrain Generation Graph.asset.meta" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="DpaMonitoringSettings">
+    <option name="firstShow" value="false" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Graph/TggGraphView.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/MarchingCubeTables.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@b749ad90954b/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@b749ad90954b/Unity.Entities/Types/Entity.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Entities/EntityManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@8017b507cc74/Unity.Mathematics/float4x4.gen.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/08b6666d108d4c9796450fb85df4d5b29b9200/cc/7e7c3e33/GUID.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2431722e3e3e41d78b6718bb39ab91111df400/47/d0aa78c1/ScriptableObject.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/40d2742c52014091a57719e891f298b8106b8/5d/662ec932/Utility.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/fde3c13fb32a45329a891b3df03f79081dee00/77/5cf6d4f4/NativeArray`1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b33129f0f2f84d4d9540790ac6d74c381ea600/c3/3d76a02c/AtomicSafetyHandle.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -69,21 +92,27 @@
     ]
   }
 }</component>
-  <component name="RunManager" selected="Attach to Unity Player.Unity.exe (AssetImportWorker1)">
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.40f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.1.0f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath &quot;C:\Users\niccs\Documents\Unity Projects\ProjectWorld&quot; -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\niccs\Documents\Unity Projects\ProjectWorld" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="PTY_MODE" value="Auto" />
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.0.40f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.1.0f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath &quot;C:\Users\niccs\Documents\Unity Projects\ProjectWorld&quot; -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\niccs\Documents\Unity Projects\ProjectWorld" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="ENV_FILE_PATHS" value="" />
+      <option name="REDIRECT_INPUT_PATH" value="" />
+      <option name="PTY_MODE" value="Auto" />
       <method v="2" />
     </configuration>
     <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
@@ -97,6 +126,7 @@
       <option name="selectedOptions">
         <list />
       </option>
+      <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
     <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
@@ -110,6 +140,7 @@
       <option name="selectedOptions">
         <list />
       </option>
+      <option name="useMixedMode" value="false" />
       <method v="2" />
     </configuration>
     <configuration name="Unity.exe (AssetImportWorker1)" type="UnityPlayer" factoryName="UnityAttachToPlayer" temporary="true">
@@ -465,11 +496,46 @@
       <workItem from="1745462154353" duration="1089000" />
       <workItem from="1745617200450" duration="3238000" />
       <workItem from="1745625474709" duration="10636000" />
+      <workItem from="1745655370238" duration="3464000" />
+      <workItem from="1745727405331" duration="10784000" />
+      <workItem from="1745784975514" duration="633000" />
+      <workItem from="1745785968013" duration="2700000" />
+      <workItem from="1746051039694" duration="1851000" />
+      <workItem from="1746136766591" duration="3080000" />
+      <workItem from="1746168269794" duration="681000" />
+      <workItem from="1746264308429" duration="1244000" />
+      <workItem from="1746321508710" duration="640000" />
+      <workItem from="1746327485443" duration="1227000" />
+      <workItem from="1746667385982" duration="1332000" />
+      <workItem from="1746741727931" duration="757000" />
+      <workItem from="1748235077187" duration="960000" />
+      <workItem from="1748295219234" duration="4136000" />
+      <workItem from="1748553406776" duration="2289000" />
+      <workItem from="1748559722224" duration="2384000" />
+      <workItem from="1748927495128" duration="1085000" />
+      <workItem from="1749010339813" duration="303000" />
+      <workItem from="1749072335393" duration="1069000" />
+      <workItem from="1749086538267" duration="4620000" />
+      <workItem from="1749158952444" duration="2075000" />
+      <workItem from="1749167226287" duration="2377000" />
+      <workItem from="1749170075459" duration="387000" />
+      <workItem from="1749185722306" duration="818000" />
+      <workItem from="1749243680670" duration="170000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnitTestsCoverage.Settings">
+    <option name="coveragePercentColumnWidth" value="150" />
+    <option name="sortOrder" value="DESCENDING" />
+    <option name="sortedColumn" value="1" />
+    <option name="symbolColumnWidth" value="177" />
+    <coverage-tree-state>
+      <expand />
+      <select />
+    </coverage-tree-state>
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
@@ -497,11 +563,23 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <breakpoint type="DotNet Exception Breakpoints">
-          <properties exception="System.IndexOutOfRangeException" isInternal="false" displayValue="IndexOutOfRangeException" namespaceName="System">
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.OperationCanceledException" breakIfHandledByOtherCode="false" displayValue="System.OperationCanceledException" />
+          <option name="timeStamp" value="2" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.Tasks.TaskCanceledException" breakIfHandledByOtherCode="false" displayValue="System.Threading.Tasks.TaskCanceledException" />
+          <option name="timeStamp" value="3" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" breakIfHandledByOtherCode="false" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="4" />
+        </breakpoint>
+        <breakpoint enabled="true" type="DotNet_Exception_Breakpoints">
+          <properties exception="System.NullReferenceException" breakIfHandledByUserCode="true" breakIfUnhandled="false" isInternal="false" displayValue="NullReferenceException" namespaceName="System">
             <option name="internal" value="false" />
           </properties>
-          <option name="timeStamp" value="1" />
+          <option name="timeStamp" value="10" />
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>

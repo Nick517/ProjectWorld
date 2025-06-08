@@ -88,7 +88,7 @@ namespace Debugging.Octree
             if (GUILayout.Button("Print Octree A", options)) PrintOctreeState(octreeA, "Octree A");
             if (GUILayout.Button("Print Octree B", options)) PrintOctreeState(octreeB, "Octree B");
             EditorGUILayout.EndHorizontal();
-            
+
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Print Node A", options)) PrintNodeState(octreeA, "Octree A");
             if (GUILayout.Button("Print Node B", options)) PrintNodeState(octreeB, "Octree B");
@@ -112,6 +112,11 @@ namespace Debugging.Octree
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Intersect A", options)) octreeA.Intersect(octreeB);
             if (GUILayout.Button("Intersect B", options)) octreeB.Intersect(octreeA);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Subdivide A", options)) SubdivideNode(octreeA, "Octree A");
+            if (GUILayout.Button("Subdivide B", options)) SubdivideNode(octreeB, "Octree B");
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space();
@@ -138,20 +143,27 @@ namespace Debugging.Octree
             var result = $"{octreeName}: ";
             var index = octree.GetIndexAtPos(_position, _scale);
 
-            if (index == -1)
-            {
-                var posInfo = $"pos=({_position.x:F2}, {_position.y:F2}, {_position.z:F2})";
-                var scaleInfo = $"scale={_scale}";
-                result += $"No node at {posInfo}, {scaleInfo}";
-            }
-            else
-            {
-                result += $"{index}: {octree.Nodes[index].ToString()}\n";
-            }
+            if (index == -1) result += NoNodeMessage();
+            else result += $"{index}: {octree.Nodes[index].ToString()}\n";
 
             Debug.Log(result);
         }
-        
+
+        private void SubdivideNode(Octree<FixedString32Bytes> octree, string octreeName)
+        {
+            var index = octree.GetIndexAtPos(_position, _scale);
+
+            if (index == -1) Debug.Log($"{octreeName}: {NoNodeMessage()}");
+            else octree.Subdivide(index);
+        }
+
+        private string NoNodeMessage()
+        {
+            var posInfo = $"pos=({_position.x:F2}, {_position.y:F2}, {_position.z:F2})";
+            var scaleInfo = $"scale={_scale}";
+            return $"No node at {posInfo}, {scaleInfo}";
+        }
+
         private void OnSceneGUI()
         {
             if (!_visualizer.OctreeA.IsCreated) return;

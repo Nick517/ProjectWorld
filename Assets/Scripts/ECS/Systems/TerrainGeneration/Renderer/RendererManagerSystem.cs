@@ -52,8 +52,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             for (var i = 0; i < segsToCreate.Count; i++)
             {
                 var node = segsToCreate.Nodes[i];
-                if (node.Value == Placeholder)
-                    TerrainSegmentAspect.CreateSegment(ecb, _settings, node.Position, node.Scale);
+                if (node.Value == Placeholder) TerrainSegmentAspect.Create(ecb, _settings, node.Position, node.Scale);
             }
 
             for (var i = 0; i < segsToDestroy.Count; i++)
@@ -74,17 +73,55 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         [BurstCompile]
         private void Populate(RendererPointAspect point, ref Octree<Entity> octree)
         {
-            var scale = 0;
+            var megaSegCount = point.Settings.MegaSegments;
+            var scale = point.Settings.MaxSegmentScale;
             var size = GetSegSize(_settings.BaseSegSize, scale);
-            var pointPos = GetClosestSegPos(point.Position, size);
+            var pointPos = GetClosestSegPos(point.SegmentPosition, scale);
+            var pointCenter = PosToCenter(pointPos, _settings.BaseSegSize);
 
-            for (var x = -1; x <= 1; x++)
-            for (var y = -1; y <= 1; y++)
-            for (var z = -1; z <= 1; z++)
+            for (var x = -megaSegCount; x <= megaSegCount; x++)
+            for (var y = -megaSegCount; y <= megaSegCount; y++)
+            for (var z = -megaSegCount; z <= megaSegCount; z++)
             {
                 var segPos = pointPos + new float3(x, y, z) * size;
-                octree.SetAtPos(Placeholder, segPos, scale);
+                var index = octree.SetAtPos(default, segPos, scale);
+
+                octree.Subdivide(index);
+
+                var node = octree.Nodes[index];
+
+                for (var oct = 0; oct < 8; oct++)
+                    PopulateRecursive(pointCenter, point.Settings.LOD, ref octree, node.ChildIndexes[oct]);
             }
+        }
+
+        [BurstCompile]
+        private void PopulateRecursive(float3 point, float lod, ref Octree<Entity> octree, int index)
+        {
+            if (index == -1) return;
+
+            var node = octree.Nodes[index];
+
+            if (node.Scale == 0)
+            {
+                octree.SetAtIndex(Placeholder, index);
+                return;
+            }
+
+            var size = GetSegSize(_settings.BaseSegSize, node.Scale);
+            var nodeCenter = PosToCenter(node.Position, size);
+            var distance = math.distance(nodeCenter, point);
+
+            if (size / distance <= lod)
+            {
+                octree.SetAtIndex(Placeholder, index);
+                return;
+            }
+
+            octree.Subdivide(index);
+            node = octree.Nodes[index];
+
+            for (var oct = 0; oct < 8; oct++) PopulateRecursive(point, lod, ref octree, node.ChildIndexes[oct]);
         }
 
         private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };

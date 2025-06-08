@@ -39,8 +39,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                 var scale = segmentScales[i].Scale;
 
                 var vertexes = new NativeList<float3>(Allocator.Temp);
-                var cubeMap = new NativeArray<float>(PopulateMap(Settings, TgTreeBlob, pos, scale),
-                    Allocator.Temp);
+                var cubeMap = new NativeArray<float>(PopulateMap(Settings, TgTreeBlob, pos, scale), Allocator.Temp);
 
                 Ecb.AddBuffer<TriangleBufferElement>(i, entity);
                 Ecb.AddBuffer<VertexBufferElement>(i, entity);

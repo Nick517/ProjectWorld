@@ -8,6 +8,5 @@ namespace ECS.Components.TerrainGeneration.Renderer
         public int MegaSegments;
         public float LOD;
         public int ReloadScale;
-        public float RenderDistance;
     }
 }

@@ -22,7 +22,7 @@ namespace Utility.TerrainGeneration
             for (var z = 0; z < cubeCount; z++)
             {
                 var index3D = new int3(x, y, z);
-                var pos = index3D * (int3)cubeSize + segmentPosition;
+                var pos = index3D * (float3)cubeSize + segmentPosition;
                 var index = GetFlatIndex(cubeCount, index3D);
 
                 map[index] = traversal.Sample(pos);

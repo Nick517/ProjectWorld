@@ -17,8 +17,7 @@ namespace ECS.Aspects.TerrainGeneration
 
         public int Scale => _segmentScale.ValueRO.Scale;
 
-        public static void CreateSegment(EntityCommandBuffer ecb, BaseSegmentSettings settings, 
-            float3 position, int scale = 0)
+        public static void Create(EntityCommandBuffer ecb, BaseSegmentSettings settings, float3 position, int scale)
         {
             var entity = ecb.Instantiate(settings.RendererSegmentPrefab);
 

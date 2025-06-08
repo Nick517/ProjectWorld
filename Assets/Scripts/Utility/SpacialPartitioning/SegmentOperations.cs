@@ -24,7 +24,12 @@ namespace Utility.SpacialPartitioning
 
         public static float3 GetClosestSegCenter(float3 pos, float segSize)
         {
-            return GetClosestSegPos(pos, segSize) + segSize / 2;
+            return PosToCenter(GetClosestSegPos(pos, segSize), segSize);
+        }
+
+        public static float3 PosToCenter(float3 pos, float segSize)
+        {
+            return pos + segSize / 2;
         }
 
         public static bool PointWithinSeg(float3 point, float3 segPos, float segSize)

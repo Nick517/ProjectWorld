@@ -12,7 +12,6 @@ namespace ECS.Authoring.TerrainGeneration.Renderer
         public int megaSegments = 2;
         public float lod = 1.5f;
         public int reloadScale = 1;
-        public float renderDistance = 2000;
     }
 
     public class RendererPointBaker : Baker<RendererPointAuthoring>
@@ -26,7 +25,6 @@ namespace ECS.Authoring.TerrainGeneration.Renderer
                 MegaSegments = authoring.megaSegments,
                 LOD = authoring.lod,
                 ReloadScale = authoring.reloadScale,
-                RenderDistance = authoring.renderDistance
             });
             AddComponent(entity, new SegmentPosition { Position = authoring.transform.position });
             AddComponent<UpdateRendererSegmentsTag>(entity);
