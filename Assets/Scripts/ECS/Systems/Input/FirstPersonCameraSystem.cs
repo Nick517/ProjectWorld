@@ -6,6 +6,7 @@ using Unity.Transforms;
 
 namespace ECS.Systems.Input
 {
+    [UpdateAfter(typeof(InputManagerSystem))]
     [BurstCompile]
     public partial struct FirstPersonCameraSystem : ISystem
     {

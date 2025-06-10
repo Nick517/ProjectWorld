@@ -18,9 +18,9 @@
                     "name": "Sprint",
                     "type": "Button",
                     "id": "3ff82f57-a903-4583-92d6-7f0f8dbd53f3",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 }
             ],
@@ -237,6 +237,45 @@
                     "processors": "ScaleVector2(x=5,y=5)",
                     "groups": "Gamepad",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Player",
+            "id": "8f4d208a-aa1d-4412-adde-c127cced0da3",
+            "actions": [
+                {
+                    "name": "Throw Object",
+                    "type": "Button",
+                    "id": "ad3efa6e-f5c8-4296-b320-5376d26d6668",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "01ccd09b-ef17-46c5-9f7d-66237d55c987",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "Throw Object",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c66e154d-e012-4e6a-a1fd-75b68a020091",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Throw Object",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

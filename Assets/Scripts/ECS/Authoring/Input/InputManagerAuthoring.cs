@@ -18,6 +18,7 @@ namespace ECS.Authoring.Input
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent<FlyCameraInput>(entity);
             AddComponent<CameraInput>(entity);
+            AddComponent<PlayerInput>(entity);
             AddComponent(entity, new CameraSettings
             {
                 Sensitivity = authoring.cameraSensitivity,

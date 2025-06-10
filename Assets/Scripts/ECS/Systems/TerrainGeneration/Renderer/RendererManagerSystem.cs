@@ -63,7 +63,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 var index = existingSegs.GetIndexAtPos(node.Position, node.Scale);
                 if (index == -1) continue;
 
-                ecb.DestroyEntity(existingSegs.Nodes[index].Value);
+                ecb.AddComponent(node.Value, new DestroySegmentTag());
             }
 
             segsToCreate.Dispose();

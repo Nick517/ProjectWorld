@@ -9,6 +9,8 @@ EditorBuildSettings:
     path: Assets/Scenes/Scene.unity
     guid: 8124e5870f4fd4c779e7a5f994e84ad1
   m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: b941c0db033853d41a80df64477e4876,
+      type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 03a1e0f92ef19ab4b8e40cab538c6d23,
       type: 2}
   m_UseUCBPForAssetBundles: 0

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 690673346499959159}
   - component: {fileID: 7734283982704057008}
+  - component: {fileID: -1652697081200785223}
   - component: {fileID: 6431473564034125354}
   m_Layer: 0
   m_Name: Fly Camera
@@ -48,6 +49,20 @@ MonoBehaviour:
   acceleration: 1
   sprintMultiplier: 4
   damping: 5
+--- !u!114 &-1652697081200785223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2278205539528277360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be0a4f9de4046268f100a3640828353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  throwObjectPrefab: {fileID: 1902771696658212214, guid: 1a445cc9a3b626e4d977443293f87c54,
+    type: 3}
 --- !u!114 &6431473564034125354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,3 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a2230b9579bdaf478336e8c7899f591, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxSegmentScale: 8
+  megaSegments: 2
+  lod: 1.5
+  reloadScale: 1

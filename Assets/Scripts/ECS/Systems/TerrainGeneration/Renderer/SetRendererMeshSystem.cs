@@ -6,8 +6,10 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Rendering;
 using UnityEngine;
+using MeshCollider = Unity.Physics.MeshCollider;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
 {
@@ -17,18 +19,12 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     {
         private BufferLookup<VertexBufferElement> _vertexBufferLookup;
         private BufferLookup<TriangleBufferElement> _triangleBufferLookup;
-        private EntityQuery _segmentQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<SetRendererMeshTag>();
-
-            _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAspect<TerrainSegmentAspect>()
-                .WithAll<SetRendererMeshTag>()
-                .Build(ref state);
 
             _vertexBufferLookup = state.GetBufferLookup<VertexBufferElement>(true);
             _triangleBufferLookup = state.GetBufferLookup<TriangleBufferElement>(true);
@@ -40,26 +36,43 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             _triangleBufferLookup.Update(ref state);
 
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
-            var material = SystemAPI.GetSingleton<BaseSegmentSettings>().Material.Value;
+            var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
+            var material = settings.Material.Value;
 
-            foreach (var seg in _segmentQuery.ToEntityArray(Allocator.Temp))
+            foreach (var seg in SystemAPI.Query<TerrainSegmentAspect>().WithAll<SetRendererMeshTag>())
             {
+                var entity = seg.Entity;
+
                 var mesh = new Mesh
                 {
-                    vertices = _vertexBufferLookup[seg].Reinterpret<Vector3>().AsNativeArray().ToArray(),
-                    triangles = _triangleBufferLookup[seg].Reinterpret<int>().AsNativeArray().ToArray()
+                    vertices = _vertexBufferLookup[entity].Reinterpret<Vector3>().AsNativeArray().ToArray(),
+                    triangles = _triangleBufferLookup[entity].Reinterpret<int>().AsNativeArray().ToArray()
                 };
 
                 mesh.RecalculateNormals();
                 mesh.RecalculateBounds();
 
-                ecb.SetSharedComponentManaged(seg, new RenderMeshArray(new[] { material }, new[] { mesh }));
-                ecb.SetComponent(seg, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
-                ecb.SetComponent(seg, new RenderBounds { Value = mesh.bounds.ToAABB() });
+                ecb.SetSharedComponentManaged(entity, new RenderMeshArray(new[] { material }, new[] { mesh }));
+                ecb.SetComponent(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
+                ecb.SetComponent(entity, new RenderBounds { Value = mesh.bounds.ToAABB() });
 
-                ecb.RemoveComponent<VertexBufferElement>(seg);
-                ecb.RemoveComponent<TriangleBufferElement>(seg);
-                ecb.RemoveComponent<SetRendererMeshTag>(seg);
+                if (seg.Scale <= settings.MaxColliderScale)
+                {
+                    var vertices = _vertexBufferLookup[entity].Reinterpret<float3>().AsNativeArray();
+                    var triangles = new NativeArray<int3>(_triangleBufferLookup[entity].Length / 3, Allocator.Temp);
+
+                    for (var i = 0; i < triangles.Length; i += 3)
+                    {
+                        var buffer = _triangleBufferLookup[entity];
+                        triangles[i] = new int3(buffer[i], buffer[i + 1], buffer[i + 2]);
+                    }
+
+                    ecb.AddComponent(entity, new PhysicsCollider { Value = MeshCollider.Create(vertices, triangles) });
+                }
+                
+                ecb.RemoveComponent<VertexBufferElement>(entity);
+                ecb.RemoveComponent<TriangleBufferElement>(entity);
+                ecb.RemoveComponent<SetRendererMeshTag>(entity);
             }
 
             ecb.Playback(state.EntityManager);

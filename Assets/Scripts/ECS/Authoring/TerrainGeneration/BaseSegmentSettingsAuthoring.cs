@@ -12,6 +12,7 @@ namespace ECS.Authoring.TerrainGeneration
         public float baseCubeSize = 1;
         public int cubeCount = 8;
         [Range(0, 1)] public float mapSurface = 0.5f;
+        public int maxColliderScale = 4;
     }
 
     public class BaseSegmentSettingsBaker : Baker<BaseSegmentSettingsAuthoring>
@@ -25,7 +26,8 @@ namespace ECS.Authoring.TerrainGeneration
                 Material = authoring.terrainMaterial,
                 BaseCubeSize = authoring.baseCubeSize,
                 CubeCount = authoring.cubeCount,
-                MapSurface = authoring.mapSurface
+                MapSurface = authoring.mapSurface,
+                MaxColliderScale = authoring.maxColliderScale
             });
         }
     }

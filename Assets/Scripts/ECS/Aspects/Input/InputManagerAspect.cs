@@ -8,6 +8,7 @@ namespace ECS.Aspects.Input
     {
         private readonly RefRW<FlyCameraInput> _flyCameraInput;
         private readonly RefRW<CameraInput> _cameraInput;
+        private readonly RefRW<PlayerInput> _playerInput;
         private readonly RefRO<CameraSettings> _cameraSettings;
 
         public float3 Movement
@@ -23,6 +24,11 @@ namespace ECS.Aspects.Input
         public float2 LookDelta
         {
             set => _cameraInput.ValueRW.LookDelta = value;
+        }
+
+        public bool ThrowObject
+        {
+            set => _playerInput.ValueRW.ThrowObject = value;
         }
 
         public float Sensitivity => _cameraSettings.ValueRO.Sensitivity;

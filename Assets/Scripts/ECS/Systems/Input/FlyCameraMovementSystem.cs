@@ -1,11 +1,12 @@
+using ECS.Aspects.Input;
 using ECS.Components.Input;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
-using FlyCameraAspect = ECS.Aspects.Input.FlyCameraAspect;
 
 namespace ECS.Systems.Input
 {
+    [UpdateAfter(typeof(InputManagerSystem))]
     [BurstCompile]
     public partial struct FlyCameraMovementSystem : ISystem
     {
