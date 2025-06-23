@@ -27,6 +27,8 @@ namespace ECS.Systems.Input
 
             inputManager.Movement = _playerControls.FlyCamera.Movement.ReadValue<Vector3>();
             inputManager.Sprint = _playerControls.FlyCamera.Sprint.IsPressed();
+            inputManager.RemoveTerrain = _playerControls.Player.RemoveTerrain.WasPressedThisFrame();
+            inputManager.AddTerrain = _playerControls.Player.AddTerrain.WasPressedThisFrame();
             inputManager.ThrowObject = _playerControls.Player.ThrowObject.WasPressedThisFrame();
 
             var lookDelta = _playerControls.Camera.Look.ReadValue<Vector2>();

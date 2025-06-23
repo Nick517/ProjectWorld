@@ -17,28 +17,26 @@ namespace DataTypes.Trees
 
         public NativeArray<Node> Nodes;
         public readonly float BaseNodeSize;
+        public readonly Allocator Allocator;
         public int Count { get; private set; }
         public bool IsCreated { get; private set; }
 
         private NativeArray<int> _rootIndexes;
         private readonly int _initialSize;
-        public readonly Allocator Allocator;
+        private readonly T _defaultValue;
 
-        public Octree(float baseNodeSize, Allocator allocator) : this(baseNodeSize, DefaultInitialSize, allocator)
+        public Octree(float baseNodeSize, Allocator allocator, T defaultValue = default)
         {
-        }
-
-        private Octree(float baseNodeSize, int initialSize, Allocator allocator)
-        {
-            Nodes = new NativeArray<Node>(initialSize, allocator);
+            Nodes = new NativeArray<Node>(DefaultInitialSize, allocator);
             BaseNodeSize = baseNodeSize;
+            Allocator = allocator;
             Count = 0;
             IsCreated = true;
             _rootIndexes = new NativeArray<int>(8, allocator);
-            _initialSize = initialSize;
-            Allocator = allocator;
+            _initialSize = DefaultInitialSize;
 
             for (var i = 0; i < 8; i++) _rootIndexes[i] = -1;
+            _defaultValue = defaultValue;
         }
 
         private readonly Node RootNode(int octant)
@@ -94,7 +92,7 @@ namespace DataTypes.Trees
                 pos += select(0, size, o);
 
                 if (node.IsLeaf) node.Alloc(Allocator);
-                if (node.ChildIndexes[oct] == -1) node.ChildIndexes[oct] = InitNode(pos, s);
+                if (node.ChildIndexes[oct] == -1) node.ChildIndexes[oct] = InitNode(pos, s, _defaultValue);
 
                 Nodes[index] = node;
                 index = node.ChildIndexes[oct];
@@ -257,7 +255,7 @@ namespace DataTypes.Trees
             var otherNode = other.Nodes[otherIndex];
             var resultIndex = copyThis ? thisIndex : result.NextIndex();
             var resultNode = new Node(thisNode.Position, thisNode.Scale,
-                !thisNode.IsDefault ? thisNode.Value : otherNode.Value);
+                !IsDefault(thisNode) ? thisNode.Value : otherNode.Value);
 
             resultNode.Alloc(Allocator);
 
@@ -414,7 +412,7 @@ namespace DataTypes.Trees
 
             var nodeA = treeA.Nodes[indexA];
             var nodeB = treeB.Nodes[indexB];
-            var collides = !nodeA.IsDefault && comparison.Evaluate(nodeA.Value, nodeB.Value);
+            var collides = !treeA.IsDefault(nodeA) && comparison.Evaluate(nodeA.Value, nodeB.Value);
 
             if (nodeA.IsLeaf)
                 return !collides
@@ -443,7 +441,7 @@ namespace DataTypes.Trees
             }
 
             var index = result.NextIndex();
-            var node = new Node(nodeA.Position, nodeA.Scale) { ChildIndexes = childIndexes };
+            var node = new Node(nodeA.Position, nodeA.Scale, treeA._defaultValue) { ChildIndexes = childIndexes };
 
             if (collides) node.Value = action.Execute(node.Value, nodeB.Value);
 
@@ -537,7 +535,7 @@ namespace DataTypes.Trees
 
             var nodeA = treeA.Nodes[indexA];
             var nodeB = treeB.Nodes[indexB];
-            var collides = !nodeA.IsDefault && comparison.Evaluate(nodeA.Value, nodeB.Value);
+            var collides = !treeA.IsDefault(nodeA) && comparison.Evaluate(nodeA.Value, nodeB.Value);
 
             if (nodeA.IsLeaf || nodeB.IsLeaf)
                 return collides
@@ -564,7 +562,7 @@ namespace DataTypes.Trees
             }
 
             var index = result.NextIndex();
-            var node = new Node(nodeA.Position, nodeA.Scale) { ChildIndexes = childIndexes };
+            var node = new Node(nodeA.Position, nodeA.Scale, treeA._defaultValue) { ChildIndexes = childIndexes };
 
             if (collides) node.Value = action.Execute(node.Value, nodeB.Value);
 
@@ -587,7 +585,7 @@ namespace DataTypes.Trees
             for (var oct = 0; oct < 8; oct++)
             {
                 var pos = node.Position + select(0, childSize, OctantToBool3(oct));
-                node.ChildIndexes[oct] = InitNode(pos, childScale);
+                node.ChildIndexes[oct] = InitNode(pos, childScale, _defaultValue);
             }
             
             Nodes[index] = node;
@@ -628,7 +626,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public int InitNode(float3 position, int scale = 0, T value = default)
+        public int InitNode(float3 position, int scale, T value)
         {
             var index = NextIndex();
 
@@ -641,7 +639,7 @@ namespace DataTypes.Trees
         private int InitRoot(int octant, int scale = 0)
         {
             var pos = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3(octant));
-            var index = InitNode(pos, scale);
+            var index = InitNode(pos, scale, _defaultValue);
 
             _rootIndexes[octant] = index;
 
@@ -653,7 +651,7 @@ namespace DataTypes.Trees
         {
             var index = NextIndex();
             var oldRoot = RootNode(octant);
-            var newRoot = new Node(oldRoot.Position * 2, oldRoot.Scale + 1);
+            var newRoot = new Node(oldRoot.Position * 2, oldRoot.Scale + 1, _defaultValue);
 
             newRoot.Alloc(Allocator);
             newRoot.ChildIndexes[7 - octant] = _rootIndexes[octant];
@@ -735,6 +733,12 @@ namespace DataTypes.Trees
                 return a;
             }
         }
+        
+        [BurstCompile]
+        private readonly bool IsDefault(Node node)
+        {
+            return node.Value.Equals(_defaultValue);
+        }
 
         [BurstCompile]
         public struct Node : IDisposable
@@ -744,11 +748,9 @@ namespace DataTypes.Trees
             public readonly int Scale;
             public NativeArray<int> ChildIndexes;
 
-            public readonly bool IsDefault => Value.Equals(default);
-
             public readonly bool IsLeaf => !ChildIndexes.IsCreated;
 
-            public Node(float3 position, int scale, T value = default)
+            public Node(float3 position, int scale, T value)
             {
                 Value = value;
                 Position = position;

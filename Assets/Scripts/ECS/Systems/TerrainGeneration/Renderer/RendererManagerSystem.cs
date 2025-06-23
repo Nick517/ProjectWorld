@@ -16,6 +16,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     {
         private BaseSegmentSettings _settings;
         private Comparison _comparison;
+        private bool _initialized;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -30,9 +31,14 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            if (!_initialized)
+            {
+                _settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
+                _initialized = true;
+            }
+            
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
-            _settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
-
+            
             using var existingSegs = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
             foreach (var seg in SystemAPI.Query<TerrainSegmentAspect>())
                 existingSegs.SetAtPos(seg.Entity, seg.Position, seg.Scale);

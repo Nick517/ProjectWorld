@@ -226,6 +226,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 085b2137f5bab0b4f89655d617972288, type: 2}
     - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
+      propertyPath: maxColliderScale
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
+        type: 3}
       propertyPath: terrainSegmentPrefab
       value: 
       objectReference: {fileID: 5932196773895458033, guid: d519b212ff0182f4aa77bacb6eb4d493,
@@ -255,7 +260,7 @@ PrefabInstance:
         type: 3}
       propertyPath: tgGraph
       value: 
-      objectReference: {fileID: 11400000, guid: 9b549e3575bc5304ca1b31a4ee14397e,
+      objectReference: {fileID: 11400000, guid: b30d432cb8c6e3f4289e37994d88fec4,
         type: 2}
     - target: {fileID: 5812077677126750501, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
@@ -288,7 +293,7 @@ PrefabInstance:
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.4
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -333,7 +338,7 @@ PrefabInstance:
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: lod
-      value: 0.4
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}

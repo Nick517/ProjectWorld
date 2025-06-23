@@ -26,6 +26,16 @@ namespace ECS.Aspects.Input
             set => _cameraInput.ValueRW.LookDelta = value;
         }
 
+        public bool RemoveTerrain
+        {
+            set => _playerInput.ValueRW.RemoveTerrain = value;
+        }
+
+        public bool AddTerrain
+        {
+            set => _playerInput.ValueRW.AddTerrain = value;
+        }
+
         public bool ThrowObject
         {
             set => _playerInput.ValueRW.ThrowObject = value;

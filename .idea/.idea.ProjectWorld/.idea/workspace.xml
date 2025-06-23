@@ -5,36 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Ball.prefab" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Ball.prefab.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/PlayerSettingsAuthoring.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/PlayerSettingsAuthoring.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerInput.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerInput.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerSettings.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerSettings.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/DestroySegmentTag.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/DestroySegmentTag.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/PlayerSystem.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/PlayerSystem.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/DestroySegmentSystem.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/DestroySegmentSystem.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/TerrainData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/TerrainData.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Fly Camera.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Fly Camera.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Terrain Renderer Segment.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Terrain Renderer Segment.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input/InputManagerAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input/InputManagerAspect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/InputManagerAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/InputManagerAuthoring.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/BaseSegmentSettingsAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/BaseSegmentSettingsAuthoring.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/PlayerSettingsAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/PlayerSettingsAuthoring.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerInput.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerSettings.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/BaseSegmentSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/BaseSegmentSettings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/FirstPersonCameraSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/FirstPersonCameraSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/FlyCameraMovementSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/FlyCameraMovementSystem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/InputManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/InputManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/PlayerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/PlayerSystem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Input Actions/PlayerControls.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Input Actions/PlayerControls.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Input Actions/PlayerControls.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Input Actions/PlayerControls.inputactions" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,6 +44,7 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/MarchingCubeTables.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Entities/EntityManager.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Transforms/LocalTransform.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@8017b507cc74/Unity.Mathematics/float4x4.gen.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.physics@b8c0a578fe9d/Unity.Physics/Collision/Colliders/MeshCollider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.physics@b8c0a578fe9d/Unity.Physics/ECS/Base/Components/PhysicsComponents.cs" root0="SKIP_HIGHLIGHTING" />
@@ -535,7 +528,21 @@
       <workItem from="1749243680670" duration="170000" />
       <workItem from="1749418689277" duration="8843000" />
       <workItem from="1749511531742" duration="3430000" />
-      <workItem from="1749588625716" duration="2908000" />
+      <workItem from="1749588625716" duration="3502000" />
+      <workItem from="1749603447695" duration="1196000" />
+      <workItem from="1749709244603" duration="743000" />
+      <workItem from="1749842753703" duration="2837000" />
+      <workItem from="1749856269349" duration="3676000" />
+      <workItem from="1749941147077" duration="2055000" />
+      <workItem from="1750104309253" duration="4274000" />
+      <workItem from="1750117341190" duration="5558000" />
+      <workItem from="1750126870251" duration="155000" />
+      <workItem from="1750132462535" duration="1131000" />
+      <workItem from="1750205036477" duration="2831000" />
+      <workItem from="1750565831425" duration="83000" />
+      <workItem from="1750624095732" duration="3654000" />
+      <workItem from="1750632830582" duration="3874000" />
+      <workItem from="1750637768558" duration="5423000" />
     </task>
     <servers />
   </component>

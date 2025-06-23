@@ -13,5 +13,6 @@ namespace ECS.Components.TerrainGeneration
         public int MaxColliderScale;
 
         public float BaseSegSize => BaseCubeSize * CubeCount;
+        public int CubeCountTotal => CubeCount * CubeCount * CubeCount;
     }
 }

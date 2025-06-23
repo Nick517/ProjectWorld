@@ -247,6 +247,24 @@
             "id": "8f4d208a-aa1d-4412-adde-c127cced0da3",
             "actions": [
                 {
+                    "name": "Add Terrain",
+                    "type": "Button",
+                    "id": "ed807d41-4040-4a3c-8c58-c97530a31c6c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Remove Terrain",
+                    "type": "Button",
+                    "id": "70c0a548-67b6-4b0b-8dff-51365ae248da",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Throw Object",
                     "type": "Button",
                     "id": "ad3efa6e-f5c8-4296-b320-5376d26d6668",
@@ -276,6 +294,50 @@
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Throw Object",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "25f56b63-d400-4ec0-a605-9cbb459c4329",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "Remove Terrain",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c2e46b49-4403-40ca-9d2e-3664eec929dc",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Remove Terrain",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5f809dc8-3c35-4267-87ba-4cbe67919347",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard",
+                    "action": "Add Terrain",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3e2a5718-d41a-4485-aa7e-9178d6d977d9",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Add Terrain",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

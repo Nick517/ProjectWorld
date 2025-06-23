@@ -333,6 +333,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             ""id"": ""8f4d208a-aa1d-4412-adde-c127cced0da3"",
             ""actions"": [
                 {
+                    ""name"": ""Add Terrain"",
+                    ""type"": ""Button"",
+                    ""id"": ""ed807d41-4040-4a3c-8c58-c97530a31c6c"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Remove Terrain"",
+                    ""type"": ""Button"",
+                    ""id"": ""70c0a548-67b6-4b0b-8dff-51365ae248da"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Throw Object"",
                     ""type"": ""Button"",
                     ""id"": ""ad3efa6e-f5c8-4296-b320-5376d26d6668"",
@@ -362,6 +380,50 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""Throw Object"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""25f56b63-d400-4ec0-a605-9cbb459c4329"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard"",
+                    ""action"": ""Remove Terrain"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2e46b49-4403-40ca-9d2e-3664eec929dc"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Remove Terrain"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5f809dc8-3c35-4267-87ba-4cbe67919347"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard"",
+                    ""action"": ""Add Terrain"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e2a5718-d41a-4485-aa7e-9178d6d977d9"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Add Terrain"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -407,6 +469,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Camera_Look = m_Camera.FindAction("Look", throwIfNotFound: true);
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
+        m_Player_AddTerrain = m_Player.FindAction("Add Terrain", throwIfNotFound: true);
+        m_Player_RemoveTerrain = m_Player.FindAction("Remove Terrain", throwIfNotFound: true);
         m_Player_ThrowObject = m_Player.FindAction("Throw Object", throwIfNotFound: true);
     }
 
@@ -693,6 +757,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
+    private readonly InputAction m_Player_AddTerrain;
+    private readonly InputAction m_Player_RemoveTerrain;
     private readonly InputAction m_Player_ThrowObject;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
@@ -705,6 +771,14 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
         public PlayerActions(@PlayerControls wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Player/AddTerrain".
+        /// </summary>
+        public InputAction @AddTerrain => m_Wrapper.m_Player_AddTerrain;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/RemoveTerrain".
+        /// </summary>
+        public InputAction @RemoveTerrain => m_Wrapper.m_Player_RemoveTerrain;
         /// <summary>
         /// Provides access to the underlying input action "Player/ThrowObject".
         /// </summary>
@@ -735,6 +809,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_PlayerActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_PlayerActionsCallbackInterfaces.Add(instance);
+            @AddTerrain.started += instance.OnAddTerrain;
+            @AddTerrain.performed += instance.OnAddTerrain;
+            @AddTerrain.canceled += instance.OnAddTerrain;
+            @RemoveTerrain.started += instance.OnRemoveTerrain;
+            @RemoveTerrain.performed += instance.OnRemoveTerrain;
+            @RemoveTerrain.canceled += instance.OnRemoveTerrain;
             @ThrowObject.started += instance.OnThrowObject;
             @ThrowObject.performed += instance.OnThrowObject;
             @ThrowObject.canceled += instance.OnThrowObject;
@@ -749,6 +829,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="PlayerActions" />
         private void UnregisterCallbacks(IPlayerActions instance)
         {
+            @AddTerrain.started -= instance.OnAddTerrain;
+            @AddTerrain.performed -= instance.OnAddTerrain;
+            @AddTerrain.canceled -= instance.OnAddTerrain;
+            @RemoveTerrain.started -= instance.OnRemoveTerrain;
+            @RemoveTerrain.performed -= instance.OnRemoveTerrain;
+            @RemoveTerrain.canceled -= instance.OnRemoveTerrain;
             @ThrowObject.started -= instance.OnThrowObject;
             @ThrowObject.performed -= instance.OnThrowObject;
             @ThrowObject.canceled -= instance.OnThrowObject;
@@ -855,6 +941,20 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     /// <seealso cref="PlayerActions.RemoveCallbacks(IPlayerActions)" />
     public interface IPlayerActions
     {
+        /// <summary>
+        /// Method invoked when associated input action "Add Terrain" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAddTerrain(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Remove Terrain" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRemoveTerrain(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "Throw Object" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

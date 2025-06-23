@@ -7,6 +7,7 @@ namespace ECS.Authoring.Input
     [AddComponentMenu("Custom Authoring/Player Authoring")]
     public class PlayerSettingsAuthoring : MonoBehaviour
     {
+        public float interactionRange = 50;
         public GameObject throwObjectPrefab;
         public float throwForce = 10;
     }
@@ -18,6 +19,7 @@ namespace ECS.Authoring.Input
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new PlayerSettings
             {
+                InteractionRange = authoring.interactionRange,
                 ThrowObjectPrefab = GetEntity(authoring.throwObjectPrefab, TransformUsageFlags.Dynamic),
                 ThrowForce = authoring.throwForce
             });
