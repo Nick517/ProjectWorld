@@ -1,3 +1,4 @@
+using DataTypes;
 using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
@@ -39,7 +40,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                 var scale = segmentScales[i].Scale;
 
                 var vertexes = new NativeList<float3>(Allocator.Temp);
-                var cubeMap = new NativeArray<float>(PopulateMap(Settings, TgTreeBlob, pos, scale), Allocator.Temp);
+                var cubeMap = PopulateMap(Settings, TgTreeBlob, pos, scale);
 
                 Ecb.AddBuffer<TriangleBufferElement>(i, entity);
                 Ecb.AddBuffer<VertexBufferElement>(i, entity);
@@ -57,14 +58,14 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
         }
 
         private static void MarchCube(int sortKey, EntityCommandBuffer.ParallelWriter ecb, BaseSegmentSettings settings,
-            Entity entity, int scale, NativeArray<float> cubeMap, int3 position, ref NativeList<float3> vertexes)
+            Entity entity, int scale, CubicArray<float> cubeMap, int3 position, ref NativeList<float3> vertexes)
         {
             var cubeSize = GetCubeSize(settings.BaseCubeSize, scale);
 
             var cube = new NativeArray<float>(8, Allocator.Temp);
 
             for (var i = 0; i < 8; i++)
-                cube[i] = SampleMap(settings, cubeMap, position + Corner(i));
+                cube[i] = cubeMap.GetAt(position + Corner(i));
 
             var config = GetCubeConfig(settings, cube);
 
@@ -78,18 +79,13 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
 
                 if (index == -1) return;
 
-                var vertPos = IndexForVertexPosition(settings, position, ref cube, index);
-                var vert = VertexForIndex(vertPos * cubeSize, ref vertexes);
+                var vertPos = IndexToVertexPosition(settings, position, ref cube, index);
+                var vert = VertexToIndex(vertPos * cubeSize, ref vertexes);
 
                 ecb.AppendToBuffer<TriangleBufferElement>(sortKey, entity, vert);
 
                 edgeIndex++;
             }
-        }
-
-        private static float SampleMap(BaseSegmentSettings settings, NativeArray<float> cubeMap, int3 point)
-        {
-            return GetCube(cubeMap, settings.CubeCount, point);
         }
 
         private static int GetCubeConfig(BaseSegmentSettings settings, NativeArray<float> cube)
@@ -103,7 +99,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
             return configIndex;
         }
 
-        private static int VertexForIndex(float3 vertex, ref NativeList<float3> vertexes)
+        private static int VertexToIndex(float3 vertex, ref NativeList<float3> vertexes)
         {
             for (var i = 0; i < vertexes.Length; i++)
                 if (vertexes[i].Equals(vertex))
@@ -114,7 +110,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
             return vertexes.Length - 1;
         }
 
-        private static float3 IndexForVertexPosition(BaseSegmentSettings settings, int3 position,
+        private static float3 IndexToVertexPosition(BaseSegmentSettings settings, int3 position,
             ref NativeArray<float> cube, int index)
         {
             var vert1 = position + Corner(Edge(index, 0));

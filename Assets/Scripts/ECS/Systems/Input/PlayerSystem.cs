@@ -69,7 +69,7 @@ namespace ECS.Systems.Input
                         index = terrainData.ValueRW.Maps.PosToIndex(segPos);
 
                         var map = TerrainGenerator.PopulateMap(_segmentSettings, _tgTreeBlob, segPos, 0);
-                        terrainData.ValueRW.Maps.SetArray(index, map);
+                        terrainData.ValueRW.Maps.SetArray(index, map.Array);
 
                         Log.Debug($"Created seg at {segPos.ToString()}, Index: {index}");
                     }
