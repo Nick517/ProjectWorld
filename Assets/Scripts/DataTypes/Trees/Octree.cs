@@ -91,11 +91,10 @@ namespace DataTypes.Trees
 
                 pos += select(0, size, o);
 
-                if (node.IsLeaf) node.Alloc(Allocator);
-                if (node.ChildIndexes[oct] == -1) node.ChildIndexes[oct] = InitNode(pos, s, _defaultValue);
+                if (node.GetChild(oct) == -1) node.SetChild(oct, InitNode(pos, s, _defaultValue));
 
                 Nodes[index] = node;
-                index = node.ChildIndexes[oct];
+                index = node.GetChild(oct);
             }
 
             return index;
@@ -128,9 +127,9 @@ namespace DataTypes.Trees
                 pos += select(0, size, o);
 
                 if (node.IsLeaf) return -1;
-                if (node.ChildIndexes[oct] == -1) return -1;
+                if (node.GetChild(oct) == -1) return -1;
 
-                index = node.ChildIndexes[oct];
+                index = node.GetChild(oct);
             }
 
             return index;
@@ -160,8 +159,10 @@ namespace DataTypes.Trees
                 if (node.IsLeaf) continue;
 
                 for (var i = 0; i < 8; i++)
-                    if (node.ChildIndexes[i] != -1)
-                        stack.Add(node.ChildIndexes[i]);
+                {
+                    var child = node.GetChild(i);
+                    if (child != -1) stack.Add(child);
+                }
             }
         }
 
@@ -185,12 +186,8 @@ namespace DataTypes.Trees
             var newIndex = NextIndex();
 
             if (!otherNode.IsLeaf)
-            {
-                newNode.Alloc(Allocator);
-
                 for (var oct = 0; oct < 8; oct++)
-                    newNode.ChildIndexes[oct] = CopyByIndex(otherNode.ChildIndexes[oct], other);
-            }
+                    newNode.SetChild(oct, CopyByIndex(otherNode.GetChild(oct), other));
 
             Nodes[newIndex] = newNode;
 
@@ -206,9 +203,9 @@ namespace DataTypes.Trees
             {
                 var thisIndex = _rootIndexes[oct];
                 var otherIndex = other._rootIndexes[oct];
-                
+
                 if (thisIndex == -1 && otherIndex == -1) continue;
-                
+
                 var otherScale = otherIndex == -1 ? 0 : other.Nodes[otherIndex].Scale;
 
                 if (otherIndex == -1)
@@ -257,14 +254,12 @@ namespace DataTypes.Trees
             var resultNode = new Node(thisNode.Position, thisNode.Scale,
                 !IsDefault(thisNode) ? thisNode.Value : otherNode.Value);
 
-            resultNode.Alloc(Allocator);
-
             for (var oct = 0; oct < 8; oct++)
-                resultNode.ChildIndexes[oct] = UnionByIndex(
-                    thisNode.IsLeaf ? -1 : thisNode.ChildIndexes[oct],
-                    otherNode.IsLeaf ? -1 : otherNode.ChildIndexes[oct],
+                resultNode.SetChild(oct, UnionByIndex(
+                    thisNode.IsLeaf ? -1 : thisNode.GetChild(oct),
+                    otherNode.IsLeaf ? -1 : otherNode.GetChild(oct),
                     other,
-                    ref result);
+                    ref result));
 
             result.Nodes[resultIndex] = resultNode;
 
@@ -338,14 +333,14 @@ namespace DataTypes.Trees
                 if (treeA.Nodes[indexA].Scale > treeB.Nodes[indexB].Scale)
                 {
                     treeR._rootIndexes[oct] = ExceptLargerTree(
-                        indexA, indexB, oppOct, treeB.Nodes[indexB].Scale, 
-                        treeA, treeB, ref treeR, 
+                        indexA, indexB, oppOct, treeB.Nodes[indexB].Scale,
+                        treeA, treeB, ref treeR,
                         allocator, comparison, action);
                 }
                 else
                 {
                     while (indexB != -1 && treeA.Nodes[indexA].Scale < treeB.Nodes[indexB].Scale)
-                        indexB = treeB.Nodes[indexB].ChildIndexes[oppOct];
+                        indexB = treeB.Nodes[indexB].GetChild(oppOct);
 
                     treeR._rootIndexes[oct] = ExceptByIndex(
                         indexA, indexB,
@@ -359,33 +354,34 @@ namespace DataTypes.Trees
 
         [BurstCompile]
         private static int ExceptLargerTree<TComparison, TAction>(int indexA, int indexB, int oppOct, int scale,
-            in Octree<T> treeA, in Octree<T> treeB, ref Octree<T> treeR, 
+            in Octree<T> treeA, in Octree<T> treeB, ref Octree<T> treeR,
             Allocator allocator, TComparison comparison, TAction action)
             where TComparison : struct, IComparison
             where TAction : struct, ICollisionAction
         {
             if (indexA == -1 || indexB == -1) return -1;
-            
+
             var nodeA = treeA.Nodes[indexA];
 
-            if (nodeA.Scale == scale) return ExceptByIndex(
-                indexA, indexB,
-                treeA, treeB, ref treeR,
-                allocator, comparison, action);
-            
+            if (nodeA.Scale == scale)
+                return ExceptByIndex(
+                    indexA, indexB,
+                    treeA, treeB, ref treeR,
+                    allocator, comparison, action);
+
             var keep = false;
             var childIndexes = new NativeArray<int>(8, allocator);
-            
+
             for (var o = 0; o < 8; o++)
                 if (o != oppOct)
                 {
-                    childIndexes[o] = treeR.CopyByIndex(nodeA.ChildIndexes[o], treeA);
+                    childIndexes[o] = treeR.CopyByIndex(nodeA.GetChild(o), treeA);
                     if (childIndexes[o] != -1) keep = true;
                 }
-                        
+
             childIndexes[oppOct] = ExceptLargerTree(
-                nodeA.ChildIndexes[oppOct], indexB, oppOct, scale, 
-                treeA, treeB, ref treeR, 
+                nodeA.GetChild(oppOct), indexB, oppOct, scale,
+                treeA, treeB, ref treeR,
                 allocator, comparison, action);
 
             if (!keep && childIndexes[oppOct] == -1)
@@ -395,7 +391,10 @@ namespace DataTypes.Trees
             }
 
             var index = treeR.NextIndex();
-            treeR.Nodes[index] = new Node(nodeA.Position, nodeA.Scale, nodeA.Value) { ChildIndexes = childIndexes };
+            var node = new Node(nodeA.Position, nodeA.Scale, nodeA.Value);
+
+            node.SetChildren(childIndexes);
+            treeR.Nodes[index] = node;
 
             return index;
         }
@@ -427,7 +426,7 @@ namespace DataTypes.Trees
             for (var oct = 0; oct < 8; oct++)
             {
                 childIndexes[oct] = ExceptByIndex(
-                    nodeA.ChildIndexes[oct], nodeB.ChildIndexes[oct],
+                    nodeA.GetChild(oct), nodeB.GetChild(oct),
                     treeA, treeB, ref result,
                     allocator, comparison, action);
 
@@ -441,7 +440,8 @@ namespace DataTypes.Trees
             }
 
             var index = result.NextIndex();
-            var node = new Node(nodeA.Position, nodeA.Scale, treeA._defaultValue) { ChildIndexes = childIndexes };
+            var node = new Node(nodeA.Position, nodeA.Scale, treeA._defaultValue);
+            node.SetChildren(childIndexes);
 
             if (collides) node.Value = action.Execute(node.Value, nodeB.Value);
 
@@ -510,10 +510,10 @@ namespace DataTypes.Trees
                 var oppOct = 7 - oct;
 
                 while (indexA != -1 && treeA.Nodes[indexA].Scale > treeB.Nodes[indexB].Scale)
-                    indexA = treeA.Nodes[indexA].ChildIndexes[oppOct];
+                    indexA = treeA.Nodes[indexA].GetChild(oppOct);
 
                 while (indexB != -1 && treeB.Nodes[indexB].Scale > treeA.Nodes[indexA].Scale)
-                    indexB = treeB.Nodes[indexB].ChildIndexes[oppOct];
+                    indexB = treeB.Nodes[indexB].GetChild(oppOct);
 
                 treeR._rootIndexes[oct] = IntersectByIndex(
                     indexA, indexB,
@@ -548,7 +548,7 @@ namespace DataTypes.Trees
             for (var oct = 0; oct < 8; oct++)
             {
                 childIndexes[oct] = IntersectByIndex(
-                    nodeA.ChildIndexes[oct], nodeB.ChildIndexes[oct],
+                    nodeA.GetChild(oct), nodeB.GetChild(oct),
                     treeA, treeB, ref result,
                     allocator, comparison, action);
 
@@ -562,7 +562,8 @@ namespace DataTypes.Trees
             }
 
             var index = result.NextIndex();
-            var node = new Node(nodeA.Position, nodeA.Scale, treeA._defaultValue) { ChildIndexes = childIndexes };
+            var node = new Node(nodeA.Position, nodeA.Scale, treeA._defaultValue);
+            node.SetChildren(childIndexes);
 
             if (collides) node.Value = action.Execute(node.Value, nodeB.Value);
 
@@ -575,19 +576,17 @@ namespace DataTypes.Trees
         public void Subdivide(int index)
         {
             if (index == -1) return;
-            
+
             var node = Nodes[index];
             var childScale = node.Scale - 1;
             var childSize = GetSegSize(BaseNodeSize, childScale);
-            
-            node.Alloc(Allocator);
 
             for (var oct = 0; oct < 8; oct++)
             {
                 var pos = node.Position + select(0, childSize, OctantToBool3(oct));
-                node.ChildIndexes[oct] = InitNode(pos, childScale, _defaultValue);
+                node.SetChild(oct, InitNode(pos, childScale, _defaultValue));
             }
-            
+
             Nodes[index] = node;
         }
 
@@ -607,8 +606,6 @@ namespace DataTypes.Trees
         [BurstCompile]
         public void Dispose()
         {
-            for (var i = 0; i < Count; i++) Nodes[i].Dispose();
-
             Nodes.Dispose();
             _rootIndexes.Dispose();
 
@@ -653,8 +650,7 @@ namespace DataTypes.Trees
             var oldRoot = RootNode(octant);
             var newRoot = new Node(oldRoot.Position * 2, oldRoot.Scale + 1, _defaultValue);
 
-            newRoot.Alloc(Allocator);
-            newRoot.ChildIndexes[7 - octant] = _rootIndexes[octant];
+            newRoot.SetChild(7 - octant, _rootIndexes[octant]);
 
             Nodes[index] = newRoot;
             _rootIndexes[octant] = index;
@@ -733,7 +729,7 @@ namespace DataTypes.Trees
                 return a;
             }
         }
-        
+
         [BurstCompile]
         private readonly bool IsDefault(Node node)
         {
@@ -741,35 +737,63 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public struct Node : IDisposable
+        public struct Node
         {
             public T Value;
             public readonly float3 Position;
             public readonly int Scale;
-            public NativeArray<int> ChildIndexes;
+            public bool IsLeaf { get; private set; }
 
-            public readonly bool IsLeaf => !ChildIndexes.IsCreated;
+            private int _child0, _child1, _child2, _child3, _child4, _child5, _child6, _child7;
 
             public Node(float3 position, int scale, T value)
             {
                 Value = value;
                 Position = position;
                 Scale = scale;
-                ChildIndexes = default;
+                IsLeaf = true;
+                _child0 = _child1 = _child2 = _child3 = _child4 = _child5 = _child6 = _child7 = -1;
             }
 
             [BurstCompile]
-            public void Alloc(Allocator allocator)
+            public readonly int GetChild(int oct)
             {
-                ChildIndexes = new NativeArray<int>(8, allocator);
-
-                for (var i = 0; i < 8; i++) ChildIndexes[i] = -1;
+                return oct switch
+                {
+                    0 => _child0,
+                    1 => _child1,
+                    2 => _child2,
+                    3 => _child3,
+                    4 => _child4,
+                    5 => _child5,
+                    6 => _child6,
+                    7 => _child7,
+                    _ => -1
+                };
             }
 
             [BurstCompile]
-            public void Dispose()
+            public void SetChild(int oct, int index)
             {
-                if (!IsLeaf) ChildIndexes.Dispose();
+                IsLeaf = false;
+
+                switch (oct)
+                {
+                    case 0: _child0 = index; break;
+                    case 1: _child1 = index; break;
+                    case 2: _child2 = index; break;
+                    case 3: _child3 = index; break;
+                    case 4: _child4 = index; break;
+                    case 5: _child5 = index; break;
+                    case 6: _child6 = index; break;
+                    case 7: _child7 = index; break;
+                }
+            }
+
+            [BurstCompile]
+            public void SetChildren(NativeArray<int> children)
+            {
+                for (var i = 0; i < 8; i++) SetChild(i, children[i]);
             }
 
             [BurstCompile]
@@ -778,9 +802,15 @@ namespace DataTypes.Trees
                 var posInfo = $"pos=({Position.x:F2}, {Position.y:F2}, {Position.z:F2})";
                 var scaleInfo = $"scale={Scale}";
                 var valueInfo = $"value={Value.ToString()}";
-                var childInfo = IsLeaf
-                    ? "leaf"
-                    : $"children=[{string.Join(",", ChildIndexes.Select(i => i == -1 ? "_" : i.ToString()))}]";
+                var childInfo = IsLeaf ? "leaf" : "children=[";
+
+                if (!IsLeaf)
+                    for (var i = 0; i < 8; i++)
+                    {
+                        var c = GetChild(i);
+                        childInfo += c != -1 ? c : "_";
+                        childInfo += i != 7 ? "," : "]";
+                    }
 
                 return $"Node({posInfo}, {scaleInfo}, {valueInfo}, {childInfo})";
             }

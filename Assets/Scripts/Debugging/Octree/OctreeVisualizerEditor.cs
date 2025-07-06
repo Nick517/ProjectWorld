@@ -1,7 +1,6 @@
 using DataTypes.Trees;
 using Unity.Burst;
 using Unity.Collections;
-using Unity.Logging;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
@@ -136,7 +135,7 @@ namespace Debugging.Octree
 
             for (var i = 0; i < octree.Count; i++) result += $"{i}: {octree.Nodes[i].ToString()}\n";
 
-            Log.Debug(result);
+            Debug.Log(result);
         }
 
         private void PrintNodeState(in Octree<FixedString32Bytes> octree, string octreeName)
@@ -147,14 +146,14 @@ namespace Debugging.Octree
             if (index == -1) result += NoNodeMessage();
             else result += $"{index}: {octree.Nodes[index].ToString()}\n";
 
-            Log.Debug(result);
+            Debug.Log(result);
         }
 
         private void SubdivideNode(Octree<FixedString32Bytes> octree, string octreeName)
         {
             var index = octree.GetIndexAtPos(_position, _scale);
 
-            if (index == -1) Log.Debug($"{octreeName}: {NoNodeMessage()}");
+            if (index == -1) Debug.Log($"{octreeName}: {NoNodeMessage()}");
             else octree.Subdivide(index);
         }
 

@@ -97,7 +97,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 var node = octree.Nodes[index];
 
                 for (var oct = 0; oct < 8; oct++)
-                    PopulateRecursive(pointCenter, point.Settings.LOD, ref octree, node.ChildIndexes[oct]);
+                    PopulateRecursive(pointCenter, point.Settings.LOD, ref octree, node.GetChild(oct));
             }
         }
 
@@ -127,7 +127,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             octree.Subdivide(index);
             node = octree.Nodes[index];
 
-            for (var oct = 0; oct < 8; oct++) PopulateRecursive(point, lod, ref octree, node.ChildIndexes[oct]);
+            for (var oct = 0; oct < 8; oct++) PopulateRecursive(point, lod, ref octree, node.GetChild(oct));
         }
 
         private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };
