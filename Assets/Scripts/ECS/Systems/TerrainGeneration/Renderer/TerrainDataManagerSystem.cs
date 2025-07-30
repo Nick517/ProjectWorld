@@ -1,4 +1,5 @@
 using DataTypes.Trees;
+using ECS.BufferElements.TerrainGeneration;
 using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
 using Unity.Burst;
@@ -32,7 +33,8 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 Maps = new ArrayOctree<float>(settings.BaseCubeSize, settings.CubeCountTotal, Allocator.Persistent),
                 Segments = new Octree<Entity>(settings.BaseSegSize, Allocator.Persistent)
             });
-            
+
+            ecb.AddBuffer<TerrainModificationBufferElement>(entity);
             ecb.AddBuffer<SegmentModifiedBufferElement>(entity);
 
             ecb.Playback(state.EntityManager);

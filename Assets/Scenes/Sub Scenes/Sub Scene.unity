@@ -223,7 +223,7 @@ PrefabInstance:
         type: 3}
       propertyPath: terrainMaterial
       value: 
-      objectReference: {fileID: 2100000, guid: 085b2137f5bab0b4f89655d617972288, type: 2}
+      objectReference: {fileID: 2100000, guid: 0038baef7711cff4097056b68af00ca6, type: 2}
     - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
       propertyPath: maxColliderScale

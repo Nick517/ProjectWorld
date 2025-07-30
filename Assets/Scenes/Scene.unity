@@ -584,6 +584,11 @@ PrefabInstance:
       propertyPath: m_Version
       value: 13
       objectReference: {fileID: 0}
+    - target: {fileID: 1580614102078287380, guid: 746239effa5613b4d8ea59226a5e6ed4,
+        type: 3}
+      propertyPath: m_UseContactShadow.m_Override
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2898253292670618299, guid: 746239effa5613b4d8ea59226a5e6ed4,
         type: 3}
       propertyPath: m_Name

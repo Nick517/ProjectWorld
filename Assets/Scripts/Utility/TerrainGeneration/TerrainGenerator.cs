@@ -74,7 +74,7 @@ namespace Utility.TerrainGeneration
                 var xyz = new int3(x, y, z);
                 var pos = segmentPosition + xyz * (float3)settings.BaseCubeSize;
 
-                map.SetAt(xyz, traversal.Sample(pos));
+                map.SetAt(xyz, math.clamp(traversal.Sample(pos), 0, 1));
             }
 
             return map;

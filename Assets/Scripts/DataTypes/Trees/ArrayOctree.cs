@@ -51,7 +51,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public NativeArray<T> GetArray(int index, Allocator allocator)
+        public readonly NativeArray<T> GetArray(int index, Allocator allocator)
         {
             var offset = _size * index;
             var array = new NativeArray<T>(_size, allocator);
