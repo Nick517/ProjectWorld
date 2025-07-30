@@ -6,6 +6,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
@@ -24,6 +25,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<RendererPoint>();
             state.RequireForUpdate<UpdateRendererSegmentsTag>();
+            state.RequireForUpdate<TerrainData>();
 
             _comparison = new Comparison();
         }
@@ -36,29 +38,39 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 _settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
                 _initialized = true;
             }
-            
+
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
-            
-            using var existingSegs = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
-            foreach (var seg in SystemAPI.Query<TerrainSegmentAspect>())
-                existingSegs.SetAtPos(seg.Entity, seg.Position, seg.Scale);
+
+            var terrainData = SystemAPI.GetSingletonRW<TerrainData>();
 
             var segsToCreate = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
             foreach (var point in SystemAPI.Query<RendererPointAspect>())
             {
-                Populate(point, ref segsToCreate);
+                PopulateSimple(point, ref segsToCreate);
                 ecb.RemoveComponent<UpdateRendererSegmentsTag>(point.Entity);
             }
 
-            using var segsToIgnore = Octree<Entity>.Intersect(existingSegs, segsToCreate, Allocator.Temp, _comparison);
-            using var segsToDestroy = Octree<Entity>.Except(existingSegs, segsToIgnore, Allocator.Temp, _comparison);
+            using var segsToIgnore =
+                Octree<Entity>.Intersect(terrainData.ValueRO.Segments, segsToCreate, Allocator.Temp, _comparison);
+            
+            using var segsToDestroy =
+                Octree<Entity>.Except(terrainData.ValueRO.Segments, segsToIgnore, Allocator.Temp, _comparison);
 
             segsToCreate.Except(segsToIgnore, _comparison);
 
             for (var i = 0; i < segsToCreate.Count; i++)
             {
                 var node = segsToCreate.Nodes[i];
-                if (node.Value == Placeholder) TerrainSegmentAspect.Create(ecb, _settings, node.Position, node.Scale);
+                if (node.Value == Placeholder)
+                {
+                    var entity = state.EntityManager.Instantiate(_settings.RendererSegmentPrefab);
+
+                    ecb.AddComponent(entity, LocalTransform.FromPosition(node.Position));
+                    ecb.AddComponent(entity, new SegmentScale { Scale = node.Scale });
+                    ecb.AddComponent<CreateRendererMeshTag>(entity);
+
+                    terrainData.ValueRW.Segments.SetAtPos(entity, node.Position, node.Scale);
+                }
             }
 
             for (var i = 0; i < segsToDestroy.Count; i++)
@@ -66,10 +78,12 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 var node = segsToDestroy.Nodes[i];
                 if (node.Value == default) continue;
 
-                var index = existingSegs.GetIndexAtPos(node.Position, node.Scale);
+                var index = terrainData.ValueRO.Segments.GetIndexAtPos(node.Position, node.Scale);
                 if (index == -1) continue;
 
                 ecb.AddComponent(node.Value, new DestroySegmentTag());
+                
+                terrainData.ValueRW.Segments.SetAtIndex(default, index);
             }
 
             segsToCreate.Dispose();
@@ -128,6 +142,20 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             node = octree.Nodes[index];
 
             for (var oct = 0; oct < 8; oct++) PopulateRecursive(point, lod, ref octree, node.GetChild(oct));
+        }
+
+        [BurstCompile]
+        private void PopulateSimple(RendererPointAspect point, ref Octree<Entity> octree)
+        {
+            var megaSegCount = point.Settings.MegaSegments;
+
+            for (var x = -megaSegCount; x <= megaSegCount; x++)
+            for (var y = -megaSegCount; y <= megaSegCount; y++)
+            for (var z = -megaSegCount; z <= megaSegCount; z++)
+            {
+                var segPos = point.SegmentPosition + new float3(x, y, z) * _settings.BaseSegSize;
+                octree.SetAtPos(Placeholder, segPos);
+            }
         }
 
         private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };

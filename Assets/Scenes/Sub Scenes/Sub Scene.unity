@@ -260,7 +260,7 @@ PrefabInstance:
         type: 3}
       propertyPath: tgGraph
       value: 
-      objectReference: {fileID: 11400000, guid: b30d432cb8c6e3f4289e37994d88fec4,
+      objectReference: {fileID: 11400000, guid: 9b549e3575bc5304ca1b31a4ee14397e,
         type: 2}
     - target: {fileID: 5812077677126750501, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
@@ -288,7 +288,7 @@ PrefabInstance:
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -33.67
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -298,7 +298,7 @@ PrefabInstance:
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.9
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -363,7 +363,7 @@ PrefabInstance:
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: megaSegments
-      value: 1
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}

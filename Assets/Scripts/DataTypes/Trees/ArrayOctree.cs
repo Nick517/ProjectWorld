@@ -10,17 +10,18 @@ namespace DataTypes.Trees
     public struct ArrayOctree<T> : IDisposable where T : unmanaged, IEquatable<T>
     {
         private readonly int _size;
-        private int Count { get; set; }
-        public bool IsCreated { get; }
         private Octree<int> _octree;
         private NativeArray<T> _elements;
+        private int _count;
+
+        public bool IsCreated { get; }
 
         public ArrayOctree(float baseNodeSize, int size, Allocator allocator)
         {
             _size = size;
             _octree = new Octree<int>(baseNodeSize, allocator, -1);
             _elements = new NativeArray<T>(_size, allocator);
-            Count = 0;
+            _count = 0;
             IsCreated = true;
         }
 
@@ -35,20 +36,20 @@ namespace DataTypes.Trees
                 node.Value = NextIndex();
                 _octree.Nodes[octreeIndex] = node;
             }
-            
+
             return node.Value;
         }
 
         [BurstCompile]
-        public int GetIndexAtPos(float3 position, int scale = 0)
+        public readonly int GetIndexAtPos(float3 position, int scale = 0)
         {
-            var index = _octree.PosToIndex(position, scale);
-            
+            var index = _octree.GetIndexAtPos(position, scale);
+
             if (index == -1) return -1;
-            
+
             return _octree.Nodes[index].Value;
         }
-        
+
         [BurstCompile]
         public NativeArray<T> GetArray(int index, Allocator allocator)
         {
@@ -67,13 +68,22 @@ namespace DataTypes.Trees
 
             for (var i = 0; i < _size; i++) _elements[offset + i] = array[i];
         }
-        
+
+        [BurstCompile]
+        public readonly int GetNeighbor(int3 offset, float3 pos, int scale)
+        {
+            var index = _octree.GetNeighbor(offset, pos, scale);
+
+            return index == -1 ? -1 : _octree.Nodes[index].Value;
+        }
+
         [BurstCompile]
         private int NextIndex()
         {
-            var index = Count++;
+            var index = _count++;
 
-            if (Count * _size > _elements.Length) _elements = _elements.SetSize(_elements.Length * 2, _octree.Allocator);
+            if (_count * _size > _elements.Length)
+                _elements = _elements.SetSize(_elements.Length * 2, _octree.Allocator);
 
             return index;
         }
@@ -82,7 +92,7 @@ namespace DataTypes.Trees
         public void Dispose()
         {
             if (!IsCreated) return;
-            
+
             _octree.Dispose();
             _elements.Dispose();
         }

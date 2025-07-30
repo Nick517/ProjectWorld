@@ -1,13 +1,16 @@
+using DataTypes;
+using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.Input;
 using ECS.Components.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Logging;
 using Unity.Physics;
 using Unity.Transforms;
+using UnityEngine;
 using Utility.SpacialPartitioning;
 using Utility.TerrainGeneration;
+using TerrainData = ECS.Components.TerrainGeneration.TerrainData;
 
 namespace ECS.Systems.Input
 {
@@ -23,6 +26,7 @@ namespace ECS.Systems.Input
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<SegmentModifiedBufferElement>();
             state.RequireForUpdate<TgTreeBlob>();
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<TerrainData>();
@@ -31,6 +35,7 @@ namespace ECS.Systems.Input
             state.RequireForUpdate<PlayerSettings>();
         }
 
+        [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             if (!_initialized)
@@ -46,7 +51,6 @@ namespace ECS.Systems.Input
             var playerEntity = SystemAPI.GetSingletonEntity<PlayerSettings>();
             var transform = SystemAPI.GetComponent<LocalTransform>(playerEntity);
             var physicsWorld = SystemAPI.GetSingleton<PhysicsWorldSingleton>().PhysicsWorld;
-
 
             if (playerInput.RemoveTerrain)
             {
@@ -66,16 +70,14 @@ namespace ECS.Systems.Input
 
                     if (index == -1)
                     {
-                        index = terrainData.ValueRW.Maps.PosToIndex(segPos);
+                        var map = TerrainGenerator.CreateMap(_segmentSettings, _tgTreeBlob, segPos);
 
-                        var map = TerrainGenerator.PopulateMap(_segmentSettings, _tgTreeBlob, segPos, 0);
+                        index = terrainData.ValueRW.Maps.PosToIndex(segPos);
                         terrainData.ValueRW.Maps.SetArray(index, map.Array);
 
-                        Log.Debug($"Created seg at {segPos.ToString()}, Index: {index}");
-                    }
-                    else
-                    {
-                        Log.Debug($"Seg already exists at {segPos.ToString()}");
+                        var entity = SystemAPI.GetSingletonEntity<SegmentModifiedBufferElement>();
+
+                        ecb.AppendToBuffer<SegmentModifiedBufferElement>(entity, segPos);
                     }
                 }
             }

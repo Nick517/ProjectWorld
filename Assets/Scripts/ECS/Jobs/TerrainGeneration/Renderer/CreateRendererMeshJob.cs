@@ -1,4 +1,5 @@
 using DataTypes;
+using DataTypes.Trees;
 using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
@@ -22,6 +23,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
         [ReadOnly] public ComponentTypeHandle<LocalTransform> LocalTransformTypeHandle;
         [ReadOnly] public ComponentTypeHandle<SegmentScale> SegmentScaleTypeHandle;
         [ReadOnly] public BaseSegmentSettings Settings;
+        [ReadOnly] public ArrayOctree<float> Maps;
         [ReadOnly] public TgTreeBlob TgTreeBlob;
 
         public void Execute(in ArchetypeChunk chunk, int unfilteredChunkIndex, bool useEnabledMask,
@@ -40,7 +42,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                 var scale = segmentScales[i].Scale;
 
                 var vertexes = new NativeList<float3>(Allocator.Temp);
-                var cubeMap = PopulateMap(Settings, TgTreeBlob, pos, scale);
+                var cubeMap = PopulateMap(Settings, TgTreeBlob, Maps, pos, scale);
 
                 Ecb.AddBuffer<TriangleBufferElement>(i, entity);
                 Ecb.AddBuffer<VertexBufferElement>(i, entity);
@@ -64,8 +66,7 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
 
             var cube = new NativeArray<float>(8, Allocator.Temp);
 
-            for (var i = 0; i < 8; i++)
-                cube[i] = cubeMap.GetAt(position + Corner(i));
+            for (var i = 0; i < 8; i++) cube[i] = cubeMap.GetAt(position + Corner(i));
 
             var config = GetCubeConfig(settings, cube);
 

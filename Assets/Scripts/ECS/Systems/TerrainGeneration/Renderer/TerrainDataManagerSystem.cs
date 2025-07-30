@@ -1,4 +1,5 @@
 using DataTypes.Trees;
+using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
@@ -28,8 +29,11 @@ namespace ECS.Systems.TerrainGeneration.Renderer
 
             ecb.AddComponent(entity, new TerrainData
             {
-                Maps = new ArrayOctree<float>(settings.BaseCubeSize, settings.CubeCountTotal, Allocator.Persistent)
+                Maps = new ArrayOctree<float>(settings.BaseCubeSize, settings.CubeCountTotal, Allocator.Persistent),
+                Segments = new Octree<Entity>(settings.BaseSegSize, Allocator.Persistent)
             });
+            
+            ecb.AddBuffer<SegmentModifiedBufferElement>(entity);
 
             ecb.Playback(state.EntityManager);
             _initialized = true;
@@ -38,10 +42,13 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
+            _initialized = false;
+            
             var entity = SystemAPI.GetSingletonEntity<TerrainData>();
             var terrainData = state.EntityManager.GetComponentData<TerrainData>(entity);
 
             if (terrainData.Maps.IsCreated) terrainData.Maps.Dispose();
+            if (terrainData.Segments.IsCreated) terrainData.Segments.Dispose();
         }
     }
 }

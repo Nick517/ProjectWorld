@@ -5,28 +5,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/TerrainData.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/TerrainData.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/BufferElements/TerrainGeneration/Renderer/SegmentModifiedBufferElement.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/BufferElements/TerrainGeneration/Renderer/SegmentModifiedBufferElement.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/SegmentModificationManagerSystem.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/SegmentModificationManagerSystem.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/CubicArray.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/CubicArray.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input/InputManagerAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input/InputManagerAspect.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/PlayerSettingsAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/PlayerSettingsAuthoring.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerInput.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerInput.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/PlayerSettings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/BaseSegmentSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/BaseSegmentSettings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/InputManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/InputManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/TerrainSegmentAspect.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/TerrainSegmentAspect.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/TerrainData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/TerrainData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/TerrainGeneration/Renderer/CreateRendererMeshJob.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/TerrainGeneration/Renderer/CreateRendererMeshJob.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/PlayerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/PlayerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/CreateRendererMeshSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/CreateRendererMeshSystem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Input Actions/PlayerControls.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Input Actions/PlayerControls.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Input Actions/PlayerControls.inputactions" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Input Actions/PlayerControls.inputactions" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/TerrainGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/TerrainGenerator.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EntitiesClientSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EntitiesClientSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/Packages/com.unity.testtools.codecoverage/Settings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ShaderGraphSettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +43,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Graph/TggGraphView.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/MarchingCubeTables.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Entities/EntityManager.cs" root0="SKIP_HIGHLIGHTING" />
@@ -48,7 +52,6 @@
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@8017b507cc74/Unity.Mathematics/float4x4.gen.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.physics@b8c0a578fe9d/Unity.Physics/Collision/Colliders/MeshCollider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.physics@b8c0a578fe9d/Unity.Physics/ECS/Base/Components/PhysicsComponents.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/b33129f0f2f84d4d9540790ac6d74c381ea600/c3/3d76a02c/AtomicSafetyHandle.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -80,6 +83,7 @@
     &quot;Attach to Unity Player.Unity.exe (AssetImportWorker1).executor&quot;: &quot;Debug&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
@@ -88,7 +92,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -99,7 +103,7 @@
 }</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.1.0f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.1.11f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath &quot;C:\Users\niccs\Documents\Unity Projects\ProjectWorld&quot; -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\niccs\Documents\Unity Projects\ProjectWorld" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -110,7 +114,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.1.0f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.1.11f1\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath &quot;C:\Users\niccs\Documents\Unity Projects\ProjectWorld&quot; -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\niccs\Documents\Unity Projects\ProjectWorld" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -543,6 +547,36 @@
       <workItem from="1750624095732" duration="3654000" />
       <workItem from="1750632830582" duration="3874000" />
       <workItem from="1750637768558" duration="5423000" />
+      <workItem from="1752647647930" duration="279000" />
+      <workItem from="1752690427075" duration="2412000" />
+      <workItem from="1752779423574" duration="2281000" />
+      <workItem from="1752783260580" duration="5351000" />
+      <workItem from="1752788665584" duration="7196000" />
+      <workItem from="1752797426635" duration="5239000" />
+      <workItem from="1752806831027" duration="1069000" />
+      <workItem from="1752818994598" duration="2905000" />
+      <workItem from="1752858082623" duration="3083000" />
+      <workItem from="1752867326391" duration="514000" />
+      <workItem from="1752874480316" duration="1708000" />
+      <workItem from="1752877538771" duration="1649000" />
+      <workItem from="1752882989159" duration="639000" />
+      <workItem from="1752906000875" duration="2777000" />
+      <workItem from="1753044157115" duration="2534000" />
+      <workItem from="1753046792538" duration="848000" />
+      <workItem from="1753128751521" duration="470000" />
+      <workItem from="1753222581626" duration="144000" />
+      <workItem from="1753228299390" duration="1626000" />
+      <workItem from="1753295347342" duration="10006000" />
+      <workItem from="1753388287743" duration="3829000" />
+      <workItem from="1753395043372" duration="3026000" />
+      <workItem from="1753399040752" duration="1009000" />
+      <workItem from="1753465895926" duration="4727000" />
+      <workItem from="1753505944959" duration="601000" />
+      <workItem from="1753571238791" duration="593000" />
+      <workItem from="1753584273307" duration="9687000" />
+      <workItem from="1753649413826" duration="10692000" />
+      <workItem from="1753723218279" duration="3611000" />
+      <workItem from="1753809546694" duration="13787000" />
     </task>
     <servers />
   </component>

@@ -39,6 +39,7 @@ namespace DataTypes.Trees
             _defaultValue = defaultValue;
         }
 
+        [BurstCompile]
         private readonly Node RootNode(int octant)
         {
             return Nodes[_rootIndexes[octant]];
@@ -67,7 +68,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private readonly T GetAtIndex(int index)
+        public readonly T GetAtIndex(int index)
         {
             return Nodes[index].Value;
         }
@@ -126,13 +127,55 @@ namespace DataTypes.Trees
 
                 pos += select(0, size, o);
 
-                if (node.IsLeaf) return -1;
                 if (node.GetChild(oct) == -1) return -1;
 
                 index = node.GetChild(oct);
             }
 
             return index;
+        }
+
+        [BurstCompile]
+        public readonly int GetLeafAtPos(float3 position, int scale = 0)
+        {
+            var octant = GetOctant(position);
+            var index = _rootIndexes[octant];
+
+            if (index == -1) return -1;
+
+            var node = Nodes[index];
+            var pos = node.Position;
+            var s = node.Scale;
+
+            if (s < scale) return index;
+
+            var size = GetSegSize(BaseNodeSize, s);
+
+            while (s-- > scale)
+            {
+                node = Nodes[index];
+                size /= 2;
+
+                var o = position >= pos + size;
+                var oct = Bool3ToOctant(o);
+
+                pos += select(0, size, o);
+
+                if (node.GetChild(oct) == -1) return index;
+
+                index = node.GetChild(oct);
+            }
+
+            return index;
+        }
+
+        [BurstCompile]
+        public readonly int GetNeighbor(int3 offset, float3 position, int scale = 0)
+        {
+            var segSize = GetSegSize(BaseNodeSize, scale);
+            var neighborPos = position + (float3)offset * segSize;
+
+            return GetIndexAtPos(neighborPos, scale);
         }
 
         [BurstCompile]
@@ -395,6 +438,7 @@ namespace DataTypes.Trees
 
             node.SetChildren(childIndexes);
             treeR.Nodes[index] = node;
+            childIndexes.Dispose();
 
             return index;
         }
@@ -446,6 +490,7 @@ namespace DataTypes.Trees
             if (collides) node.Value = action.Execute(node.Value, nodeB.Value);
 
             result.Nodes[index] = node;
+            childIndexes.Dispose();
 
             return index;
         }
@@ -568,6 +613,7 @@ namespace DataTypes.Trees
             if (collides) node.Value = action.Execute(node.Value, nodeB.Value);
 
             result.Nodes[index] = node;
+            childIndexes.Dispose();
 
             return index;
         }
@@ -623,7 +669,7 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        public int InitNode(float3 position, int scale, T value)
+        private int InitNode(float3 position, int scale, T value)
         {
             var index = NextIndex();
 

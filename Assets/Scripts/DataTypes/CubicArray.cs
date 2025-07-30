@@ -23,12 +23,12 @@ namespace DataTypes
             _sideLength = sideLength;
         }
 
-        public T GetAt(int3 index3D)
+        public readonly T GetAt(int3 index3D)
         {
             return GetAt(index3D.x, index3D.y, index3D.z);
         }
 
-        public T GetAt(int x, int y, int z)
+        public readonly T GetAt(int x, int y, int z)
         {
             return Array[GetFlatIndex(_sideLength, x, y, z)];
         }

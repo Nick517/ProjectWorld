@@ -24,6 +24,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         {
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<TgTreeBlob>();
+            state.RequireForUpdate<TerrainData>();
             state.RequireForUpdate<CreateRendererMeshTag>();
 
             _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
@@ -46,6 +47,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             using var ecb = new EntityCommandBuffer(Allocator.TempJob);
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
             var tgGraph = SystemAPI.GetSingleton<TgTreeBlob>();
+            var maps = SystemAPI.GetSingleton<TerrainData>().Maps;
 
             var jobHandle = new CreateRendererMeshJob
             {
@@ -54,7 +56,8 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 LocalTransformTypeHandle = _localTransformTypeHandle,
                 SegmentScaleTypeHandle = _segmentScaleTypeHandle,
                 Settings = settings,
-                TgTreeBlob = tgGraph
+                TgTreeBlob = tgGraph,
+                Maps = maps
             }.ScheduleParallel(_segmentQuery, state.Dependency);
 
             state.Dependency = JobHandle.CombineDependencies(state.Dependency, jobHandle);

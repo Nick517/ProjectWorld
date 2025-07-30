@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.unity.burst": {
-      "version": "1.8.21",
+      "version": "1.8.23",
       "depth": 1,
       "source": "registry",
       "dependencies": {
@@ -21,7 +21,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "2.7.1",
+      "version": "2.8.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
@@ -118,7 +118,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.inputsystem": {
-      "version": "1.14.0",
+      "version": "1.14.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -234,10 +234,13 @@
       }
     },
     "com.unity.scriptablebuildpipeline": {
-      "version": "2.1.4",
+      "version": "2.4.0",
       "depth": 1,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.test-framework": "1.4.5",
+        "com.unity.modules.assetbundle": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.searcher": {
@@ -274,7 +277,7 @@
       }
     },
     "com.unity.splines": {
-      "version": "2.8.0",
+      "version": "2.8.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
