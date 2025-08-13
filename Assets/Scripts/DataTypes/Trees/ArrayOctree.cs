@@ -9,18 +9,18 @@ namespace DataTypes.Trees
     [BurstCompile]
     public struct ArrayOctree<T> : IDisposable where T : unmanaged, IEquatable<T>
     {
-        private readonly int _size;
         private Octree<int> _octree;
         private NativeArray<T> _elements;
+        private readonly int _size;
         private int _count;
 
         public bool IsCreated { get; }
 
         public ArrayOctree(float baseNodeSize, int size, Allocator allocator)
         {
-            _size = size;
             _octree = new Octree<int>(baseNodeSize, allocator, -1);
-            _elements = new NativeArray<T>(_size, allocator);
+            _elements = new NativeArray<T>(size, allocator);
+            _size = size;
             _count = 0;
             IsCreated = true;
         }
@@ -47,7 +47,7 @@ namespace DataTypes.Trees
 
             if (index == -1) return -1;
 
-            return _octree.Nodes[index].Value;
+            return _octree.GetAtIndex(index);
         }
 
         [BurstCompile]
@@ -76,6 +76,15 @@ namespace DataTypes.Trees
 
             return index == -1 ? -1 : _octree.Nodes[index].Value;
         }
+        
+        [BurstCompile]
+        public void Dispose()
+        {
+            if (!IsCreated) return;
+
+            _octree.Dispose();
+            _elements.Dispose();
+        }
 
         [BurstCompile]
         private int NextIndex()
@@ -86,15 +95,6 @@ namespace DataTypes.Trees
                 _elements = _elements.SetSize(_elements.Length * 2, _octree.Allocator);
 
             return index;
-        }
-
-        [BurstCompile]
-        public void Dispose()
-        {
-            if (!IsCreated) return;
-
-            _octree.Dispose();
-            _elements.Dispose();
         }
     }
 }

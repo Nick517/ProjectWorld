@@ -152,6 +152,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5678115198066551879, guid: 9ecdeb518604fc6469918657bb0347da,
+        type: 3}
+      propertyPath: field of view
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 5678115198066551879, guid: 9ecdeb518604fc6469918657bb0347da,
+        type: 3}
+      propertyPath: m_projectionMatrixMode
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -586,8 +596,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1580614102078287380, guid: 746239effa5613b4d8ea59226a5e6ed4,
         type: 3}
+      propertyPath: m_RayTracedContactShadow
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580614102078287380, guid: 746239effa5613b4d8ea59226a5e6ed4,
+        type: 3}
+      propertyPath: m_ShadowResolution.m_Level
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580614102078287380, guid: 746239effa5613b4d8ea59226a5e6ed4,
+        type: 3}
+      propertyPath: m_UseContactShadow.m_Level
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580614102078287380, guid: 746239effa5613b4d8ea59226a5e6ed4,
+        type: 3}
       propertyPath: m_UseContactShadow.m_Override
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580614102078287380, guid: 746239effa5613b4d8ea59226a5e6ed4,
+        type: 3}
+      propertyPath: m_ShadowResolution.m_UseOverride
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1580614102078287380, guid: 746239effa5613b4d8ea59226a5e6ed4,
+        type: 3}
+      propertyPath: m_UseContactShadow.m_UseOverride
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2898253292670618299, guid: 746239effa5613b4d8ea59226a5e6ed4,
         type: 3}

@@ -58,16 +58,6 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 ecb.SetComponent(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
                 ecb.SetComponent(entity, new RenderBounds { Value = mesh.bounds.ToAABB() });
 
-                ecb.AddSharedComponent(entity, new RenderFilterSettings
-                {
-                    Layer = 0,
-                    RenderingLayerMask = 1,
-                    ShadowCastingMode = ShadowCastingMode.On,
-                    ReceiveShadows = true,
-                    MotionMode = MotionVectorGenerationMode.Object,
-                    StaticShadowCaster = true
-                });
-
                 if (seg.Scale <= settings.MaxColliderScale)
                 {
                     var vertices = _vertexBufferLookup[entity].Reinterpret<float3>().AsNativeArray();
@@ -76,11 +66,11 @@ namespace ECS.Systems.TerrainGeneration.Renderer
 
                     for (var i = 0; i < triangles.Length; i++)
                     {
-                        var bufferIndex = i * 3;
+                        var index = i * 3;
                         triangles[i] = new int3(
-                            triangleBuffer[bufferIndex],
-                            triangleBuffer[bufferIndex + 1],
-                            triangleBuffer[bufferIndex + 2]
+                            triangleBuffer[index],
+                            triangleBuffer[index + 1],
+                            triangleBuffer[index + 2]
                         );
                     }
 

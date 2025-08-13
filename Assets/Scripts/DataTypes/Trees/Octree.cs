@@ -15,41 +15,38 @@ namespace DataTypes.Trees
     {
         private const int DefaultInitialSize = 2048;
 
-        public NativeArray<Node> Nodes;
         public readonly float BaseNodeSize;
         public readonly Allocator Allocator;
-        public int Count { get; private set; }
-        public bool IsCreated { get; private set; }
+        public NativeArray<Node> Nodes;
 
         private NativeArray<int> _rootIndexes;
         private readonly int _initialSize;
         private readonly T _defaultValue;
 
+        public int Count { get; private set; }
+        public bool IsCreated { get; private set; }
+
         public Octree(float baseNodeSize, Allocator allocator, T defaultValue = default)
         {
-            Nodes = new NativeArray<Node>(DefaultInitialSize, allocator);
             BaseNodeSize = baseNodeSize;
             Allocator = allocator;
-            Count = 0;
-            IsCreated = true;
+            Nodes = new NativeArray<Node>(DefaultInitialSize, allocator);
             _rootIndexes = new NativeArray<int>(8, allocator);
             _initialSize = DefaultInitialSize;
+            _defaultValue = defaultValue;
+            Count = 0;
+            IsCreated = true;
 
             for (var i = 0; i < 8; i++) _rootIndexes[i] = -1;
-            _defaultValue = defaultValue;
-        }
-
-        [BurstCompile]
-        private readonly Node RootNode(int octant)
-        {
-            return Nodes[_rootIndexes[octant]];
         }
 
         [BurstCompile]
         public int SetAtPos(T value, float3 position, int scale = 0)
         {
             var index = PosToIndex(position, scale);
+            
             SetAtIndex(value, index);
+            
             return index;
         }
 
@@ -659,6 +656,17 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
+        public readonly override string ToString()
+        {
+            var typeInfo = $"type={typeof(T)}";
+            var sizeInfo = $"baseNodeSize={BaseNodeSize}";
+            var countInfo = $"count={Count}";
+            var rootInfo = $"roots=[{string.Join(",", _rootIndexes.Select(i => i == -1 ? "_" : i.ToString()))}]";
+
+            return $"Octree({typeInfo}, {sizeInfo}, {countInfo}, {rootInfo})";
+        }
+
+        [BurstCompile]
         private int NextIndex()
         {
             var index = Count++;
@@ -681,7 +689,8 @@ namespace DataTypes.Trees
         [BurstCompile]
         private int InitRoot(int octant, int scale = 0)
         {
-            var pos = select(-GetSegSize(BaseNodeSize, scale), 0, OctantToBool3(octant));
+            var segSize = GetSegSize(BaseNodeSize, scale);
+            var pos = select(-segSize, 0, OctantToBool3(octant));
             var index = InitNode(pos, scale, _defaultValue);
 
             _rootIndexes[octant] = index;
@@ -717,6 +726,18 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
+        private readonly bool IsDefault(Node node)
+        {
+            return node.Value.Equals(_defaultValue);
+        }
+
+        [BurstCompile]
+        private readonly Node RootNode(int octant)
+        {
+            return Nodes[_rootIndexes[octant]];
+        }
+
+        [BurstCompile]
         private readonly bool PointWithinOctant(float3 position, int octant)
         {
             var root = RootNode(octant);
@@ -728,17 +749,6 @@ namespace DataTypes.Trees
         private readonly int MinEncompassingScale(float3 point)
         {
             return point.Equals(default) ? 0 : (int)ceil(log2(cmax(abs(point)) / BaseNodeSize));
-        }
-
-        [BurstCompile]
-        public readonly override string ToString()
-        {
-            var typeInfo = $"type={typeof(T)}";
-            var sizeInfo = $"baseNodeSize={BaseNodeSize}";
-            var countInfo = $"count={Count}";
-            var rootInfo = $"roots=[{string.Join(",", _rootIndexes.Select(i => i == -1 ? "_" : i.ToString()))}]";
-
-            return $"Octree({typeInfo}, {sizeInfo}, {countInfo}, {rootInfo})";
         }
 
         public interface ITraverseAction
@@ -777,28 +787,23 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private readonly bool IsDefault(Node node)
-        {
-            return node.Value.Equals(_defaultValue);
-        }
-
-        [BurstCompile]
         public struct Node
         {
             public T Value;
             public readonly float3 Position;
             public readonly int Scale;
-            public bool IsLeaf { get; private set; }
 
             private int _child0, _child1, _child2, _child3, _child4, _child5, _child6, _child7;
+
+            public bool IsLeaf { get; private set; }
 
             public Node(float3 position, int scale, T value)
             {
                 Value = value;
                 Position = position;
                 Scale = scale;
-                IsLeaf = true;
                 _child0 = _child1 = _child2 = _child3 = _child4 = _child5 = _child6 = _child7 = -1;
+                IsLeaf = true;
             }
 
             [BurstCompile]
@@ -837,7 +842,7 @@ namespace DataTypes.Trees
             }
 
             [BurstCompile]
-            public void SetChildren(NativeArray<int> children)
+            public void SetChildren(in NativeArray<int> children)
             {
                 for (var i = 0; i < 8; i++) SetChild(i, children[i]);
             }

@@ -1,5 +1,7 @@
 using DataTypes.Trees;
 using ECS.BufferElements.TerrainGeneration.Renderer;
+using ECS.Components.TerrainGeneration;
+using ECS.Components.TerrainGeneration.Renderer;
 using ECS.Systems.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
@@ -7,7 +9,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace ECS.Components.TerrainGeneration.Renderer
+namespace ECS.Systems.TerrainGeneration
 {
     [UpdateAfter(typeof(RendererManagerSystem))]
     [BurstCompile]
@@ -40,15 +42,15 @@ namespace ECS.Components.TerrainGeneration.Renderer
 
             foreach (var seg in padded.Nodes)
             {
-                if (seg.Value == false) continue;
-                
+                if (!seg.Value) continue;
+
                 var index = terrainData.ValueRO.Segments.GetLeafAtPos(seg.Position);
 
                 if (index == -1) continue;
 
                 var node = terrainData.ValueRO.Segments.Nodes[index];
 
-                ecb.AddComponent<DestroySegmentTag>(node.Value);
+                if (node.Value != Placeholder && node.Value != default) ecb.AddComponent<DestroySegmentTag>(node.Value);
 
                 var entity = state.EntityManager.Instantiate(settings.RendererSegmentPrefab);
 
@@ -63,5 +65,7 @@ namespace ECS.Components.TerrainGeneration.Renderer
 
             ecb.Playback(state.EntityManager);
         }
+
+        private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };
     }
 }

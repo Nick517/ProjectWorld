@@ -46,7 +46,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             var segsToCreate = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
             foreach (var point in SystemAPI.Query<RendererPointAspect>())
             {
-                PopulateSimple(point, ref segsToCreate);
+                Populate(point, ref segsToCreate);
                 ecb.RemoveComponent<UpdateRendererSegmentsTag>(point.Entity);
             }
 
@@ -142,20 +142,6 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             node = octree.Nodes[index];
 
             for (var oct = 0; oct < 8; oct++) PopulateRecursive(point, lod, ref octree, node.GetChild(oct));
-        }
-
-        [BurstCompile]
-        private void PopulateSimple(RendererPointAspect point, ref Octree<Entity> octree)
-        {
-            var megaSegCount = point.Settings.MegaSegments;
-
-            for (var x = -megaSegCount; x <= megaSegCount; x++)
-            for (var y = -megaSegCount; y <= megaSegCount; y++)
-            for (var z = -megaSegCount; z <= megaSegCount; z++)
-            {
-                var segPos = point.SegmentPosition + new float3(x, y, z) * _settings.BaseSegSize;
-                octree.SetAtPos(Placeholder, segPos);
-            }
         }
 
         private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };

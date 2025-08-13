@@ -48,19 +48,15 @@ namespace ECS.Systems.TerrainGeneration
                     var abc = new float3(a, b, c);
                     var segPos = segMin + abc * settings.BaseSegSize;
                     var index = terrainData.ValueRO.Maps.GetIndexAtPos(segPos);
-                    CubicArray<float> map;
 
-                    if (index == -1)
-                    {
-                        map = TerrainGenerator.CreateMap(settings, tgTreeBlob, segPos);
-                        index = terrainData.ValueRW.Maps.PosToIndex(segPos);
-                    }
-                    else
-                    {
-                        map = new CubicArray<float>(settings.CubeCount,
+                    var map = index == -1
+                        ? TerrainGenerator.CreateMap(settings, tgTreeBlob, segPos)
+                        : new CubicArray<float>(settings.CubeCount,
                             terrainData.ValueRO.Maps.GetArray(index, Allocator.Temp));
-                        index = terrainData.ValueRW.Maps.GetIndexAtPos(segPos);
-                    }
+
+                    index = index == -1
+                        ? terrainData.ValueRW.Maps.PosToIndex(segPos)
+                        : terrainData.ValueRW.Maps.GetIndexAtPos(segPos);
 
                     for (var x = 0; x < settings.CubeCount; x++)
                     for (var y = 0; y < settings.CubeCount; y++)
@@ -73,7 +69,7 @@ namespace ECS.Systems.TerrainGeneration
 
                         if (mod.Addition) val += mod.Range - dist;
                         else val -= mod.Range - dist;
-                        
+
                         val = math.clamp(val, 0, 1);
 
                         if (dist <= mod.Range) map.SetAt(xyz, val);

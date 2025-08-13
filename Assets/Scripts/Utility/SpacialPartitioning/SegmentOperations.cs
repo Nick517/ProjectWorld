@@ -1,6 +1,5 @@
 using Unity.Burst;
 using Unity.Mathematics;
-using static Unity.Mathematics.math;
 
 namespace Utility.SpacialPartitioning
 {
@@ -19,7 +18,7 @@ namespace Utility.SpacialPartitioning
         
         public static float3 GetClosestSegPos(float3 pos, float segSize)
         {
-            return floor(pos / segSize) * segSize;
+            return math.floor(pos / segSize) * segSize;
         }
 
         public static float3 GetClosestSegCenter(float3 pos, float segSize)
@@ -34,12 +33,12 @@ namespace Utility.SpacialPartitioning
 
         public static bool PointWithinSeg(float3 point, float3 segPos, float segSize)
         {
-            return all(point >= segPos) && all(point < segPos + segSize);
+            return math.all(point >= segPos) && math.all(point < segPos + segSize);
         }
         
         public static float ScaleMultiplier(int scale)
         {
-            return pow(2, scale);
+            return math.pow(2, scale);
         }
     }
 }

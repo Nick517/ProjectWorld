@@ -5,21 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/BufferElements/TerrainGeneration/TerrainModificationBufferElement.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/BufferElements/TerrainGeneration/TerrainModificationBufferElement.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/TerrainModificationManager.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/TerrainModificationManager.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Ball.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Ball.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Terrain.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Terrain.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Terrain Renderer Segment.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Terrain Renderer Segment.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Scene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/CubicArray.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/CubicArray.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/PlayerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/PlayerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/Octree.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/SegmentModificationManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/SegmentModificationManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/SegmentModificationManagerSystem.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/SegmentModificationManagerSystem.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/TerrainModificationManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/TerrainModificationManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/Collections/NativeArrayUtility.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/Collections/NativeArrayUtility.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/SegmentOperations.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/SegmentOperations.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/TerrainGenerator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/TerrainGenerator.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Textures/Albedo Maps/RockTerrain_AlbedoMap.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/Albedo Maps/RockTerrain_AlbedoMap.png.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Textures/MSAO Maps/RockTerrain_MSAOMap.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/MSAO Maps/RockTerrain_MSAOMap.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/DefaultSettingsVolumeProfile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/DefaultSettingsVolumeProfile.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/HDRenderPipelineAsset.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/HDRPDefaultResources/HDRenderPipelineAsset.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Settings/SkyandFogSettingsProfile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Settings/SkyandFogSettingsProfile.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Normal Maps/RockTerrain_NormalMap.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/Normal Maps/RockTerrain_NormalMap.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/GraphicsSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +41,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$USER_HOME$/AppData/Local/Temp/SourceGeneratedDocuments/D7D045D6CD40897C2342B2ED/SystemGenerator/Unity.Entities.SourceGen.SystemGenerator.SystemGenerator/TerrainModificationManager__System_10229265480.g.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Graph/TggGraphView.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/MarchingCubeTables.cs" root0="FORCE_HIGHLIGHTING" />
@@ -568,7 +577,27 @@
       <workItem from="1753723218279" duration="3611000" />
       <workItem from="1753809546694" duration="21034000" />
       <workItem from="1753892885146" duration="153000" />
-      <workItem from="1753893869359" duration="9733000" />
+      <workItem from="1753893869359" duration="10328000" />
+      <workItem from="1753908813936" duration="1028000" />
+      <workItem from="1753915288346" duration="7401000" />
+      <workItem from="1753986122893" duration="1527000" />
+      <workItem from="1754022636159" duration="3713000" />
+      <workItem from="1754075095059" duration="3814000" />
+      <workItem from="1754086427691" duration="7390000" />
+      <workItem from="1754372882444" duration="603000" />
+      <workItem from="1754449311557" duration="38000" />
+      <workItem from="1754449370982" duration="3671000" />
+      <workItem from="1754697406474" duration="703000" />
+      <workItem from="1754705022436" duration="3039000" />
+      <workItem from="1754761925358" duration="8072000" />
+      <workItem from="1754874885483" duration="412000" />
+      <workItem from="1754875312621" duration="21000" />
+      <workItem from="1754875350530" duration="260000" />
+      <workItem from="1754875634206" duration="5420000" />
+      <workItem from="1754937685835" duration="5675000" />
+      <workItem from="1754954261808" duration="1940000" />
+      <workItem from="1754965333701" duration="6128000" />
+      <workItem from="1755027067144" duration="12150000" />
     </task>
     <servers />
   </component>
