@@ -1,12 +1,10 @@
-using ECS.Aspects.TerrainGeneration;
 using ECS.Components.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
 using ECS.Jobs.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
-using Unity.Transforms;
+using TerrainData = ECS.Components.TerrainGeneration.TerrainData;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
 {
@@ -16,54 +14,49 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     {
         private EntityQuery _segmentQuery;
         private EntityTypeHandle _entityTypeHandle;
-        private ComponentTypeHandle<LocalTransform> _localTransformTypeHandle;
-        private ComponentTypeHandle<SegmentScale> _segmentScaleTypeHandle;
+        private ComponentTypeHandle<SegmentInfo> _segmentInfoTypeHandle;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<TgTreeBlob>();
             state.RequireForUpdate<TerrainData>();
             state.RequireForUpdate<CreateRendererMeshTag>();
 
             _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAspect<TerrainSegmentAspect>()
                 .WithAll<CreateRendererMeshTag>()
                 .Build(ref state);
 
             _entityTypeHandle = state.GetEntityTypeHandle();
-            _localTransformTypeHandle = state.GetComponentTypeHandle<LocalTransform>(true);
-            _segmentScaleTypeHandle = state.GetComponentTypeHandle<SegmentScale>(true);
+            _segmentInfoTypeHandle = state.GetComponentTypeHandle<SegmentInfo>(true);
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             _entityTypeHandle.Update(ref state);
-            _localTransformTypeHandle.Update(ref state);
-            _segmentScaleTypeHandle.Update(ref state);
+            _segmentInfoTypeHandle.Update(ref state);
 
-            using var ecb = new EntityCommandBuffer(Allocator.TempJob);
+            var ecb = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+                .CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter();
+
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
             var tgGraph = SystemAPI.GetSingleton<TgTreeBlob>();
             var maps = SystemAPI.GetSingleton<TerrainData>().Maps;
 
             var jobHandle = new CreateRendererMeshJob
             {
-                Ecb = ecb.AsParallelWriter(),
+                Ecb = ecb,
                 EntityTypeHandle = _entityTypeHandle,
-                LocalTransformTypeHandle = _localTransformTypeHandle,
-                SegmentScaleTypeHandle = _segmentScaleTypeHandle,
+                SegmentInfoTypeHandle = _segmentInfoTypeHandle,
                 Settings = settings,
                 TgTreeBlob = tgGraph,
-                Maps = maps
+                Maps = maps,
             }.ScheduleParallel(_segmentQuery, state.Dependency);
 
-            state.Dependency = JobHandle.CombineDependencies(state.Dependency, jobHandle);
-            state.Dependency.Complete();
-
-            ecb.Playback(state.EntityManager);
+            state.Dependency = jobHandle;
         }
     }
 }

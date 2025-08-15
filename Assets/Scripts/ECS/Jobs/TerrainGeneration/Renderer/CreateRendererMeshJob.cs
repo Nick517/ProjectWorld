@@ -18,10 +18,9 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
     [BurstCompile]
     public struct CreateRendererMeshJob : IJobChunk
     {
-        public EntityCommandBuffer.ParallelWriter Ecb;
+        [WriteOnly] public EntityCommandBuffer.ParallelWriter Ecb;
         [ReadOnly] public EntityTypeHandle EntityTypeHandle;
-        [ReadOnly] public ComponentTypeHandle<LocalTransform> LocalTransformTypeHandle;
-        [ReadOnly] public ComponentTypeHandle<SegmentScale> SegmentScaleTypeHandle;
+        [ReadOnly] public ComponentTypeHandle<SegmentInfo> SegmentInfoTypeHandle;
         [ReadOnly] public BaseSegmentSettings Settings;
         [ReadOnly] public ArrayOctree<float> Maps;
         [ReadOnly] public TgTreeBlob TgTreeBlob;
@@ -30,16 +29,19 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
             in v128 chunkEnabledMask)
         {
             var entities = chunk.GetNativeArray(EntityTypeHandle);
-            var localTransforms = chunk.GetNativeArray(ref LocalTransformTypeHandle);
-            var segmentScales = chunk.GetNativeArray(ref SegmentScaleTypeHandle);
+            var segmentInfos = chunk.GetNativeArray(ref SegmentInfoTypeHandle);
 
             var enumerator = new ChunkEntityEnumerator(useEnabledMask, chunkEnabledMask, chunk.Count);
 
+            var processed = 0;
+
             while (enumerator.NextEntityIndex(out var i))
             {
+                if (processed >= Settings.MaxSegmentsPerFrame) break;
+
                 var entity = entities[i];
-                var pos = localTransforms[i].Position;
-                var scale = segmentScales[i].Scale;
+                var pos = segmentInfos[i].Position;
+                var scale = segmentInfos[i].Scale;
 
                 var vertexes = new NativeList<float3>(Allocator.Temp);
                 var cubeMap = PopulateMap(Settings, TgTreeBlob, Maps, pos, scale);
@@ -53,9 +55,12 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                     MarchCube(i, Ecb, Settings, entity, scale, cubeMap, new int3(x, y, z), ref vertexes);
 
                 foreach (var vert in vertexes) Ecb.AppendToBuffer<VertexBufferElement>(i, entity, vert);
-
+                
+                Ecb.AddComponent(i, entity, LocalTransform.FromPosition(pos));
                 Ecb.RemoveComponent<CreateRendererMeshTag>(i, entity);
                 Ecb.AddComponent<SetRendererMeshTag>(i, entity);
+
+                processed++;
             }
         }
 

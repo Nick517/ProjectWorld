@@ -6,7 +6,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
@@ -52,7 +51,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
 
             using var segsToIgnore =
                 Octree<Entity>.Intersect(terrainData.ValueRO.Segments, segsToCreate, Allocator.Temp, _comparison);
-            
+
             using var segsToDestroy =
                 Octree<Entity>.Except(terrainData.ValueRO.Segments, segsToIgnore, Allocator.Temp, _comparison);
 
@@ -61,28 +60,29 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             for (var i = 0; i < segsToCreate.Count; i++)
             {
                 var node = segsToCreate.Nodes[i];
-                if (node.Value == Placeholder)
-                {
-                    var entity = state.EntityManager.Instantiate(_settings.RendererSegmentPrefab);
 
-                    ecb.AddComponent(entity, LocalTransform.FromPosition(node.Position));
-                    ecb.AddComponent(entity, new SegmentScale { Scale = node.Scale });
-                    ecb.AddComponent<CreateRendererMeshTag>(entity);
+                if (node.Value != Placeholder) continue;
 
-                    terrainData.ValueRW.Segments.SetAtPos(entity, node.Position, node.Scale);
-                }
+                var entity = state.EntityManager.Instantiate(_settings.RendererSegmentPrefab);
+
+                ecb.AddComponent(entity, new SegmentInfo { Position = node.Position, Scale = node.Scale });
+                ecb.AddComponent<CreateRendererMeshTag>(entity);
+
+                terrainData.ValueRW.Segments.SetAtPos(entity, node.Position, node.Scale);
             }
 
             for (var i = 0; i < segsToDestroy.Count; i++)
             {
                 var node = segsToDestroy.Nodes[i];
+                
                 if (node.Value == default) continue;
 
                 var index = terrainData.ValueRO.Segments.GetIndexAtPos(node.Position, node.Scale);
+                
                 if (index == -1) continue;
 
-                ecb.AddComponent(node.Value, new DestroySegmentTag());
-                
+                ecb.AddComponent<DestroySegmentTag>(node.Value);
+
                 terrainData.ValueRW.Segments.SetAtIndex(default, index);
             }
 

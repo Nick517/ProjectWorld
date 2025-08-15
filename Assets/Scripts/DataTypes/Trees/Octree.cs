@@ -4,7 +4,6 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using Utility.Collections;
-using static Unity.Mathematics.math;
 using static Utility.SpacialPartitioning.OctantOperations;
 using static Utility.SpacialPartitioning.SegmentOperations;
 
@@ -44,16 +43,10 @@ namespace DataTypes.Trees
         public int SetAtPos(T value, float3 position, int scale = 0)
         {
             var index = PosToIndex(position, scale);
-            
-            SetAtIndex(value, index);
-            
-            return index;
-        }
 
-        [BurstCompile]
-        public T GetAtPos(float3 position, int scale = 0)
-        {
-            return GetAtIndex(PosToIndex(position, scale));
+            SetAtIndex(value, index);
+
+            return index;
         }
 
         [BurstCompile]
@@ -87,7 +80,7 @@ namespace DataTypes.Trees
                 var o = position >= pos + size;
                 var oct = Bool3ToOctant(o);
 
-                pos += select(0, size, o);
+                pos += math.select(0, size, o);
 
                 if (node.GetChild(oct) == -1) node.SetChild(oct, InitNode(pos, s, _defaultValue));
 
@@ -122,7 +115,7 @@ namespace DataTypes.Trees
                 var o = position >= pos + size;
                 var oct = Bool3ToOctant(o);
 
-                pos += select(0, size, o);
+                pos += math.select(0, size, o);
 
                 if (node.GetChild(oct) == -1) return -1;
 
@@ -156,7 +149,7 @@ namespace DataTypes.Trees
                 var o = position >= pos + size;
                 var oct = Bool3ToOctant(o);
 
-                pos += select(0, size, o);
+                pos += math.select(0, size, o);
 
                 if (node.GetChild(oct) == -1) return index;
 
@@ -284,8 +277,12 @@ namespace DataTypes.Trees
         private int UnionByIndex(int thisIndex, int otherIndex, in Octree<T> other, ref Octree<T> result,
             bool copyThis = false)
         {
-            if (thisIndex == -1 && otherIndex == -1) return -1;
-            if (thisIndex == -1) return result.CopyByIndex(otherIndex, other);
+            switch (thisIndex)
+            {
+                case -1 when otherIndex == -1: return -1;
+                case -1: return result.CopyByIndex(otherIndex, other);
+            }
+
             if (otherIndex == -1) return result.CopyByIndex(thisIndex, this);
 
             var thisNode = Nodes[thisIndex];
@@ -311,8 +308,7 @@ namespace DataTypes.Trees
         {
             this = Except(this, other,
                 Allocator,
-                new DefaultComparison(),
-                new DefaultCollisionAction()
+                new DefaultComparison()
             );
         }
 
@@ -322,37 +318,14 @@ namespace DataTypes.Trees
         {
             this = Except(this, other,
                 Allocator,
-                comparison,
-                new DefaultCollisionAction()
-            );
-        }
-
-        public static Octree<T> Except(in Octree<T> treeA, in Octree<T> treeB,
-            Allocator allocator)
-        {
-            return Except(treeA, treeB,
-                allocator,
-                new DefaultComparison(),
-                new DefaultCollisionAction()
-            );
-        }
-
-        public static Octree<T> Except<TComparison>(in Octree<T> treeA, in Octree<T> treeB,
-            Allocator allocator, TComparison comparison)
-            where TComparison : struct, IComparison
-        {
-            return Except(treeA, treeB,
-                allocator,
-                comparison,
-                new DefaultCollisionAction()
+                comparison
             );
         }
 
         [BurstCompile]
-        public static Octree<T> Except<TComparison, TAction>(in Octree<T> treeA, in Octree<T> treeB,
-            Allocator allocator, TComparison comparison, TAction action)
+        public static Octree<T> Except<TComparison>(in Octree<T> treeA, in Octree<T> treeB,
+            Allocator allocator, TComparison comparison)
             where TComparison : struct, IComparison
-            where TAction : struct, ICollisionAction
         {
             var treeR = new Octree<T>(treeA.BaseNodeSize, allocator);
 
@@ -375,7 +348,7 @@ namespace DataTypes.Trees
                     treeR._rootIndexes[oct] = ExceptLargerTree(
                         indexA, indexB, oppOct, treeB.Nodes[indexB].Scale,
                         treeA, treeB, ref treeR,
-                        allocator, comparison, action);
+                        allocator, comparison);
                 }
                 else
                 {
@@ -385,7 +358,7 @@ namespace DataTypes.Trees
                     treeR._rootIndexes[oct] = ExceptByIndex(
                         indexA, indexB,
                         treeA, treeB, ref treeR,
-                        allocator, comparison, action);
+                        allocator, comparison);
                 }
             }
 
@@ -393,11 +366,10 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private static int ExceptLargerTree<TComparison, TAction>(int indexA, int indexB, int oppOct, int scale,
+        private static int ExceptLargerTree<TComparison>(int indexA, int indexB, int oppOct, int scale,
             in Octree<T> treeA, in Octree<T> treeB, ref Octree<T> treeR,
-            Allocator allocator, TComparison comparison, TAction action)
+            Allocator allocator, TComparison comparison)
             where TComparison : struct, IComparison
-            where TAction : struct, ICollisionAction
         {
             if (indexA == -1 || indexB == -1) return -1;
 
@@ -407,7 +379,7 @@ namespace DataTypes.Trees
                 return ExceptByIndex(
                     indexA, indexB,
                     treeA, treeB, ref treeR,
-                    allocator, comparison, action);
+                    allocator, comparison);
 
             var keep = false;
             var childIndexes = new NativeArray<int>(8, allocator);
@@ -422,7 +394,7 @@ namespace DataTypes.Trees
             childIndexes[oppOct] = ExceptLargerTree(
                 nodeA.GetChild(oppOct), indexB, oppOct, scale,
                 treeA, treeB, ref treeR,
-                allocator, comparison, action);
+                allocator, comparison);
 
             if (!keep && childIndexes[oppOct] == -1)
             {
@@ -441,11 +413,10 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
-        private static int ExceptByIndex<TComparison, TCollisionAction>(int indexA, int indexB,
+        private static int ExceptByIndex<TComparison>(int indexA, int indexB,
             in Octree<T> treeA, in Octree<T> treeB, ref Octree<T> result,
-            Allocator allocator, TComparison comparison, TCollisionAction action)
+            Allocator allocator, TComparison comparison)
             where TComparison : struct, IComparison
-            where TCollisionAction : struct, ICollisionAction
         {
             if (indexA == -1) return -1;
             if (indexB == -1) return result.CopyByIndex(indexA, treeA);
@@ -456,7 +427,7 @@ namespace DataTypes.Trees
 
             if (nodeA.IsLeaf)
                 return !collides
-                    ? result.InitNode(nodeA.Position, nodeA.Scale, action.Execute(nodeA.Value, nodeB.Value))
+                    ? result.InitNode(nodeA.Position, nodeA.Scale, nodeA.Value)
                     : -1;
 
             if (nodeB.IsLeaf) return !collides ? result.CopyByIndex(indexA, treeA) : -1;
@@ -469,7 +440,7 @@ namespace DataTypes.Trees
                 childIndexes[oct] = ExceptByIndex(
                     nodeA.GetChild(oct), nodeB.GetChild(oct),
                     treeA, treeB, ref result,
-                    allocator, comparison, action);
+                    allocator, comparison);
 
                 if (childIndexes[oct] != -1) keep = true;
             }
@@ -484,7 +455,7 @@ namespace DataTypes.Trees
             var node = new Node(nodeA.Position, nodeA.Scale, treeA._defaultValue);
             node.SetChildren(childIndexes);
 
-            if (collides) node.Value = action.Execute(node.Value, nodeB.Value);
+            if (collides) node.Value = nodeA.Value;
 
             result.Nodes[index] = node;
             childIndexes.Dispose();
@@ -497,48 +468,14 @@ namespace DataTypes.Trees
         {
             this = Intersect(this, other,
                 Allocator,
-                new DefaultComparison(),
-                new DefaultCollisionAction()
+                new DefaultComparison()
             );
         }
 
         [BurstCompile]
-        public void Intersect<TComparison>(in Octree<T> other, TComparison comparison)
-            where TComparison : struct, IComparison
-        {
-            this = Intersect(this, other,
-                Allocator,
-                comparison,
-                new DefaultCollisionAction()
-            );
-        }
-
-        public static Octree<T> Intersect(in Octree<T> treeA, in Octree<T> treeB,
-            Allocator allocator)
-        {
-            return Intersect(treeA, treeB,
-                allocator,
-                new DefaultComparison(),
-                new DefaultCollisionAction()
-            );
-        }
-
         public static Octree<T> Intersect<TComparison>(in Octree<T> treeA, in Octree<T> treeB,
             Allocator allocator, TComparison comparison)
             where TComparison : struct, IComparison
-        {
-            return Intersect(treeA, treeB,
-                allocator,
-                comparison,
-                new DefaultCollisionAction()
-            );
-        }
-
-        [BurstCompile]
-        public static Octree<T> Intersect<TComparison, TCollisionAction>(in Octree<T> treeA, in Octree<T> treeB,
-            Allocator allocator, TComparison comparison, TCollisionAction action)
-            where TComparison : struct, IComparison
-            where TCollisionAction : struct, ICollisionAction
         {
             var treeR = new Octree<T>(treeA.BaseNodeSize, allocator);
 
@@ -560,18 +497,17 @@ namespace DataTypes.Trees
                 treeR._rootIndexes[oct] = IntersectByIndex(
                     indexA, indexB,
                     treeA, treeB, ref treeR,
-                    allocator, comparison, action);
+                    allocator, comparison);
             }
 
             return treeR;
         }
 
         [BurstCompile]
-        private static int IntersectByIndex<TComparison, TCollisionAction>(int indexA, int indexB,
+        private static int IntersectByIndex<TComparison>(int indexA, int indexB,
             in Octree<T> treeA, in Octree<T> treeB, ref Octree<T> result,
-            Allocator allocator, TComparison comparison, TCollisionAction action)
+            Allocator allocator, TComparison comparison)
             where TComparison : struct, IComparison
-            where TCollisionAction : struct, ICollisionAction
         {
             if (indexA == -1 || indexB == -1) return -1;
 
@@ -581,7 +517,7 @@ namespace DataTypes.Trees
 
             if (nodeA.IsLeaf || nodeB.IsLeaf)
                 return collides
-                    ? result.InitNode(nodeA.Position, nodeA.Scale, action.Execute(nodeA.Value, nodeB.Value))
+                    ? result.InitNode(nodeA.Position, nodeA.Scale, nodeA.Value)
                     : -1;
 
             var keep = collides;
@@ -592,7 +528,7 @@ namespace DataTypes.Trees
                 childIndexes[oct] = IntersectByIndex(
                     nodeA.GetChild(oct), nodeB.GetChild(oct),
                     treeA, treeB, ref result,
-                    allocator, comparison, action);
+                    allocator, comparison);
 
                 if (childIndexes[oct] != -1) keep = true;
             }
@@ -607,7 +543,7 @@ namespace DataTypes.Trees
             var node = new Node(nodeA.Position, nodeA.Scale, treeA._defaultValue);
             node.SetChildren(childIndexes);
 
-            if (collides) node.Value = action.Execute(node.Value, nodeB.Value);
+            if (collides) node.Value = nodeA.Value;
 
             result.Nodes[index] = node;
             childIndexes.Dispose();
@@ -626,7 +562,7 @@ namespace DataTypes.Trees
 
             for (var oct = 0; oct < 8; oct++)
             {
-                var pos = node.Position + select(0, childSize, OctantToBool3(oct));
+                var pos = node.Position + math.select(0, childSize, OctantToBool3(oct));
                 node.SetChild(oct, InitNode(pos, childScale, _defaultValue));
             }
 
@@ -690,7 +626,7 @@ namespace DataTypes.Trees
         private int InitRoot(int octant, int scale = 0)
         {
             var segSize = GetSegSize(BaseNodeSize, scale);
-            var pos = select(-segSize, 0, OctantToBool3(octant));
+            var pos = math.select(-segSize, 0, OctantToBool3(octant));
             var index = InitNode(pos, scale, _defaultValue);
 
             _rootIndexes[octant] = index;
@@ -748,7 +684,7 @@ namespace DataTypes.Trees
         [BurstCompile]
         private readonly int MinEncompassingScale(float3 point)
         {
-            return point.Equals(default) ? 0 : (int)ceil(log2(cmax(abs(point)) / BaseNodeSize));
+            return point.Equals(default) ? 0 : (int)math.ceil(math.log2(math.cmax(math.abs(point)) / BaseNodeSize));
         }
 
         public interface ITraverseAction
@@ -761,11 +697,6 @@ namespace DataTypes.Trees
             public bool Evaluate(in T a, in T b);
         }
 
-        public interface ICollisionAction
-        {
-            public T Execute(in T a, in T b);
-        }
-
         [BurstCompile]
         private readonly struct DefaultComparison : IComparison
         {
@@ -773,16 +704,6 @@ namespace DataTypes.Trees
             public bool Evaluate(in T a, in T b)
             {
                 return a.Equals(b);
-            }
-        }
-
-        [BurstCompile]
-        private readonly struct DefaultCollisionAction : ICollisionAction
-        {
-            [BurstCompile]
-            public T Execute(in T a, in T b)
-            {
-                return a;
             }
         }
 
@@ -853,15 +774,17 @@ namespace DataTypes.Trees
                 var posInfo = $"pos=({Position.x:F2}, {Position.y:F2}, {Position.z:F2})";
                 var scaleInfo = $"scale={Scale}";
                 var valueInfo = $"value={Value.ToString()}";
-                var childInfo = IsLeaf ? "leaf" : "children=[";
 
-                if (!IsLeaf)
-                    for (var i = 0; i < 8; i++)
-                    {
-                        var c = GetChild(i);
-                        childInfo += c != -1 ? c : "_";
-                        childInfo += i != 7 ? "," : "]";
-                    }
+                if (IsLeaf) return $"Node({posInfo}, {scaleInfo}, {valueInfo}, leaf)";
+
+                var childInfo = "children=[";
+
+                for (var i = 0; i < 8; i++)
+                {
+                    var c = GetChild(i);
+                    childInfo += c != -1 ? c : "_";
+                    childInfo += i != 7 ? "," : "]";
+                }
 
                 return $"Node({posInfo}, {scaleInfo}, {valueInfo}, {childInfo})";
             }

@@ -10,7 +10,7 @@ namespace ECS.Components.TerrainGeneration
         public float BaseCubeSize;
         public int CubeCount;
         public float MapSurface;
-        public int MaxColliderScale;
+        public int MaxSegmentsPerFrame;
 
         public float BaseSegSize => BaseCubeSize * CubeCount;
         public int CubeCountTotal => CubeCount * CubeCount * CubeCount;

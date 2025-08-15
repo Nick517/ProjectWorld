@@ -1,16 +1,13 @@
-using ECS.Aspects.TerrainGeneration;
 using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Entities.Graphics;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Rendering;
 using UnityEngine;
-using UnityEngine.Rendering;
 using MeshCollider = Unity.Physics.MeshCollider;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
@@ -21,6 +18,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     {
         private BufferLookup<VertexBufferElement> _vertexBufferLookup;
         private BufferLookup<TriangleBufferElement> _triangleBufferLookup;
+        private EntityQuery _segmentQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -30,6 +28,10 @@ namespace ECS.Systems.TerrainGeneration.Renderer
 
             _vertexBufferLookup = state.GetBufferLookup<VertexBufferElement>(true);
             _triangleBufferLookup = state.GetBufferLookup<TriangleBufferElement>(true);
+
+            _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
+                .WithAll<SetRendererMeshTag>()
+                .Build(ref state);
         }
 
         public void OnUpdate(ref SystemState state)
@@ -41,14 +43,15 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
             var material = settings.Material.Value;
 
-            foreach (var seg in SystemAPI.Query<TerrainSegmentAspect>().WithAll<SetRendererMeshTag>())
+            foreach (var entity in _segmentQuery.ToEntityArray(Allocator.Temp))
             {
-                var entity = seg.Entity;
+                var vertexBuffer = _vertexBufferLookup[entity];
+                var triangleBuffer = _triangleBufferLookup[entity];
 
                 var mesh = new Mesh
                 {
-                    vertices = _vertexBufferLookup[entity].Reinterpret<Vector3>().AsNativeArray().ToArray(),
-                    triangles = _triangleBufferLookup[entity].Reinterpret<int>().AsNativeArray().ToArray()
+                    vertices = vertexBuffer.Reinterpret<Vector3>().AsNativeArray().ToArray(),
+                    triangles = triangleBuffer.Reinterpret<int>().AsNativeArray().ToArray()
                 };
 
                 mesh.RecalculateNormals();
@@ -58,29 +61,25 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 ecb.SetComponent(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
                 ecb.SetComponent(entity, new RenderBounds { Value = mesh.bounds.ToAABB() });
 
-                if (seg.Scale <= settings.MaxColliderScale)
+                var vertices = vertexBuffer.Reinterpret<float3>().AsNativeArray();
+                var triangles = new NativeArray<int3>(triangleBuffer.Length / 3, Allocator.Temp);
+
+                for (var i = 0; i < triangles.Length; i++)
                 {
-                    var vertices = _vertexBufferLookup[entity].Reinterpret<float3>().AsNativeArray();
-                    var triangleBuffer = _triangleBufferLookup[entity];
-                    var triangles = new NativeArray<int3>(triangleBuffer.Length / 3, Allocator.Temp);
-
-                    for (var i = 0; i < triangles.Length; i++)
-                    {
-                        var index = i * 3;
-                        triangles[i] = new int3(
-                            triangleBuffer[index],
-                            triangleBuffer[index + 1],
-                            triangleBuffer[index + 2]
-                        );
-                    }
-
-                    ecb.AddComponent(entity, new PhysicsCollider { Value = MeshCollider.Create(vertices, triangles) });
-                    triangles.Dispose();
+                    var index = i * 3;
+                    triangles[i] = new int3(
+                        triangleBuffer[index],
+                        triangleBuffer[index + 1],
+                        triangleBuffer[index + 2]
+                    );
                 }
 
+                ecb.AddComponent(entity, new PhysicsCollider { Value = MeshCollider.Create(vertices, triangles) });
                 ecb.RemoveComponent<VertexBufferElement>(entity);
                 ecb.RemoveComponent<TriangleBufferElement>(entity);
                 ecb.RemoveComponent<SetRendererMeshTag>(entity);
+
+                triangles.Dispose();
             }
 
             ecb.Playback(state.EntityManager);

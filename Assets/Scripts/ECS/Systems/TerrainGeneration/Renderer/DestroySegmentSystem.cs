@@ -1,4 +1,3 @@
-using ECS.Aspects.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
@@ -11,14 +10,13 @@ namespace ECS.Systems.TerrainGeneration.Renderer
     public partial struct DestroySegmentSystem : ISystem
     {
         private EntityQuery _segmentQuery;
-        
+
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<DestroySegmentTag>();
-            
+
             _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAspect<TerrainSegmentAspect>()
                 .WithAll<DestroySegmentTag>()
                 .Build(ref state);
         }
@@ -28,7 +26,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         {
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-            foreach (var seg in _segmentQuery.ToEntityArray(Allocator.Temp)) ecb.DestroyEntity(seg);
+            foreach (var entity in _segmentQuery.ToEntityArray(Allocator.Temp)) ecb.DestroyEntity(entity);
 
             ecb.Playback(state.EntityManager);
         }

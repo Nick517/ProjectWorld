@@ -231,6 +231,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
+      propertyPath: maxSegmentsPerFrame
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
+        type: 3}
       propertyPath: terrainSegmentPrefab
       value: 
       objectReference: {fileID: 5932196773895458033, guid: d519b212ff0182f4aa77bacb6eb4d493,
@@ -288,7 +293,7 @@ PrefabInstance:
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -298,7 +303,7 @@ PrefabInstance:
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -338,7 +343,7 @@ PrefabInstance:
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: lod
-      value: 0.6
+      value: 0.35
       objectReference: {fileID: 0}
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -368,7 +373,7 @@ PrefabInstance:
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: maxSegmentScale
-      value: 5
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7734283982704057008, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
