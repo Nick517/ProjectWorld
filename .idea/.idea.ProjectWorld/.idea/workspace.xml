@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Compute Shaders.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Compute Shaders/CreateRenderMesh.compute" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Compute Shaders/CreateRenderMesh.compute.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Compute Shaders/MarchingCubeTables.hlsl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Compute Shaders/MarchingCubeTables.hlsl.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Terrain Test.unity" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Terrain Test.unity.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration/DrawSegmentOutline.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Scene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/TerrainGeneration/Renderer/CreateRendererMeshJob.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/TerrainGeneration/Renderer/CreateRendererMeshJob.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
@@ -600,6 +599,9 @@
       <workItem from="1755293379030" duration="13114000" />
       <workItem from="1755318179845" duration="12414000" />
       <workItem from="1755369227793" duration="18212000" />
+      <workItem from="1756502468584" duration="4037000" />
+      <workItem from="1756515632034" duration="5669000" />
+      <workItem from="1756529310743" duration="4893000" />
     </task>
     <servers />
   </component>
