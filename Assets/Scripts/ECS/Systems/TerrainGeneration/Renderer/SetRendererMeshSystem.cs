@@ -57,22 +57,19 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 mesh.RecalculateNormals();
                 mesh.RecalculateBounds();
 
-                ecb.SetSharedComponentManaged(entity, new RenderMeshArray(new[] { material }, new[] { mesh }));
-                ecb.SetComponent(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
-                ecb.SetComponent(entity, new RenderBounds { Value = mesh.bounds.ToAABB() });
+                ecb.AddSharedComponentManaged(entity, new RenderMeshArray(new[] { material }, new[] { mesh }));
+                ecb.AddComponent(entity, MaterialMeshInfo.FromRenderMeshArrayIndices(0, 0));
+                ecb.AddComponent(entity, new RenderBounds { Value = mesh.bounds.ToAABB() });
 
                 var vertices = vertexBuffer.Reinterpret<float3>().AsNativeArray();
                 var triangles = new NativeArray<int3>(triangleBuffer.Length / 3, Allocator.Temp);
 
-                for (var i = 0; i < triangles.Length; i++)
-                {
-                    var index = i * 3;
+                for (var i = 0; i < triangles.Length; i += 3)
                     triangles[i] = new int3(
-                        triangleBuffer[index],
-                        triangleBuffer[index + 1],
-                        triangleBuffer[index + 2]
+                        triangleBuffer[i],
+                        triangleBuffer[i + 1],
+                        triangleBuffer[i + 2]
                     );
-                }
 
                 ecb.AddComponent(entity, new PhysicsCollider { Value = MeshCollider.Create(vertices, triangles) });
                 ecb.RemoveComponent<VertexBufferElement>(entity);

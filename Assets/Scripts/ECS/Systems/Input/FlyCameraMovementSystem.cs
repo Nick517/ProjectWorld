@@ -1,8 +1,8 @@
-using ECS.Aspects.Input;
 using ECS.Components.Input;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 
 namespace ECS.Systems.Input
 {
@@ -10,33 +10,31 @@ namespace ECS.Systems.Input
     [BurstCompile]
     public partial struct FlyCameraMovementSystem : ISystem
     {
-        private FlyCameraAspect _flyCamera;
-        private FlyCameraInput _flyCameraInput;
-        private float3 _velocity;
-
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            state.RequireForUpdate<FlyCameraSettings>();
+            state.RequireForUpdate<FlyCamera>();
             state.RequireForUpdate<FlyCameraInput>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            _flyCamera = SystemAPI.GetAspect<FlyCameraAspect>(SystemAPI.GetSingletonEntity<FlyCameraSettings>());
-            _flyCameraInput = SystemAPI.GetSingleton<FlyCameraInput>();
+            var flyCam = SystemAPI.GetSingletonRW<FlyCamera>();
+            var transform = SystemAPI.GetComponentRW<LocalTransform>(SystemAPI.GetSingletonEntity<FlyCamera>());
+            var flyCamInput = SystemAPI.GetSingleton<FlyCameraInput>();
             var deltaTime = SystemAPI.Time.DeltaTime;
+            var velocity = flyCam.ValueRO.Velocity;
 
-            _velocity += AccelerationVector;
-            _velocity = math.lerp(_velocity, float3.zero, _flyCamera.Damping * deltaTime);
-            _flyCamera.Position += _flyCamera.LocalTransform.Right() * _velocity.x * deltaTime;
-            _flyCamera.Position += _flyCamera.LocalTransform.Up() * _velocity.y * deltaTime;
-            _flyCamera.Position += _flyCamera.LocalTransform.Forward() * _velocity.z * deltaTime;
+            velocity += flyCamInput.Movement * flyCam.ValueRO.Acceleration *
+                        (flyCamInput.Sprint ? flyCam.ValueRO.SprintMultiplier : 1);
+
+            velocity = math.lerp(velocity, float3.zero, flyCam.ValueRO.Damping * deltaTime);
+            transform.ValueRW.Position += transform.ValueRW.Right() * velocity.x * deltaTime;
+            transform.ValueRW.Position += transform.ValueRW.Up() * velocity.y * deltaTime;
+            transform.ValueRW.Position += transform.ValueRW.Forward() * velocity.z * deltaTime;
+            
+            flyCam.ValueRW.Velocity = velocity;
         }
-
-        private readonly float3 AccelerationVector => _flyCameraInput.Sprint
-            ? _flyCameraInput.Movement * _flyCamera.Acceleration * _flyCamera.SprintMultiplier
-            : _flyCameraInput.Movement * _flyCamera.Acceleration;
     }
 }

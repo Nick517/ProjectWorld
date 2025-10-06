@@ -1,9 +1,9 @@
-using ECS.Aspects.TerrainGeneration;
 using ECS.Components.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Transforms;
 using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace ECS.Systems.TerrainGeneration
@@ -24,10 +24,15 @@ namespace ECS.Systems.TerrainGeneration
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
 
-            foreach (var point in SystemAPI.Query<RendererPointAspect>())
-                if (!PointWithinSeg(point.Position, point.SegmentPosition,
-                        settings.BaseSegSize * point.Settings.ReloadScale))
-                    point.UpdateSegmentPosition(ecb, settings);
+            foreach (var (point, transform, entity) in SystemAPI.Query<RefRW<RendererPoint>, RefRO<LocalTransform>>().WithEntityAccess())
+            {
+                var position = transform.ValueRO.Position;
+
+                if (PointWithinSeg(position, point.ValueRO.SegmentPosition, settings.BaseSegSize)) continue;
+
+                point.ValueRW.SegmentPosition = GetClosestSegPos(position, GetSegSize(settings.BaseSegSize));
+                ecb.AddComponent<UpdateRendererSegmentsTag>(entity);
+            }
 
             ecb.Playback(state.EntityManager);
         }

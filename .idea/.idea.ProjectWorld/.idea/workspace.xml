@@ -5,15 +5,63 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5f1eb2ff-92b7-41d3-93a0-0d0de7bdcf13" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Terrain Test.unity" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Terrain Test.unity.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration/DrawSegmentOutline.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Testing/Octree Test.unity" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Testing/Octree Test.unity.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Testing/Terrain Test.unity" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scenes/Testing/Terrain Test.unity.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration/TerrainTest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration/TerrainTest.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration/TerrainTestEditor.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration/TerrainTestEditor.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/ECS.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/ECS/EntityConversion.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/ECS/EntityConversion.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hs_err_pid30048.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ProjectWorld/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Terrain Renderer Segment.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Entity Prefabs/Terrain Renderer Segment.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Octree Test.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Octree Test.unity.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Scene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Sub Scenes/Sub Scene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Terrain Test.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Terrain Test.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Testing.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input/FlyCameraAspect.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input/FlyCameraAspect.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input/InputManagerAspect.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/Input/InputManagerAspect.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/RendererPointAspect.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Aspects/TerrainGeneration/RendererPointAspect.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/FlyCameraSettingsAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/Input/FlyCameraSettingsAuthoring.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/BaseSegmentSettingsAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/BaseSegmentSettingsAuthoring.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/Renderer/RendererPointAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/Renderer/RendererPointAuthoring.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/TgGraphAuthoring.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/TgGraphAuthoring.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/FlyCameraSettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/FlyCamera.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/FlyCameraSettings.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/Input/FlyCamera.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/RendererPoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/Renderer/RendererPoint.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/SegmentPosition.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Components/TerrainGeneration/SegmentPosition.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/TerrainGeneration/Renderer/CreateRendererMeshJob.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Jobs/TerrainGeneration/Renderer/CreateRendererMeshJob.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/FlyCameraMovementSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/FlyCameraMovementSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/InputManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/Input/InputManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/CreateRendererMeshSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/CreateRendererMeshSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataInitializerSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataManagerSystem.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/TerrainDataInitializerSystem.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/TrackPointSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/TrackPointSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/TreeBuilder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TerrainGenerationGraph/TreeBuilder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utility/Input/FollowFlyCamera.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utility/Input/FollowFlyCamera.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/XR.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/XR/XRGeneralSettingsPerBuildTarget.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/XR/XRGeneralSettingsPerBuildTarget.asset.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectVersion.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,13 +75,23 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$USER_HOME$/AppData/Local/Temp/SourceGeneratedDocuments/D7D045D6CD40897C2342B2ED/SystemGenerator/Unity.Entities.SourceGen.SystemGenerator.SystemGenerator/TerrainModificationManager__System_10229265480.g.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3ea01e77be99618395f448b16bd7cc2bd4248bd9e5d8474964b2d97f39c5d74/System.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/DataTypes/CubicArray.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/DataTypes/Trees/ArrayOctree.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Debugging/Octree/OctreeVisualizerEditor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration/DrawSegmentOutline.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Debugging/TerrainGeneration/TerrainTestEditor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ECS/Authoring/TerrainGeneration/BaseSegmentSettingsAuthoring.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ECS/BufferElements/TerrainGeneration/Renderer/SegmentModifiedBufferElement.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/RendererManagerSystem.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/ECS/Systems/TerrainGeneration/Renderer/SetRendererMeshSystem.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Editor/TerrainGenerationGraph/Graph/TggGraphView.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/SpacialPartitioning/SegmentOperations.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Utility/TerrainGeneration/MarchingCubeTables.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Entities/EntityManager.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@e581b903be8e/Unity.Transforms/LocalTransform.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.collections@aea9d3bd5e19/Unity.Collections/AllocatorManager.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@f6e02210e263/Unity.Entities/Iterators/RefRW.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@f6e02210e263/Unity.Entities/Stubs/Unity/Debug.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.mathematics@8017b507cc74/Unity.Mathematics/float4x4.gen.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.physics@b8c0a578fe9d/Unity.Physics/Collision/Colliders/MeshCollider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.physics@b8c0a578fe9d/Unity.Physics/ECS/Base/Components/PhysicsComponents.cs" root0="SKIP_HIGHLIGHTING" />
@@ -88,7 +146,7 @@
 }</component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.2.0f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.2.6f2\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-projectPath &quot;C:\Users\niccs\Documents\Unity Projects\ProjectWorld&quot; -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\niccs\Documents\Unity Projects\ProjectWorld" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -99,7 +157,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.2.0f1\Editor\Unity.exe" />
+      <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\6000.2.6f2\Editor\Unity.exe" />
       <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath &quot;C:\Users\niccs\Documents\Unity Projects\ProjectWorld&quot; -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
       <option name="WORKING_DIRECTORY" value="C:\Users\niccs\Documents\Unity Projects\ProjectWorld" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -602,6 +660,50 @@
       <workItem from="1756502468584" duration="4037000" />
       <workItem from="1756515632034" duration="5669000" />
       <workItem from="1756529310743" duration="4893000" />
+      <workItem from="1756590437460" duration="610000" />
+      <workItem from="1756593279716" duration="1171000" />
+      <workItem from="1756600804209" duration="1523000" />
+      <workItem from="1756669240006" duration="10186000" />
+      <workItem from="1756686473220" duration="3344000" />
+      <workItem from="1756694692163" duration="599000" />
+      <workItem from="1757044314978" duration="2043000" />
+      <workItem from="1757051813306" duration="6902000" />
+      <workItem from="1757128568034" duration="8228000" />
+      <workItem from="1757179777880" duration="897000" />
+      <workItem from="1757195259030" duration="737000" />
+      <workItem from="1757211607905" duration="8982000" />
+      <workItem from="1757371853451" duration="204000" />
+      <workItem from="1757372428875" duration="2743000" />
+      <workItem from="1757810225010" duration="270000" />
+      <workItem from="1757810514396" duration="199000" />
+      <workItem from="1757810730491" duration="21000" />
+      <workItem from="1757810766014" duration="661000" />
+      <workItem from="1757811614825" duration="4276000" />
+      <workItem from="1757816731603" duration="414000" />
+      <workItem from="1757817174982" duration="18000" />
+      <workItem from="1757817225627" duration="7926000" />
+      <workItem from="1757877429497" duration="3200000" />
+      <workItem from="1757880675204" duration="37000" />
+      <workItem from="1757880777275" duration="163000" />
+      <workItem from="1757880988342" duration="2067000" />
+      <workItem from="1757904118134" duration="4139000" />
+      <workItem from="1758083306216" duration="654000" />
+      <workItem from="1758260775312" duration="1970000" />
+      <workItem from="1758314134026" duration="1406000" />
+      <workItem from="1758404194811" duration="445000" />
+      <workItem from="1758405020981" duration="3000" />
+      <workItem from="1758405626124" duration="2541000" />
+      <workItem from="1758482891942" duration="1423000" />
+      <workItem from="1758486966229" duration="180000" />
+      <workItem from="1758923568294" duration="1709000" />
+      <workItem from="1758925573197" duration="3124000" />
+      <workItem from="1758949889435" duration="827000" />
+      <workItem from="1759275567727" duration="164000" />
+      <workItem from="1759275747177" duration="213000" />
+      <workItem from="1759276135072" duration="13389000" />
+      <workItem from="1759554727567" duration="3552000" />
+      <workItem from="1759605436462" duration="6412000" />
+      <workItem from="1759696671645" duration="8791000" />
     </task>
     <servers />
   </component>

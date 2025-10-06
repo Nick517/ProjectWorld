@@ -34,11 +34,10 @@ namespace Debugging.Octree
             [BurstCompile]
             public void Execute(in Octree<FixedString32Bytes> octree, in Octree<FixedString32Bytes>.Node node)
             {
-                Gizmos.color = Color;
-
                 var size = GetSegSize(octree.BaseNodeSize, node.Scale);
                 var center = GetClosestSegCenter(node.Position, size);
 
+                Gizmos.color = Color;
                 Gizmos.DrawWireCube(center, (float3)size);
                 Handles.Label(center, node.Value.ToString());
             }

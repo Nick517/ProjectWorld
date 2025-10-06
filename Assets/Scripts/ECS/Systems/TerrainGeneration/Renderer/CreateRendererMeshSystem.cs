@@ -53,7 +53,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 SegmentInfoTypeHandle = _segmentInfoTypeHandle,
                 Settings = settings,
                 TgTreeBlob = tgGraph,
-                Maps = maps,
+                Maps = maps
             }.ScheduleParallel(_segmentQuery, state.Dependency);
 
             state.Dependency = jobHandle;

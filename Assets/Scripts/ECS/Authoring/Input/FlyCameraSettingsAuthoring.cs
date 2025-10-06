@@ -18,7 +18,7 @@ namespace ECS.Authoring.Input
         {
             var entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent<FirstPersonCameraTag>(entity);
-            AddComponent(entity, new FlyCameraSettings
+            AddComponent(entity, new FlyCamera
             {
                 Acceleration = authoring.acceleration,
                 SprintMultiplier = authoring.sprintMultiplier,

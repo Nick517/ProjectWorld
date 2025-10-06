@@ -14,50 +14,55 @@ namespace Debugging.Octree
         private const float BaseNodeSize = 1;
         private const float HandleSize = 0.2f;
 
-        private OctreeVisualizer _visualizer;
+        private static readonly Color HandleColor = Color.white;
+        
+        private OctreeVisualizer _target;
         private float3 _position;
         private FixedString32Bytes _value = "";
         private int _scale;
 
+        [BurstCompile]
         private void OnEnable()
         {
-            _visualizer = (OctreeVisualizer)target;
+            _target = (OctreeVisualizer)target;
         }
 
+        [BurstCompile]
         private void InitializeOctrees()
         {
-            if (!_visualizer.OctreeA.IsCreated)
-            {
-                _visualizer.OctreeA = new Octree<FixedString32Bytes>(BaseNodeSize, Allocator.Persistent);
-                _visualizer.OctreeB = new Octree<FixedString32Bytes>(BaseNodeSize, Allocator.Persistent);
+            if (_target.OctreeA.IsCreated) return;
+            
+            _target.OctreeA = new Octree<FixedString32Bytes>(BaseNodeSize, Allocator.Persistent);
+            _target.OctreeB = new Octree<FixedString32Bytes>(BaseNodeSize, Allocator.Persistent);
 
-                AssemblyReloadEvents.beforeAssemblyReload += CleanupOctrees;
-                EditorApplication.playModeStateChanged += HandlePlayModeStateChanged;
-            }
+            AssemblyReloadEvents.beforeAssemblyReload += CleanupOctrees;
+            EditorApplication.playModeStateChanged += HandlePlayModeStateChanged;
         }
 
+        [BurstCompile]
         private void CleanupOctrees()
         {
-            _visualizer.OctreeA.Dispose();
-            _visualizer.OctreeB.Dispose();
+            _target.OctreeA.Dispose();
+            _target.OctreeB.Dispose();
 
             AssemblyReloadEvents.beforeAssemblyReload -= CleanupOctrees;
             EditorApplication.playModeStateChanged -= HandlePlayModeStateChanged;
         }
 
+        [BurstCompile]
         private void HandlePlayModeStateChanged(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.ExitingEditMode || state == PlayModeStateChange.ExitingPlayMode)
-                CleanupOctrees();
+            if (state is PlayModeStateChange.ExitingEditMode or PlayModeStateChange.ExitingPlayMode) CleanupOctrees();
         }
 
+        [BurstCompile]
         public override void OnInspectorGUI()
         {
             InitializeOctrees();
             DrawDefaultInspector();
 
-            ref var octreeA = ref _visualizer.OctreeA;
-            ref var octreeB = ref _visualizer.OctreeB;
+            ref var octreeA = ref _target.OctreeA;
+            ref var octreeB = ref _target.OctreeB;
 
             var buttonWidth = EditorGUIUtility.currentViewWidth / 2 - 12;
             var options = new[] { GUILayout.Width(buttonWidth) };
@@ -122,14 +127,14 @@ namespace Debugging.Octree
             EditorGUILayout.Space();
 
             EditorGUILayout.BeginHorizontal();
-            _visualizer.drawA = GUILayout.Toggle(_visualizer.drawA, "Draw A");
-            _visualizer.drawB = GUILayout.Toggle(_visualizer.drawB, "Draw B");
+            _target.drawA = GUILayout.Toggle(_target.drawA, "Draw A");
+            _target.drawB = GUILayout.Toggle(_target.drawB, "Draw B");
             EditorGUILayout.EndHorizontal();
 
             if (GUI.changed) SceneView.RepaintAll();
         }
 
-        private void PrintOctreeState(in Octree<FixedString32Bytes> octree, string octreeName)
+        private static void PrintOctreeState(in Octree<FixedString32Bytes> octree, string octreeName)
         {
             var result = $"{octreeName}: {octree.ToString()}\n";
 
@@ -138,6 +143,7 @@ namespace Debugging.Octree
             Debug.Log(result);
         }
 
+        [BurstCompile]
         private void PrintNodeState(in Octree<FixedString32Bytes> octree, string octreeName)
         {
             var result = $"{octreeName}: ";
@@ -149,6 +155,7 @@ namespace Debugging.Octree
             Debug.Log(result);
         }
 
+        [BurstCompile]
         private void SubdivideNode(Octree<FixedString32Bytes> octree, string octreeName)
         {
             var index = octree.GetIndexAtPos(_position, _scale);
@@ -157,6 +164,7 @@ namespace Debugging.Octree
             else octree.Subdivide(index);
         }
 
+        [BurstCompile]
         private string NoNodeMessage()
         {
             var posInfo = $"pos=({_position.x:F2}, {_position.y:F2}, {_position.z:F2})";
@@ -164,11 +172,12 @@ namespace Debugging.Octree
             return $"No node at {posInfo}, {scaleInfo}";
         }
 
+        [BurstCompile]
         private void OnSceneGUI()
         {
-            if (!_visualizer.OctreeA.IsCreated) return;
+            if (!_target.OctreeA.IsCreated) return;
 
-            Handles.color = Color.white;
+            Handles.color = HandleColor;
             var handleSize = HandleUtility.GetHandleSize(_position) * HandleSize;
 
             EditorGUI.BeginChangeCheck();
@@ -177,6 +186,7 @@ namespace Debugging.Octree
             Repaint();
         }
 
+        [BurstCompile]
         private void OnDestroy()
         {
             CleanupOctrees();

@@ -1,11 +1,11 @@
 using DataTypes.Trees;
-using ECS.Aspects.TerrainGeneration;
 using ECS.Components.TerrainGeneration;
 using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
@@ -43,10 +43,13 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             var terrainData = SystemAPI.GetSingletonRW<TerrainData>();
 
             var segsToCreate = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
-            foreach (var point in SystemAPI.Query<RendererPointAspect>())
+            foreach (var (point, transform, entity) in SystemAPI
+                         .Query<RefRO<RendererPoint>, RefRO<LocalTransform>>()
+                         .WithPresent<UpdateRendererSegmentsTag>()
+                         .WithEntityAccess())
             {
-                Populate(point, ref segsToCreate);
-                ecb.RemoveComponent<UpdateRendererSegmentsTag>(point.Entity);
+                Populate(point.ValueRO, transform.ValueRO.Position, ref segsToCreate);
+                ecb.RemoveComponent<UpdateRendererSegmentsTag>(entity);
             }
 
             using var segsToIgnore =
@@ -74,11 +77,11 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             for (var i = 0; i < segsToDestroy.Count; i++)
             {
                 var node = segsToDestroy.Nodes[i];
-                
+
                 if (node.Value == default) continue;
 
                 var index = terrainData.ValueRO.Segments.GetIndexAtPos(node.Position, node.Scale);
-                
+
                 if (index == -1) continue;
 
                 ecb.AddComponent<DestroySegmentTag>(node.Value);
@@ -91,12 +94,12 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         }
 
         [BurstCompile]
-        private void Populate(RendererPointAspect point, ref Octree<Entity> octree)
+        private void Populate(RendererPoint settings, float3 point, ref Octree<Entity> octree)
         {
-            var megaSegCount = point.Settings.MegaSegments;
-            var scale = point.Settings.MaxSegmentScale;
+            var megaSegCount = settings.MegaSegments;
+            var scale = settings.MaxSegmentScale;
             var size = GetSegSize(_settings.BaseSegSize, scale);
-            var pointPos = GetClosestSegPos(point.SegmentPosition, scale);
+            var pointPos = GetClosestSegPos(point, scale);
             var pointCenter = PosToCenter(pointPos, _settings.BaseSegSize);
 
             for (var x = -megaSegCount; x <= megaSegCount; x++)
@@ -111,7 +114,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
                 var node = octree.Nodes[index];
 
                 for (var oct = 0; oct < 8; oct++)
-                    PopulateRecursive(pointCenter, point.Settings.LOD, ref octree, node.GetChild(oct));
+                    PopulateRecursive(pointCenter, settings.LOD, ref octree, node.GetChild(oct));
             }
         }
 

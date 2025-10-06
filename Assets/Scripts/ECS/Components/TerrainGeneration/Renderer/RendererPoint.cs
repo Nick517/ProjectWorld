@@ -1,4 +1,5 @@
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace ECS.Components.TerrainGeneration.Renderer
 {
@@ -7,6 +8,6 @@ namespace ECS.Components.TerrainGeneration.Renderer
         public int MaxSegmentScale;
         public int MegaSegments;
         public float LOD;
-        public int ReloadScale;
+        public float3 SegmentPosition;
     }
 }

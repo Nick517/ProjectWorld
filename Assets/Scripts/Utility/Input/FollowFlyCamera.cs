@@ -1,33 +1,25 @@
-using System.Linq;
 using ECS.Components.Input;
 using Unity.Entities;
+using Unity.Transforms;
 using UnityEngine;
-using FlyCameraAspect = ECS.Aspects.Input.FlyCameraAspect;
 
 namespace Utility.Input
 {
     public class FollowFlyCamera : MonoBehaviour
     {
         private EntityManager _entityManager;
+        private EntityQuery _entityQuery;
 
         private void Start()
         {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            _entityQuery = _entityManager.CreateEntityQuery(ComponentType.ReadOnly<FlyCamera>());
         }
 
         private void Update()
         {
-            var entities = _entityManager.GetAllEntities();
-
-            foreach (var entity in entities.Where(entity => _entityManager.HasComponent<FlyCameraSettings>(entity)))
-            {
-                var flyCameraAspect = _entityManager.GetAspect<FlyCameraAspect>(entity);
-                gameObject.transform.SetPositionAndRotation
-                    (flyCameraAspect.LocalTransform.Position, flyCameraAspect.LocalTransform.Rotation);
-                break;
-            }
-
-            entities.Dispose();
+            var flyCamTransform = _entityManager.GetComponentData<LocalTransform>(_entityQuery.GetSingletonEntity());
+            transform.SetPositionAndRotation(flyCamTransform.Position, flyCamTransform.Rotation);
         }
     }
 }

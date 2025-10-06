@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3476470693438551907}
   - component: {fileID: 2113103857992456100}
   - component: {fileID: 8879463208378380555}
-  - component: {fileID: -3327108201974584183}
+  - component: {fileID: 3735374118353703125}
   m_Layer: 0
   m_Name: Terrain Renderer Segment
   m_TagString: Untagged
@@ -90,7 +90,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &-3327108201974584183
+--- !u!64 &3735374118353703125
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

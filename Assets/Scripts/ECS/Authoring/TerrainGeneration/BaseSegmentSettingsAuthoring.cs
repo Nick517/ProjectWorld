@@ -8,7 +8,6 @@ namespace ECS.Authoring.TerrainGeneration
     public class BaseSegmentSettingsAuthoring : MonoBehaviour
     {
         public GameObject rendererSegmentPrefab;
-        public Material terrainMaterial;
         public float baseCubeSize = 1;
         public int cubeCount = 8;
         [Range(0, 1)] public float mapSurface = 0.5f;
@@ -19,11 +18,12 @@ namespace ECS.Authoring.TerrainGeneration
     {
         public override void Bake(BaseSegmentSettingsAuthoring authoring)
         {
-            var entity = GetEntity(TransformUsageFlags.Dynamic);
-            AddComponent(entity, new BaseSegmentSettings
+            var prefab = authoring.rendererSegmentPrefab;
+
+            AddComponent(GetEntity(TransformUsageFlags.Dynamic), new BaseSegmentSettings
             {
-                RendererSegmentPrefab = GetEntity(authoring.rendererSegmentPrefab, TransformUsageFlags.Dynamic),
-                Material = authoring.terrainMaterial,
+                RendererSegmentPrefab = GetEntity(prefab, TransformUsageFlags.Dynamic),
+                Material = prefab.GetComponent<MeshRenderer>().sharedMaterial,
                 BaseCubeSize = authoring.baseCubeSize,
                 CubeCount = authoring.cubeCount,
                 MapSurface = authoring.mapSurface,

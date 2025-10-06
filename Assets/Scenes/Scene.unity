@@ -163,6 +163,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03cd16d2730e46f8b10daf7613819478, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Debugging.ECS.Monobehaviour.TerrainGeneration.DrawSegmentOutlineFlagAuthoring
+  minScale: 0
+  maxScale: 9
   colors:
   - {r: 0, g: 0, b: 0, a: 1}
   - {r: 0.6470588, g: 0.1647059, b: 0.1647059, a: 1}
