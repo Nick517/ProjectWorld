@@ -7,86 +7,80 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using static Utility.SpacialPartitioning.SegmentOperations;
+using static Utility.TerrainGeneration.SegmentTags;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
 {
-    [UpdateAfter(typeof(TrackPointSystem))]
+    [UpdateAfter(typeof(TerrainDataManagerSystem))]
     [BurstCompile]
     public partial struct RendererManagerSystem : ISystem
     {
         private BaseSegmentSettings _settings;
-        private Comparison _comparison;
-        private bool _initialized;
+        private RefRW<TerrainData> _terrainData;
+        private SegmentComparison _comparison;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<RendererPoint>();
-            state.RequireForUpdate<UpdateRendererSegmentsTag>();
             state.RequireForUpdate<TerrainData>();
 
-            _comparison = new Comparison();
+            _comparison = new SegmentComparison();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            if (!_initialized)
-            {
-                _settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
-                _initialized = true;
-            }
+            var pointEntity = SystemAPI.GetSingletonEntity<RendererPoint>();
+            var point = SystemAPI.GetComponentRW<RendererPoint>(pointEntity);
+            if (!point.ValueRO.Update) return;
+            point.ValueRW.Update = false;
+            
+            _settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
+            _terrainData = SystemAPI.GetSingletonRW<TerrainData>();
 
-            using var ecb = new EntityCommandBuffer(Allocator.Temp);
-
-            var terrainData = SystemAPI.GetSingletonRW<TerrainData>();
-
+            var pointPos = SystemAPI.GetComponentRO<LocalTransform>(pointEntity).ValueRO.Position;
             var segsToCreate = new Octree<Entity>(_settings.BaseSegSize, Allocator.Temp);
-            foreach (var (point, transform, entity) in SystemAPI
-                         .Query<RefRO<RendererPoint>, RefRO<LocalTransform>>()
-                         .WithPresent<UpdateRendererSegmentsTag>()
-                         .WithEntityAccess())
-            {
-                Populate(point.ValueRO, transform.ValueRO.Position, ref segsToCreate);
-                ecb.RemoveComponent<UpdateRendererSegmentsTag>(entity);
-            }
+            Populate(point.ValueRO, pointPos, ref segsToCreate);
 
             using var segsToIgnore =
-                Octree<Entity>.Intersect(terrainData.ValueRO.Segments, segsToCreate, Allocator.Temp, _comparison);
+                Octree<Entity>.Intersect(_terrainData.ValueRO.Segments, segsToCreate, Allocator.Temp, _comparison);
 
             using var segsToDestroy =
-                Octree<Entity>.Except(terrainData.ValueRO.Segments, segsToIgnore, Allocator.Temp, _comparison);
+                Octree<Entity>.Except(_terrainData.ValueRO.Segments, segsToIgnore, Allocator.Temp, _comparison);
 
             segsToCreate.Except(segsToIgnore, _comparison);
+
+            using var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             for (var i = 0; i < segsToCreate.Count; i++)
             {
                 var node = segsToCreate.Nodes[i];
-
-                if (node.Value != Placeholder) continue;
+                if (node.Value.IsValidSegment()) continue;
 
                 var entity = state.EntityManager.Instantiate(_settings.RendererSegmentPrefab);
 
                 ecb.AddComponent(entity, new SegmentInfo { Position = node.Position, Scale = node.Scale });
                 ecb.AddComponent<CreateRendererMeshTag>(entity);
 
-                terrainData.ValueRW.Segments.SetAtPos(entity, node.Position, node.Scale);
+                _terrainData.ValueRW.Segments.SetAtPos(entity, node.Position, node.Scale);
             }
 
             for (var i = 0; i < segsToDestroy.Count; i++)
             {
                 var node = segsToDestroy.Nodes[i];
-
                 if (node.Value == default) continue;
 
-                var index = terrainData.ValueRO.Segments.GetIndexAtPos(node.Position, node.Scale);
-
+                var index = _terrainData.ValueRO.Segments.GetIndexAtPos(node.Position, node.Scale);
                 if (index == -1) continue;
 
-                ecb.AddComponent<DestroySegmentTag>(node.Value);
+                var seg = _terrainData.ValueRO.Segments.GetAtIndex(index);
+                if (!seg.IsValidSegment()) continue;
 
-                terrainData.ValueRW.Segments.SetAtIndex(default, index);
+                ecb.AddComponent<DestroySegmentTag>(seg);
+
+                _terrainData.ValueRW.Segments.SetAtIndex(default, index);
             }
 
             segsToCreate.Dispose();
@@ -94,12 +88,12 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         }
 
         [BurstCompile]
-        private void Populate(RendererPoint settings, float3 point, ref Octree<Entity> octree)
+        private void Populate(RendererPoint point, float3 pointPos, ref Octree<Entity> segments)
         {
-            var megaSegCount = settings.MegaSegments;
-            var scale = settings.MaxSegmentScale;
+            var megaSegCount = point.MegaSegments;
+            var scale = point.MaxSegmentScale;
             var size = GetSegSize(_settings.BaseSegSize, scale);
-            var pointPos = GetClosestSegPos(point, scale);
+            pointPos = GetClosestSegPos(pointPos, scale);
             var pointCenter = PosToCenter(pointPos, _settings.BaseSegSize);
 
             for (var x = -megaSegCount; x <= megaSegCount; x++)
@@ -107,50 +101,49 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             for (var z = -megaSegCount; z <= megaSegCount; z++)
             {
                 var segPos = pointPos + new float3(x, y, z) * size;
-                var index = octree.SetAtPos(default, segPos, scale);
+                var index = segments.SetAtPos(default, segPos, scale);
 
-                octree.Subdivide(index);
+                segments.Subdivide(index);
 
-                var node = octree.Nodes[index];
+                var node = segments.Nodes[index];
 
                 for (var oct = 0; oct < 8; oct++)
-                    PopulateRecursive(pointCenter, settings.LOD, ref octree, node.GetChild(oct));
+                    PopulateRecursive(pointCenter, point.LOD, ref segments, node.GetChild(oct));
             }
         }
 
         [BurstCompile]
-        private void PopulateRecursive(float3 point, float lod, ref Octree<Entity> octree, int index)
+        private void PopulateRecursive(float3 pos, float lod, ref Octree<Entity> segments, int index)
         {
             if (index == -1) return;
 
-            var node = octree.Nodes[index];
+            var node = segments.Nodes[index];
+            var active = _terrainData.ValueRO.Segments.GetAtPos(node.Position, node.Scale) != Inactive;
 
             if (node.Scale == 0)
             {
-                octree.SetAtIndex(Placeholder, index);
+                if (active) segments.SetAtIndex(PlaceHolder, index);
                 return;
             }
 
             var size = GetSegSize(_settings.BaseSegSize, node.Scale);
-            var nodeCenter = PosToCenter(node.Position, size);
-            var distance = math.distance(nodeCenter, point);
+            var center = PosToCenter(node.Position, size);
+            var distance = math.distance(center, pos);
 
             if (size / distance <= lod)
             {
-                octree.SetAtIndex(Placeholder, index);
+                if (active) segments.SetAtIndex(PlaceHolder, index);
                 return;
             }
 
-            octree.Subdivide(index);
-            node = octree.Nodes[index];
+            segments.Subdivide(index);
+            node = segments.Nodes[index];
 
-            for (var oct = 0; oct < 8; oct++) PopulateRecursive(point, lod, ref octree, node.GetChild(oct));
+            for (var oct = 0; oct < 8; oct++) PopulateRecursive(pos, lod, ref segments, node.GetChild(oct));
         }
 
-        private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };
-
         [BurstCompile]
-        private readonly struct Comparison : Octree<Entity>.IComparison
+        private readonly struct SegmentComparison : Octree<Entity>.IComparison
         {
             [BurstCompile]
             public bool Evaluate(in Entity a, in Entity b)

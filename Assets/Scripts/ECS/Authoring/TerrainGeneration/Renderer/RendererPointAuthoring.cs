@@ -21,9 +21,9 @@ namespace ECS.Authoring.TerrainGeneration.Renderer
             {
                 MaxSegmentScale = authoring.maxSegmentScale,
                 MegaSegments = authoring.megaSegments,
-                LOD = authoring.lod
+                LOD = authoring.lod,
+                Update = true
             });
-            AddComponent<UpdateRendererSegmentsTag>(entity);
         }
     }
 }

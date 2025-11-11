@@ -9,5 +9,6 @@ namespace ECS.Components.TerrainGeneration.Renderer
         public int MegaSegments;
         public float LOD;
         public float3 SegmentPosition;
+        public bool Update;
     }
 }

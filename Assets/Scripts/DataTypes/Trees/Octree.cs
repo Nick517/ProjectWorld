@@ -50,6 +50,12 @@ namespace DataTypes.Trees
         }
 
         [BurstCompile]
+        public readonly T GetAtPos(float3 position, int scale = 0)
+        {
+            return GetAtIndex(GetIndexAtPos(position, scale));
+        }
+
+        [BurstCompile]
         public void SetAtIndex(T value, int index)
         {
             var node = Nodes[index];
@@ -60,7 +66,7 @@ namespace DataTypes.Trees
         [BurstCompile]
         public readonly T GetAtIndex(int index)
         {
-            return Nodes[index].Value;
+            return index == -1 ? default : Nodes[index].Value;
         }
 
         [BurstCompile]

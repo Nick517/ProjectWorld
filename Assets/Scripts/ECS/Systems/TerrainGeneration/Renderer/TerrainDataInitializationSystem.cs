@@ -5,12 +5,10 @@ using ECS.Components.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using TerrainData = ECS.Components.TerrainGeneration.TerrainData;
 
 namespace ECS.Systems.TerrainGeneration.Renderer
 {
-    [BurstCompile]
-    public partial struct TerrainDataInitializerSystem : ISystem
+    public partial struct TerrainDataInitializationSystem : ISystem
     {
         private bool _initialized;
 
@@ -45,13 +43,12 @@ namespace ECS.Systems.TerrainGeneration.Renderer
         [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
-            _initialized = false;
-            
-            var entity = SystemAPI.GetSingletonEntity<TerrainData>();
-            var terrainData = state.EntityManager.GetComponentData<TerrainData>(entity);
+            var terrainData = SystemAPI.GetSingletonRW<TerrainData>();
 
-            if (terrainData.Maps.IsCreated) terrainData.Maps.Dispose();
-            if (terrainData.Segments.IsCreated) terrainData.Segments.Dispose();
+            if (terrainData.ValueRO.Maps.IsCreated) terrainData.ValueRW.Maps.Dispose();
+            if (terrainData.ValueRO.Segments.IsCreated) terrainData.ValueRW.Segments.Dispose();
+            
+            _initialized = false;
         }
     }
 }

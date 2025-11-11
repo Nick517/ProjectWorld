@@ -3,6 +3,7 @@ using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
+using Utility.TerrainGeneration;
 using static Utility.SpacialPartitioning.SegmentOperations;
 using TerrainData = ECS.Components.TerrainGeneration.TerrainData;
 
@@ -53,7 +54,8 @@ namespace Debugging.TerrainGeneration
             [BurstCompile]
             public void Execute(in Octree<Entity> octree, in Octree<Entity>.Node node)
             {
-                if (node.Value == default || node.Scale < MinScale || node.Scale > MaxScale) return;
+                if (!node.Value.IsValidSegment() || node.Value == default) return;
+                if (node.Scale < MinScale || node.Scale > MaxScale) return;
 
                 var size = GetSegSize(octree.BaseNodeSize, node.Scale);
                 var center = GetClosestSegCenter(node.Position, size);

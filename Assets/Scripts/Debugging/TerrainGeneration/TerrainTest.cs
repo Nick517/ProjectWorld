@@ -50,7 +50,7 @@ namespace Debugging.TerrainGeneration
             World = DefaultWorldInitialization.Initialize(WorldName, true);
 
             var simGroup = World.GetOrCreateSystemManaged<SimulationSystemGroup>();
-            simGroup.AddSystemToUpdateList(World.GetOrCreateSystem<TerrainDataInitializerSystem>());
+            simGroup.AddSystemToUpdateList(World.GetOrCreateSystem<TerrainDataManagerSystem>());
             simGroup.AddSystemToUpdateList(World.GetOrCreateSystem<CreateRendererMeshSystem>());
             simGroup.AddSystemToUpdateList(World.GetOrCreateSystem<SetRendererMeshSystem>());
 

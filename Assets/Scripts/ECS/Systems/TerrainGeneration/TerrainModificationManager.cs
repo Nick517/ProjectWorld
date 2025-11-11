@@ -33,6 +33,7 @@ namespace ECS.Systems.TerrainGeneration
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
             var terrainData = SystemAPI.GetSingletonRW<TerrainData>();
             var modifications = SystemAPI.GetSingletonBuffer<TerrainModificationBufferElement>();
+            var bufferEntity = SystemAPI.GetSingletonEntity<SegmentModifiedBufferElement>();
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
 
             foreach (var mod in modifications)
@@ -77,8 +78,7 @@ namespace ECS.Systems.TerrainGeneration
 
                     terrainData.ValueRW.Maps.SetArray(index, map.Array);
 
-                    ecb.AppendToBuffer<SegmentModifiedBufferElement>(
-                        SystemAPI.GetSingletonEntity<SegmentModifiedBufferElement>(), segPos);
+                    ecb.AppendToBuffer<SegmentModifiedBufferElement>(bufferEntity, segPos);
                 }
             }
 

@@ -7,6 +7,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using static Utility.TerrainGeneration.SegmentTags;
 
 namespace ECS.Systems.TerrainGeneration
 {
@@ -38,7 +39,7 @@ namespace ECS.Systems.TerrainGeneration
                 for (var y = -1; y <= 0; y++)
                 for (var z = -1; z <= 0; z++)
                     padded.SetAtPos(true, mod + new float3(x, y, z) * settings.BaseSegSize);
-            
+
             foreach (var seg in padded.Nodes)
             {
                 if (!seg.Value) continue;
@@ -49,7 +50,7 @@ namespace ECS.Systems.TerrainGeneration
 
                 var node = terrainData.ValueRO.Segments.Nodes[index];
 
-                if (node.Value != Placeholder && node.Value != default) ecb.AddComponent<DestroySegmentTag>(node.Value);
+                if (node.Value != PlaceHolder && node.Value != default) ecb.AddComponent<DestroySegmentTag>(node.Value);
 
                 var entity = state.EntityManager.Instantiate(settings.RendererSegmentPrefab);
 
@@ -63,7 +64,5 @@ namespace ECS.Systems.TerrainGeneration
 
             ecb.Playback(state.EntityManager);
         }
-
-        private static readonly Entity Placeholder = new() { Index = -1, Version = -1 };
     }
 }

@@ -47,23 +47,30 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                 var cubeSize = GetCubeSize(Settings.BaseCubeSize, scale);
 
                 var cubeMap = PopulateMap(Settings, TgTreeBlob, Maps, pos, scale);
-                var vertexes = new Vertexes(Settings.CubeCount);
+                var vertexes = new Vertices(Settings.CubeCount);
 
                 Ecb.AddBuffer<TriangleBufferElement>(unfilteredChunkIndex, entity);
                 Ecb.AddBuffer<VertexBufferElement>(unfilteredChunkIndex, entity);
 
+                var active = false;
+
                 for (var x = 0; x < Settings.CubeCount; x++)
                 for (var y = 0; y < Settings.CubeCount; y++)
                 for (var z = 0; z < Settings.CubeCount; z++)
-                    MarchCube(unfilteredChunkIndex, Ecb, Settings, entity, cubeSize, cubeMap, new int3(x, y, z),
-                        ref vertexes, ref cube);
+                    if (MarchCube(unfilteredChunkIndex, Ecb, Settings, entity, cubeSize, cubeMap, new int3(x, y, z),
+                            ref vertexes, ref cube))
+                        active = true;
 
                 foreach (var vert in vertexes.Positions)
                     Ecb.AppendToBuffer<VertexBufferElement>(unfilteredChunkIndex, entity, vert);
 
+                if (active) Ecb.AddComponent<SetRendererMeshTag>(unfilteredChunkIndex, entity);
+                else
+                    Ecb.AddComponent(unfilteredChunkIndex, entity,
+                        new InactiveSegment { Position = pos, Scale = scale });
+
                 Ecb.AddComponent(unfilteredChunkIndex, entity, LocalTransform.FromPosition(pos));
                 Ecb.RemoveComponent<CreateRendererMeshTag>(unfilteredChunkIndex, entity);
-                Ecb.AddComponent<SetRendererMeshTag>(unfilteredChunkIndex, entity);
 
                 vertexes.Dispose();
 
@@ -73,40 +80,42 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
             if (cube.IsCreated) cube.Dispose();
         }
 
-        private static void MarchCube(int sortKey, EntityCommandBuffer.ParallelWriter ecb, BaseSegmentSettings settings,
-            Entity entity, float cubeSize, CubicArray<float> cubeMap, int3 position, ref Vertexes vertexes,
+        private static bool MarchCube(int sortKey, EntityCommandBuffer.ParallelWriter ecb, BaseSegmentSettings settings,
+            Entity entity, float cubeSize, CubicArray<float> cubeMap, int3 position, ref Vertices vertices,
             ref NativeArray<float> cube)
         {
-            for (var ci = 0; ci < 8; ci++) cube[ci] = cubeMap.GetAt(position + Corner(ci));
+            for (var c = 0; c < 8; c++) cube[c] = cubeMap.GetAt(position + Corner(c));
 
             var config = GetCubeConfig(settings, cube);
-            if (config is 0 or 255) return;
+            if (config is 0 or 255) return false;
 
             var edgeIndex = 0;
 
             for (var i = 0; i < 15; i++)
             {
                 var index = Triangle(config, edgeIndex);
-                if (index == -1) return;
+                if (index == -1) return true;
 
                 var vertPos = IndexToVertexPosition(settings, position, ref cube, index);
-                var vertIndex = vertexes.GetOrCreateVertex(position, index, vertPos * cubeSize);
+                var vertIndex = vertices.GetOrCreateVertex(position, index, vertPos * cubeSize);
 
                 ecb.AppendToBuffer<TriangleBufferElement>(sortKey, entity, vertIndex);
 
                 edgeIndex++;
             }
+
+            return true;
         }
 
         private static int GetCubeConfig(BaseSegmentSettings settings, NativeArray<float> cube)
         {
-            var configIndex = 0;
-            
-            for (var i = 0; i < 8; i++)
-                if (cube[i] <= settings.MapSurface)
-                    configIndex |= 1 << i;
-            
-            return configIndex;
+            var config = 0;
+
+            for (var c = 0; c < 8; c++)
+                if (cube[c] <= settings.MapSurface)
+                    config |= 1 << c;
+
+            return config;
         }
 
         private static float3 IndexToVertexPosition(BaseSegmentSettings settings, int3 position,
@@ -124,14 +133,14 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
             return vert1 + (float3)(vert2 - vert1) * dif;
         }
 
-        private struct Vertexes : IDisposable
+        private struct Vertices : IDisposable
         {
             public NativeList<float3> Positions;
 
             private NativeArray<int> _vertIndices;
             private readonly int _vertLength;
 
-            public Vertexes(int cubeCount)
+            public Vertices(int cubeCount)
             {
                 _vertLength = cubeCount + 1;
                 Positions = new NativeList<float3>(Allocator.Temp);
