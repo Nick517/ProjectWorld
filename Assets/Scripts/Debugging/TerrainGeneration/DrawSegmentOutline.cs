@@ -1,15 +1,12 @@
 using DataTypes.Trees;
-using Unity.Burst;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
-using Utility.TerrainGeneration;
 using static Utility.SpacialPartitioning.SegmentOperations;
 using TerrainData = ECS.Components.TerrainGeneration.TerrainData;
 
 namespace Debugging.TerrainGeneration
 {
-    [BurstCompile]
     public class DrawSegmentOutline : MonoBehaviour
     {
         public uint minScale;
@@ -29,14 +26,13 @@ namespace Debugging.TerrainGeneration
             Color.white
         };
 
-        [BurstCompile]
         public void OnDrawGizmos()
         {
             var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             var query = entityManager.CreateEntityQuery(typeof(TerrainData));
             if (!query.TryGetSingleton<TerrainData>(out var terrainData)) return;
 
-            terrainData.Segments.Traverse(new DrawSegments
+            terrainData.RendererSegs.Traverse(new DrawSegments
             {
                 MinScale = minScale,
                 MaxScale = maxScale,
@@ -44,17 +40,15 @@ namespace Debugging.TerrainGeneration
             });
         }
 
-        [BurstCompile]
         private struct DrawSegments : Octree<Entity>.ITraverseAction
         {
             public uint MinScale;
             public uint MaxScale;
             public Color[] Colors;
 
-            [BurstCompile]
             public void Execute(in Octree<Entity> octree, in Octree<Entity>.Node node)
             {
-                if (!node.Value.IsValidSegment() || node.Value == default) return;
+                if (node.Value == default) return;
                 if (node.Scale < MinScale || node.Scale > MaxScale) return;
 
                 var size = GetSegSize(octree.BaseNodeSize, node.Scale);

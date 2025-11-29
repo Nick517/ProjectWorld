@@ -3,13 +3,11 @@ using DataTypes;
 using DataTypes.Trees;
 using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
-using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Burst.Intrinsics;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
-using Unity.Transforms;
 using static Utility.SpacialPartitioning.SegmentOperations;
 using static Utility.TerrainGeneration.MarchingCubeTables;
 using static Utility.TerrainGeneration.TerrainGenerator;
@@ -17,7 +15,7 @@ using static Utility.TerrainGeneration.TerrainGenerator;
 namespace ECS.Jobs.TerrainGeneration.Renderer
 {
     [BurstCompile]
-    public struct CreateRendererMeshJob : IJobChunk
+    public struct CreateMeshJob : IJobChunk
     {
         [WriteOnly] public EntityCommandBuffer.ParallelWriter Ecb;
         [ReadOnly] public EntityTypeHandle EntityTypeHandle;
@@ -42,8 +40,9 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                 if (processed >= Settings.MaxSegmentsPerFrame) break;
 
                 var entity = entities[i];
-                var pos = segmentInfos[i].Position;
-                var scale = segmentInfos[i].Scale;
+                var info = segmentInfos[i];
+                var pos = info.Position;
+                var scale = info.Scale;
                 var cubeSize = GetCubeSize(Settings.BaseCubeSize, scale);
 
                 var cubeMap = PopulateMap(Settings, TgTreeBlob, Maps, pos, scale);
@@ -64,13 +63,10 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                 foreach (var vert in vertexes.Positions)
                     Ecb.AppendToBuffer<VertexBufferElement>(unfilteredChunkIndex, entity, vert);
 
-                if (active) Ecb.AddComponent<SetRendererMeshTag>(unfilteredChunkIndex, entity);
-                else
-                    Ecb.AddComponent(unfilteredChunkIndex, entity,
-                        new InactiveSegment { Position = pos, Scale = scale });
+                if (active) Ecb.AddComponent<SetMeshTag>(unfilteredChunkIndex, entity);
+                else Ecb.AddComponent<InactiveSegmentTag>(unfilteredChunkIndex, entity);
 
-                Ecb.AddComponent(unfilteredChunkIndex, entity, LocalTransform.FromPosition(pos));
-                Ecb.RemoveComponent<CreateRendererMeshTag>(unfilteredChunkIndex, entity);
+                Ecb.RemoveComponent<CreateMeshTag>(unfilteredChunkIndex, entity);
 
                 vertexes.Dispose();
 

@@ -189,7 +189,7 @@ PrefabInstance:
     - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
       propertyPath: maxSegmentsPerFrame
-      value: 32
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
@@ -247,20 +247,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1652697081200785223, guid: 4688299cda1843840837b8f03c4da5da,
+        type: 3}
+      propertyPath: modificationRadius
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1324
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 556
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 690673346499959159, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
@@ -309,6 +314,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
+      propertyPath: colliderLOD
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
+        type: 3}
+      propertyPath: rendererLOD
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
+        type: 3}
       propertyPath: gizmoColor.b
       value: 1
       objectReference: {fileID: 0}
@@ -325,12 +340,22 @@ PrefabInstance:
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: megaSegments
-      value: 2
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
       propertyPath: maxSegmentScale
-      value: 10
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
+        type: 3}
+      propertyPath: rendererMegaSegments
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
+        type: 3}
+      propertyPath: rendererMaxSegmentScale
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 7734283982704057008, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}

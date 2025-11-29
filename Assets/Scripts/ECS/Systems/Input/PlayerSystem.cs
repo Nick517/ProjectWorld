@@ -12,10 +12,6 @@ namespace ECS.Systems.Input
     [BurstCompile]
     public partial struct PlayerSystem : ISystem
     {
-        private PlayerSettings _playerSettings;
-        private bool _initialized;
-
-        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<TerrainModificationBufferElement>();
@@ -27,13 +23,8 @@ namespace ECS.Systems.Input
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            if (!_initialized)
-            {
-                _playerSettings = SystemAPI.GetSingleton<PlayerSettings>();
-                _initialized = true;
-            }
-
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
+            var playerSettings = SystemAPI.GetSingleton<PlayerSettings>();
             var playerInput = SystemAPI.GetSingleton<PlayerInput>();
             var playerEntity = SystemAPI.GetSingletonEntity<PlayerSettings>();
             var transform = SystemAPI.GetComponent<LocalTransform>(playerEntity);
@@ -41,7 +32,7 @@ namespace ECS.Systems.Input
 
             if (playerInput.AddTerrain || playerInput.RemoveTerrain)
             {
-                var rayEnd = transform.Position + transform.Forward() * _playerSettings.InteractionRange;
+                var rayEnd = transform.Position + transform.Forward() * playerSettings.InteractionRange;
                 var rayInput = new RaycastInput
                 {
                     Start = transform.Position,
@@ -54,15 +45,15 @@ namespace ECS.Systems.Input
                         new TerrainModificationBufferElement
                         {
                             Origin = hit.Position,
-                            Range = 0.5f,
+                            Range = playerSettings.ModificationRadius,
                             Addition = playerInput.AddTerrain
                         });
             }
 
             if (playerInput.ThrowObject)
             {
-                var forceVector = transform.Forward() * _playerSettings.ThrowForce;
-                var throwEntity = ecb.Instantiate(_playerSettings.ThrowObjectPrefab);
+                var forceVector = transform.Forward() * playerSettings.ThrowForce;
+                var throwEntity = ecb.Instantiate(playerSettings.ThrowObjectPrefab);
                 ecb.SetComponent(throwEntity,
                     LocalTransform.FromPositionRotationScale(transform.Position, transform.Rotation, 0.5f));
                 ecb.SetComponent(throwEntity, new PhysicsVelocity { Linear = forceVector });

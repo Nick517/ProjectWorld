@@ -1,7 +1,7 @@
 using Unity.Entities;
 using Unity.Mathematics;
 
-namespace ECS.BufferElements.TerrainGeneration.Renderer
+namespace ECS.BufferElements.TerrainGeneration
 {
     public struct SegmentModifiedBufferElement : IBufferElementData
     {

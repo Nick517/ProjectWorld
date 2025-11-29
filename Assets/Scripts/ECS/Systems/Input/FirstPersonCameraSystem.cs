@@ -10,15 +10,15 @@ namespace ECS.Systems.Input
     [BurstCompile]
     public partial struct FirstPersonCameraSystem : ISystem
     {
+        private quaternion _rotation;
+
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<CameraInput>();
             state.RequireForUpdate<CameraSettings>();
             state.RequireForUpdate<FirstPersonCameraTag>();
         }
-
-        private quaternion _rotation;
-
+        
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {

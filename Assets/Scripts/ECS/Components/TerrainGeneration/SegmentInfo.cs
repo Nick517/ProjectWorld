@@ -7,5 +7,6 @@ namespace ECS.Components.TerrainGeneration
     {
         public float3 Position;
         public int Scale;
+        public bool IsRenderer;
     }
 }

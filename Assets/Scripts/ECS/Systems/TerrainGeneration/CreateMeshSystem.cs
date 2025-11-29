@@ -1,32 +1,29 @@
 using ECS.Components.TerrainGeneration;
-using ECS.Components.TerrainGeneration.Renderer;
 using ECS.Jobs.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using TerrainData = ECS.Components.TerrainGeneration.TerrainData;
 
-namespace ECS.Systems.TerrainGeneration.Renderer
+namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(RendererManagerSystem))]
+    [UpdateAfter(typeof(DestroySegmentSystem))]
     [BurstCompile]
-    public partial struct CreateRendererMeshSystem : ISystem
+    public partial struct CreateMeshSystem : ISystem
     {
         private EntityQuery _segmentQuery;
         private EntityTypeHandle _entityTypeHandle;
         private ComponentTypeHandle<SegmentInfo> _segmentInfoTypeHandle;
 
-        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<TgTreeBlob>();
             state.RequireForUpdate<TerrainData>();
-            state.RequireForUpdate<CreateRendererMeshTag>();
+            state.RequireForUpdate<CreateMeshTag>();
 
             _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<CreateRendererMeshTag>()
+                .WithAll<CreateMeshTag>()
                 .Build(ref state);
 
             _entityTypeHandle = state.GetEntityTypeHandle();
@@ -46,7 +43,7 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             var tgGraph = SystemAPI.GetSingleton<TgTreeBlob>();
             var maps = SystemAPI.GetSingleton<TerrainData>().Maps;
 
-            var jobHandle = new CreateRendererMeshJob
+            var jobHandle = new CreateMeshJob
             {
                 Ecb = ecb,
                 EntityTypeHandle = _entityTypeHandle,

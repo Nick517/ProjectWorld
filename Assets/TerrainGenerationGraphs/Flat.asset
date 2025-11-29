@@ -42,8 +42,25 @@ MonoBehaviour:
     - id: 1ed6f4a2664abb64883cf14e8b1e2315
     - id: 6424fab4d49f16742a3fd329f5864f2e
     - id: bfceb219191248c418f96aa60d694bca
+  - type: 8
+    position: {x: -259.19998, y: 143.2}
+    inputPorts:
+    - id: 6cab06360aa96994f84ea07f0956d657
+      constVal:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+    - id: 2e02c527261534a4398078181f16ecc7
+      constVal:
+        x: 10
+        y: 0
+        z: 0
+        w: 0
+    outputPorts:
+    - id: 9027df2c2e5e92e4fa7f0761e9ee23d3
   - type: 7
-    position: {x: -259.19998, y: 4.799999}
+    position: {x: -376, y: 4.799999}
     inputPorts:
     - id: 45eee4ef46f38e1449e7957bc1488d0e
       constVal:
@@ -59,4 +76,6 @@ MonoBehaviour:
   - inputPortId: 45eee4ef46f38e1449e7957bc1488d0e
     outputPortId: 1ed6f4a2664abb64883cf14e8b1e2315
   - inputPortId: 08464d5ba2cca014b8f0ce57e0f2fbdd
+    outputPortId: 9027df2c2e5e92e4fa7f0761e9ee23d3
+  - inputPortId: 6cab06360aa96994f84ea07f0956d657
     outputPortId: 2b86abb2437ebba41ad6b63388216746

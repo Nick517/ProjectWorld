@@ -1,12 +1,10 @@
 using System;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using Utility.Collections;
 
 namespace DataTypes.Trees
 {
-    [BurstCompile]
     public struct ArrayOctree<T> : IDisposable where T : unmanaged, IEquatable<T>
     {
         private Octree<int> _octree;
@@ -14,7 +12,7 @@ namespace DataTypes.Trees
         private readonly int _size;
         private int _count;
 
-        public bool IsCreated { get; }
+        private bool IsCreated { get; }
 
         public ArrayOctree(float baseNodeSize, int size, Allocator allocator)
         {
@@ -25,32 +23,26 @@ namespace DataTypes.Trees
             IsCreated = true;
         }
 
-        [BurstCompile]
         public int PosToIndex(float3 position, int scale = 0)
         {
             var octreeIndex = _octree.PosToIndex(position, scale);
             var node = _octree.Nodes[octreeIndex];
-
-            if (node.Value == -1)
-            {
-                node.Value = NextIndex();
-                _octree.Nodes[octreeIndex] = node;
-            }
+            if (node.Value != -1) return node.Value;
+            
+            node.Value = NextIndex();
+            _octree.Nodes[octreeIndex] = node;
 
             return node.Value;
         }
 
-        [BurstCompile]
         public readonly int GetIndexAtPos(float3 position, int scale = 0)
         {
             var index = _octree.GetIndexAtPos(position, scale);
-
             if (index == -1) return -1;
 
             return _octree.GetAtIndex(index);
         }
 
-        [BurstCompile]
         public readonly NativeArray<T> GetArray(int index, Allocator allocator)
         {
             var offset = _size * index;
@@ -61,23 +53,13 @@ namespace DataTypes.Trees
             return array;
         }
 
-        [BurstCompile]
         public void SetArray(int index, NativeArray<T> array)
         {
             var offset = _size * index;
 
             for (var i = 0; i < _size; i++) _elements[offset + i] = array[i];
         }
-
-        [BurstCompile]
-        public readonly int GetNeighbor(int3 offset, float3 pos, int scale)
-        {
-            var index = _octree.GetNeighbor(offset, pos, scale);
-
-            return index == -1 ? -1 : _octree.Nodes[index].Value;
-        }
         
-        [BurstCompile]
         public void Dispose()
         {
             if (!IsCreated) return;
@@ -86,7 +68,6 @@ namespace DataTypes.Trees
             _elements.Dispose();
         }
 
-        [BurstCompile]
         private int NextIndex()
         {
             var index = _count++;

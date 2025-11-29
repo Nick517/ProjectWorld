@@ -1,5 +1,4 @@
 using ECS.Components.TerrainGeneration;
-using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Entities;
 using Unity.Transforms;
@@ -10,19 +9,18 @@ namespace ECS.Systems.TerrainGeneration
     [BurstCompile]
     public partial struct TrackPointSystem : ISystem
     {
-        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<BaseSegmentSettings>();
-            state.RequireForUpdate<RendererPoint>();
+            state.RequireForUpdate<TrackPoint>();
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
             var settings = SystemAPI.GetSingleton<BaseSegmentSettings>();
-            var entity = SystemAPI.GetSingletonEntity<RendererPoint>();
-            var point = SystemAPI.GetComponentRW<RendererPoint>(entity);
+            var entity = SystemAPI.GetSingletonEntity<TrackPoint>();
+            var point = SystemAPI.GetComponentRW<TrackPoint>(entity);
             var pos = SystemAPI.GetComponentRO<LocalTransform>(entity).ValueRO.Position;
             
             if (PointWithinSeg(pos, point.ValueRO.SegmentPosition, settings.BaseSegSize)) return;

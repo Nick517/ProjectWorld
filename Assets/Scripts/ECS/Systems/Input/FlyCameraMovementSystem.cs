@@ -10,7 +10,6 @@ namespace ECS.Systems.Input
     [BurstCompile]
     public partial struct FlyCameraMovementSystem : ISystem
     {
-        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<FlyCamera>();

@@ -1,5 +1,4 @@
 using DataTypes.Trees;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using UnityEditor;
@@ -8,7 +7,6 @@ using UnityEngine;
 namespace Debugging.Octree
 {
     [CustomEditor(typeof(OctreeVisualizer))]
-    [BurstCompile]
     public class OctreeVisualizerEditor : Editor
     {
         private const float BaseNodeSize = 1;
@@ -21,13 +19,11 @@ namespace Debugging.Octree
         private FixedString32Bytes _value = "";
         private int _scale;
 
-        [BurstCompile]
         private void OnEnable()
         {
             _target = (OctreeVisualizer)target;
         }
 
-        [BurstCompile]
         private void InitializeOctrees()
         {
             if (_target.OctreeA.IsCreated) return;
@@ -39,7 +35,6 @@ namespace Debugging.Octree
             EditorApplication.playModeStateChanged += HandlePlayModeStateChanged;
         }
 
-        [BurstCompile]
         private void CleanupOctrees()
         {
             _target.OctreeA.Dispose();
@@ -49,13 +44,11 @@ namespace Debugging.Octree
             EditorApplication.playModeStateChanged -= HandlePlayModeStateChanged;
         }
 
-        [BurstCompile]
         private void HandlePlayModeStateChanged(PlayModeStateChange state)
         {
             if (state is PlayModeStateChange.ExitingEditMode or PlayModeStateChange.ExitingPlayMode) CleanupOctrees();
         }
 
-        [BurstCompile]
         public override void OnInspectorGUI()
         {
             InitializeOctrees();
@@ -143,7 +136,6 @@ namespace Debugging.Octree
             Debug.Log(result);
         }
 
-        [BurstCompile]
         private void PrintNodeState(in Octree<FixedString32Bytes> octree, string octreeName)
         {
             var result = $"{octreeName}: ";
@@ -155,7 +147,6 @@ namespace Debugging.Octree
             Debug.Log(result);
         }
 
-        [BurstCompile]
         private void SubdivideNode(Octree<FixedString32Bytes> octree, string octreeName)
         {
             var index = octree.GetIndexAtPos(_position, _scale);
@@ -164,7 +155,6 @@ namespace Debugging.Octree
             else octree.Subdivide(index);
         }
 
-        [BurstCompile]
         private string NoNodeMessage()
         {
             var posInfo = $"pos=({_position.x:F2}, {_position.y:F2}, {_position.z:F2})";
@@ -172,7 +162,6 @@ namespace Debugging.Octree
             return $"No node at {posInfo}, {scaleInfo}";
         }
 
-        [BurstCompile]
         private void OnSceneGUI()
         {
             if (!_target.OctreeA.IsCreated) return;
@@ -186,7 +175,6 @@ namespace Debugging.Octree
             Repaint();
         }
 
-        [BurstCompile]
         private void OnDestroy()
         {
             CleanupOctrees();

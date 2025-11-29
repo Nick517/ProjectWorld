@@ -1,6 +1,5 @@
 using DataTypes;
 using ECS.BufferElements.TerrainGeneration;
-using ECS.BufferElements.TerrainGeneration.Renderer;
 using ECS.Components.TerrainGeneration;
 using ECS.Systems.Input;
 using Unity.Burst;
@@ -14,15 +13,13 @@ namespace ECS.Systems.TerrainGeneration
 {
     [UpdateAfter(typeof(PlayerSystem))]
     [BurstCompile]
-    public partial struct TerrainModificationManager : ISystem
+    public partial struct TerrainModificationManagerSystem : ISystem
     {
-        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SegmentModifiedBufferElement>();
             state.RequireForUpdate<TgTreeBlob>();
             state.RequireForUpdate<BaseSegmentSettings>();
-            state.RequireForUpdate<TerrainData>();
             state.RequireForUpdate<TerrainModificationBufferElement>();
         }
 

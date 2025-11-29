@@ -10,18 +10,11 @@ namespace ECS.Systems.Input
     {
         private PlayerControls _playerControls;
 
-        [BurstCompile]
         protected override void OnCreate()
         {
-            RequireForUpdate<CameraSettings>();
-            RequireForUpdate<CameraInput>();
-            RequireForUpdate<FlyCameraInput>();
-            RequireForUpdate<PlayerInput>();
-
             _playerControls = new PlayerControls();
         }
 
-        [BurstCompile]
         protected override void OnStartRunning()
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -47,13 +40,11 @@ namespace ECS.Systems.Input
             cameraInput.ValueRW.LookDelta = lookDelta * cameraSettings.Sensitivity;
         }
 
-        [BurstCompile]
         protected override void OnStopRunning()
         {
             _playerControls.Disable();
         }
 
-        [BurstCompile]
         protected override void OnDestroy()
         {
             _playerControls.Dispose();

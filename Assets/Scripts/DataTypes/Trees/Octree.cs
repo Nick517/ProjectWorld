@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using Utility.Collections;
@@ -9,7 +8,6 @@ using static Utility.SpacialPartitioning.SegmentOperations;
 
 namespace DataTypes.Trees
 {
-    [BurstCompile]
     public struct Octree<T> : IDisposable where T : unmanaged, IEquatable<T>
     {
         private const int DefaultInitialSize = 2048;
@@ -39,7 +37,6 @@ namespace DataTypes.Trees
             for (var i = 0; i < 8; i++) _rootIndexes[i] = -1;
         }
 
-        [BurstCompile]
         public int SetAtPos(T value, float3 position, int scale = 0)
         {
             var index = PosToIndex(position, scale);
@@ -49,13 +46,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
-        public readonly T GetAtPos(float3 position, int scale = 0)
-        {
-            return GetAtIndex(GetIndexAtPos(position, scale));
-        }
-
-        [BurstCompile]
         public void SetAtIndex(T value, int index)
         {
             var node = Nodes[index];
@@ -63,13 +53,11 @@ namespace DataTypes.Trees
             Nodes[index] = node;
         }
 
-        [BurstCompile]
         public readonly T GetAtIndex(int index)
         {
             return index == -1 ? default : Nodes[index].Value;
         }
 
-        [BurstCompile]
         public int PosToIndex(float3 position, int scale = 0)
         {
             var index = EncompassPoint(position);
@@ -97,7 +85,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
         public readonly int GetIndexAtPos(float3 position, int scale = 0)
         {
             var octant = GetOctant(position);
@@ -131,7 +118,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
         public readonly int GetLeafAtPos(float3 position, int scale = 0)
         {
             var octant = GetOctant(position);
@@ -165,16 +151,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
-        public readonly int GetNeighbor(int3 offset, float3 position, int scale = 0)
-        {
-            var segSize = GetSegSize(BaseNodeSize, scale);
-            var neighborPos = position + (float3)offset * segSize;
-
-            return GetIndexAtPos(neighborPos, scale);
-        }
-
-        [BurstCompile]
         public void Traverse<TAction>(in TAction action) where TAction : struct, ITraverseAction
         {
             for (var i = 0; i < 8; i++)
@@ -182,30 +158,21 @@ namespace DataTypes.Trees
                     TraverseByIndex(_rootIndexes[i], action);
         }
 
-        [BurstCompile]
         private void TraverseByIndex<TAction>(int index, TAction action) where TAction : struct, ITraverseAction
         {
-            using var stack = new NativeList<int>(Allocator.Temp);
-            stack.Add(index);
+            var node = Nodes[index];
+            
+            action.Execute(this, node);
 
-            while (stack.Length > 0)
+            if (node.IsLeaf) return;
+
+            for (var i = 0; i < 8; i++)
             {
-                var node = Nodes[stack[^1]];
-                stack.RemoveAt(stack.Length - 1);
-
-                action.Execute(this, node);
-
-                if (node.IsLeaf) continue;
-
-                for (var i = 0; i < 8; i++)
-                {
-                    var child = node.GetChild(i);
-                    if (child != -1) stack.Add(child);
-                }
+                var child = node.GetChild(i);
+                if (child != -1) TraverseByIndex(child, action);
             }
         }
 
-        [BurstCompile]
         public void Copy(in Octree<T> other)
         {
             Clear();
@@ -215,7 +182,6 @@ namespace DataTypes.Trees
                     _rootIndexes[oct] = CopyByIndex(other._rootIndexes[oct], other);
         }
 
-        [BurstCompile]
         private int CopyByIndex(int otherIndex, in Octree<T> other)
         {
             if (otherIndex == -1) return -1;
@@ -233,7 +199,6 @@ namespace DataTypes.Trees
             return newIndex;
         }
 
-        [BurstCompile]
         public void Union(in Octree<T> other)
         {
             var result = new Octree<T>(BaseNodeSize, Allocator);
@@ -279,7 +244,6 @@ namespace DataTypes.Trees
             this = result;
         }
 
-        [BurstCompile]
         private int UnionByIndex(int thisIndex, int otherIndex, in Octree<T> other, ref Octree<T> result,
             bool copyThis = false)
         {
@@ -309,29 +273,22 @@ namespace DataTypes.Trees
             return resultIndex;
         }
 
-        [BurstCompile]
-        public void Except(in Octree<T> other)
+        public void Except<TU>(in Octree<TU> other) where TU : unmanaged, IEquatable<TU>
         {
-            this = Except(this, other,
-                Allocator,
-                new DefaultComparison()
-            );
+            this = Except(this, other, Allocator, new DefaultComparison<TU>());
         }
 
-        [BurstCompile]
-        public void Except<TComparison>(in Octree<T> other, TComparison comparison)
-            where TComparison : struct, IComparison
+        public void Except<TU, TComparison>(in Octree<TU> other, TComparison comparison)
+            where TU : unmanaged, IEquatable<TU>
+            where TComparison : struct, IComparison<TU>
         {
-            this = Except(this, other,
-                Allocator,
-                comparison
-            );
+            this = Except(this, other, Allocator, comparison);
         }
 
-        [BurstCompile]
-        public static Octree<T> Except<TComparison>(in Octree<T> treeA, in Octree<T> treeB,
+        public static Octree<T> Except<TU, TComparison>(in Octree<T> treeA, in Octree<TU> treeB,
             Allocator allocator, TComparison comparison)
-            where TComparison : struct, IComparison
+            where TU : unmanaged, IEquatable<TU>
+            where TComparison : struct, IComparison<TU>
         {
             var treeR = new Octree<T>(treeA.BaseNodeSize, allocator);
 
@@ -371,11 +328,11 @@ namespace DataTypes.Trees
             return treeR;
         }
 
-        [BurstCompile]
-        private static int ExceptLargerTree<TComparison>(int indexA, int indexB, int oppOct, int scale,
-            in Octree<T> treeA, in Octree<T> treeB, ref Octree<T> treeR,
+        private static int ExceptLargerTree<TU, TComparison>(int indexA, int indexB, int oppOct, int scale,
+            in Octree<T> treeA, in Octree<TU> treeB, ref Octree<T> treeR,
             Allocator allocator, TComparison comparison)
-            where TComparison : struct, IComparison
+            where TU : unmanaged, IEquatable<TU>
+            where TComparison : struct, IComparison<TU>
         {
             if (indexA == -1 || indexB == -1) return -1;
 
@@ -418,11 +375,11 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
-        private static int ExceptByIndex<TComparison>(int indexA, int indexB,
-            in Octree<T> treeA, in Octree<T> treeB, ref Octree<T> result,
+        private static int ExceptByIndex<TU, TComparison>(int indexA, int indexB,
+            in Octree<T> treeA, in Octree<TU> treeB, ref Octree<T> result,
             Allocator allocator, TComparison comparison)
-            where TComparison : struct, IComparison
+            where TU : unmanaged, IEquatable<TU>
+            where TComparison : struct, IComparison<TU>
         {
             if (indexA == -1) return -1;
             if (indexB == -1) return result.CopyByIndex(indexA, treeA);
@@ -469,19 +426,15 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
-        public void Intersect(in Octree<T> other)
+        public void Intersect<TU>(in Octree<TU> other) where TU : unmanaged, IEquatable<TU>
         {
-            this = Intersect(this, other,
-                Allocator,
-                new DefaultComparison()
-            );
+            this = Intersect(this, other, Allocator, new DefaultComparison<TU>());
         }
 
-        [BurstCompile]
-        public static Octree<T> Intersect<TComparison>(in Octree<T> treeA, in Octree<T> treeB,
+        public static Octree<T> Intersect<TU, TComparison>(in Octree<T> treeA, in Octree<TU> treeB,
             Allocator allocator, TComparison comparison)
-            where TComparison : struct, IComparison
+            where TU : unmanaged, IEquatable<TU>
+            where TComparison : struct, IComparison<TU>
         {
             var treeR = new Octree<T>(treeA.BaseNodeSize, allocator);
 
@@ -509,11 +462,11 @@ namespace DataTypes.Trees
             return treeR;
         }
 
-        [BurstCompile]
-        private static int IntersectByIndex<TComparison>(int indexA, int indexB,
-            in Octree<T> treeA, in Octree<T> treeB, ref Octree<T> result,
+        private static int IntersectByIndex<TU, TComparison>(int indexA, int indexB,
+            in Octree<T> treeA, in Octree<TU> treeB, ref Octree<T> result,
             Allocator allocator, TComparison comparison)
-            where TComparison : struct, IComparison
+            where TU : unmanaged, IEquatable<TU>
+            where TComparison : struct, IComparison<TU>
         {
             if (indexA == -1 || indexB == -1) return -1;
 
@@ -557,7 +510,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
         public void Subdivide(int index)
         {
             if (index == -1) return;
@@ -575,7 +527,6 @@ namespace DataTypes.Trees
             Nodes[index] = node;
         }
 
-        [BurstCompile]
         public void Clear()
         {
             Dispose();
@@ -588,7 +539,6 @@ namespace DataTypes.Trees
             for (var i = 0; i < 8; i++) _rootIndexes[i] = -1;
         }
 
-        [BurstCompile]
         public void Dispose()
         {
             Nodes.Dispose();
@@ -597,7 +547,6 @@ namespace DataTypes.Trees
             IsCreated = false;
         }
 
-        [BurstCompile]
         public readonly override string ToString()
         {
             var typeInfo = $"type={typeof(T)}";
@@ -608,7 +557,6 @@ namespace DataTypes.Trees
             return $"Octree({typeInfo}, {sizeInfo}, {countInfo}, {rootInfo})";
         }
 
-        [BurstCompile]
         private int NextIndex()
         {
             var index = Count++;
@@ -618,7 +566,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
         private int InitNode(float3 position, int scale, T value)
         {
             var index = NextIndex();
@@ -628,7 +575,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
         private int InitRoot(int octant, int scale = 0)
         {
             var segSize = GetSegSize(BaseNodeSize, scale);
@@ -640,7 +586,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
         private int UpscaleRoot(int octant)
         {
             var index = NextIndex();
@@ -655,7 +600,6 @@ namespace DataTypes.Trees
             return index;
         }
 
-        [BurstCompile]
         private int EncompassPoint(float3 position)
         {
             var oct = GetOctant(position);
@@ -667,19 +611,16 @@ namespace DataTypes.Trees
             return _rootIndexes[oct];
         }
 
-        [BurstCompile]
         private readonly bool IsDefault(Node node)
         {
             return node.Value.Equals(_defaultValue);
         }
 
-        [BurstCompile]
         private readonly Node RootNode(int octant)
         {
             return Nodes[_rootIndexes[octant]];
         }
 
-        [BurstCompile]
         private readonly bool PointWithinOctant(float3 position, int octant)
         {
             var root = RootNode(octant);
@@ -687,7 +628,6 @@ namespace DataTypes.Trees
             return PointWithinSeg(position, root.Position, GetSegSize(BaseNodeSize, root.Scale));
         }
 
-        [BurstCompile]
         private readonly int MinEncompassingScale(float3 point)
         {
             return point.Equals(default) ? 0 : (int)math.ceil(math.log2(math.cmax(math.abs(point)) / BaseNodeSize));
@@ -698,22 +638,19 @@ namespace DataTypes.Trees
             public void Execute(in Octree<T> octree, in Node node);
         }
 
-        public interface IComparison
+        public interface IComparison<TU> where TU : unmanaged
         {
-            public bool Evaluate(in T a, in T b);
+            public bool Evaluate(in T a, in TU b);
         }
 
-        [BurstCompile]
-        private readonly struct DefaultComparison : IComparison
+        private readonly struct DefaultComparison<TU> : IComparison<TU> where TU : unmanaged, IEquatable<TU>
         {
-            [BurstCompile]
-            public bool Evaluate(in T a, in T b)
+            public bool Evaluate(in T a, in TU b)
             {
                 return a.Equals(b);
             }
         }
 
-        [BurstCompile]
         public struct Node
         {
             public T Value;
@@ -733,7 +670,6 @@ namespace DataTypes.Trees
                 IsLeaf = true;
             }
 
-            [BurstCompile]
             public readonly int GetChild(int oct)
             {
                 return oct switch
@@ -750,7 +686,6 @@ namespace DataTypes.Trees
                 };
             }
 
-            [BurstCompile]
             public void SetChild(int oct, int index)
             {
                 IsLeaf = false;
@@ -768,13 +703,11 @@ namespace DataTypes.Trees
                 }
             }
 
-            [BurstCompile]
             public void SetChildren(in NativeArray<int> children)
             {
                 for (var i = 0; i < 8; i++) SetChild(i, children[i]);
             }
 
-            [BurstCompile]
             public readonly override string ToString()
             {
                 var posInfo = $"pos=({Position.x:F2}, {Position.y:F2}, {Position.z:F2})";

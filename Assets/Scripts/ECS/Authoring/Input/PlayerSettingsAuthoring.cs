@@ -10,6 +10,7 @@ namespace ECS.Authoring.Input
         public float interactionRange = 50;
         public GameObject throwObjectPrefab;
         public float throwForce = 10;
+        public float modificationRadius = 0.5f;
     }
 
     public class PlayerSettingsBaker : Baker<PlayerSettingsAuthoring>
@@ -21,7 +22,8 @@ namespace ECS.Authoring.Input
             {
                 InteractionRange = authoring.interactionRange,
                 ThrowObjectPrefab = GetEntity(authoring.throwObjectPrefab, TransformUsageFlags.Dynamic),
-                ThrowForce = authoring.throwForce
+                ThrowForce = authoring.throwForce,
+                ModificationRadius = authoring.modificationRadius
             });
         }
     }

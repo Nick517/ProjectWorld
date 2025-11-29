@@ -1,22 +1,23 @@
 using ECS.Components.TerrainGeneration;
-using ECS.Components.TerrainGeneration.Renderer;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
-using static Utility.TerrainGeneration.SegmentTags;
-using TerrainData = ECS.Components.TerrainGeneration.TerrainData;
 
-namespace ECS.Systems.TerrainGeneration.Renderer
+namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(TrackPointSystem))]
     [BurstCompile]
     public partial struct TerrainDataManagerSystem : ISystem
     {
-        [BurstCompile]
+        private EntityQuery _segmentQuery;
+
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<BaseSegmentSettings>();
             state.RequireForUpdate<TerrainData>();
+
+            _segmentQuery = new EntityQueryBuilder(Allocator.Temp)
+                .WithAll<SegmentInfo, InactiveSegmentTag>()
+                .Build(ref state);
         }
 
         [BurstCompile]
@@ -25,13 +26,18 @@ namespace ECS.Systems.TerrainGeneration.Renderer
             using var ecb = new EntityCommandBuffer(Allocator.Temp);
             var terrainData = SystemAPI.GetSingletonRW<TerrainData>();
 
-            foreach (var (seg, entity) in SystemAPI.Query<RefRO<InactiveSegment>>().WithEntityAccess())
+            foreach (var entity in _segmentQuery.ToEntityArray(Allocator.Temp))
             {
-                terrainData.ValueRW.Segments.SetAtPos(Inactive, seg.ValueRO.Position, seg.ValueRO.Scale);
-                ecb.RemoveComponent<InactiveSegment>(entity);
+                var seg = state.EntityManager.GetComponentData<SegmentInfo>(entity);
+
+                terrainData.ValueRW.InactiveSegs.SetAtPos(true, seg.Position, seg.Scale);
+                terrainData.ValueRW.RendererSegs.SetAtPos(default, seg.Position, seg.Scale);
+                terrainData.ValueRW.ColliderSegs.SetAtPos(default, seg.Position, seg.Scale);
+
+                ecb.RemoveComponent<InactiveSegmentTag>(entity);
                 ecb.AddComponent<DestroySegmentTag>(entity);
             }
-            
+
             ecb.Playback(state.EntityManager);
         }
     }

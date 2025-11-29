@@ -1,17 +1,16 @@
-using ECS.Components.TerrainGeneration.Renderer;
+using ECS.Components.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
-namespace ECS.Systems.TerrainGeneration.Renderer
+namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(SetRendererMeshSystem))]
+    [UpdateAfter(typeof(SegmentManagerSystem))]
     [BurstCompile]
     public partial struct DestroySegmentSystem : ISystem
     {
         private EntityQuery _segmentQuery;
 
-        [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<DestroySegmentTag>();

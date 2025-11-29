@@ -6,6 +6,8 @@ namespace ECS.Components.TerrainGeneration
     public struct TerrainData : IComponentData
     {
         public ArrayOctree<float> Maps;
-        public Octree<Entity> Segments;
+        public Octree<bool> InactiveSegs;
+        public Octree<Entity> RendererSegs;
+        public Octree<Entity> ColliderSegs;
     }
 }

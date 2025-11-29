@@ -7,5 +7,6 @@ namespace ECS.Components.Input
         public float InteractionRange;
         public Entity ThrowObjectPrefab;
         public float ThrowForce;
+        public float ModificationRadius;
     }
 }
