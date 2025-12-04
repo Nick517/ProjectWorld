@@ -28,7 +28,6 @@ namespace ECS.Systems.TerrainGeneration
             state.EntityManager.AddComponentData(entity, new TerrainData
             {
                 Maps = new ArrayOctree<float>(settings.BaseCubeSize, settings.CubeCountTotal, Allocator.Persistent),
-                InactiveSegs = new Octree<bool>(settings.BaseSegSize, Allocator.Persistent),
                 RendererSegs = new Octree<Entity>(settings.BaseSegSize, Allocator.Persistent),
                 ColliderSegs = new Octree<Entity>(settings.BaseSegSize, Allocator.Persistent)
             });

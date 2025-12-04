@@ -9,6 +9,7 @@ namespace Debugging.TerrainGeneration
 {
     public class DrawSegmentOutline : MonoBehaviour
     {
+        public bool drawRenderer = true;
         public uint minScale;
         public uint maxScale = 9;
 
@@ -32,7 +33,9 @@ namespace Debugging.TerrainGeneration
             var query = entityManager.CreateEntityQuery(typeof(TerrainData));
             if (!query.TryGetSingleton<TerrainData>(out var terrainData)) return;
 
-            terrainData.RendererSegs.Traverse(new DrawSegments
+            var octree = drawRenderer ? terrainData.RendererSegs : terrainData.ColliderSegs;
+
+            octree.Traverse(new DrawSegments
             {
                 MinScale = minScale,
                 MaxScale = maxScale,

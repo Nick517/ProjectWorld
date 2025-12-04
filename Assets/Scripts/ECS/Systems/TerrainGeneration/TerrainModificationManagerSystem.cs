@@ -11,7 +11,6 @@ using Utility.TerrainGeneration;
 
 namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(PlayerSystem))]
     [BurstCompile]
     public partial struct TerrainModificationManagerSystem : ISystem
     {

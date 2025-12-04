@@ -26,7 +26,8 @@ namespace ECS.Systems.TerrainGeneration
             if (PointWithinSeg(pos, point.ValueRO.SegmentPosition, settings.BaseSegSize)) return;
 
             point.ValueRW.SegmentPosition = GetClosestSegPos(pos, settings.BaseSegSize);
-            point.ValueRW.Update = true;
+            state.EntityManager.AddComponent<UpdateRendererSegmentsTag>(entity);
+            state.EntityManager.AddComponent<UpdateColliderSegmentsTag>(entity);
         }
     }
 }

@@ -2,6 +2,7 @@ using ECS.Components.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using static Utility.TerrainGeneration.SegmentTags;
 
 namespace ECS.Systems.TerrainGeneration
 {
@@ -30,9 +31,8 @@ namespace ECS.Systems.TerrainGeneration
             {
                 var seg = state.EntityManager.GetComponentData<SegmentInfo>(entity);
 
-                terrainData.ValueRW.InactiveSegs.SetAtPos(true, seg.Position, seg.Scale);
-                terrainData.ValueRW.RendererSegs.SetAtPos(default, seg.Position, seg.Scale);
-                terrainData.ValueRW.ColliderSegs.SetAtPos(default, seg.Position, seg.Scale);
+                if (seg.IsRenderer) terrainData.ValueRW.RendererSegs.SetAtPos(Inactive, seg.Position, seg.Scale);
+                else terrainData.ValueRW.ColliderSegs.SetAtPos(Inactive, seg.Position, seg.Scale);
 
                 ecb.RemoveComponent<InactiveSegmentTag>(entity);
                 ecb.AddComponent<DestroySegmentTag>(entity);

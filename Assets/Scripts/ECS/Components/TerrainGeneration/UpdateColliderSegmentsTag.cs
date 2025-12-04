@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace ECS.Components.TerrainGeneration
 {
-    public struct SetMeshTag : IComponentData
+    public struct UpdateColliderSegmentsTag : IComponentData
     {
     }
 }

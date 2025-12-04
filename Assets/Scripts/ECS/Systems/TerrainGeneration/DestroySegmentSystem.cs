@@ -5,7 +5,6 @@ using Unity.Entities;
 
 namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(SegmentManagerSystem))]
     [BurstCompile]
     public partial struct DestroySegmentSystem : ISystem
     {

@@ -1,12 +1,11 @@
 using ECS.Components.TerrainGeneration;
-using ECS.Jobs.TerrainGeneration.Renderer;
+using ECS.Jobs.TerrainGeneration;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(DestroySegmentSystem))]
     [BurstCompile]
     public partial struct CreateMeshSystem : ISystem
     {

@@ -45,6 +45,12 @@ namespace DataTypes.Trees
 
             return index;
         }
+        
+        public readonly T GetAtPos(float3 position, int scale = 0)
+        {
+            var index = GetIndexAtPos(position, scale);
+            return index == -1 ? default : GetAtIndex(index);
+        }
 
         public void SetAtIndex(T value, int index)
         {

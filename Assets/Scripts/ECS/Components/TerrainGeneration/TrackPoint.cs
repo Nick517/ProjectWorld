@@ -10,8 +10,6 @@ namespace ECS.Components.TerrainGeneration
         public float RendererLOD;
         public int ColliderMaxSegmentScale;
         public int ColliderMegaSegments;
-        public float ColliderLOD;
         public float3 SegmentPosition;
-        public bool Update;
     }
 }

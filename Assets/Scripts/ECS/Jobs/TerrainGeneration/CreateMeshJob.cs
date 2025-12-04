@@ -12,7 +12,7 @@ using static Utility.SpacialPartitioning.SegmentOperations;
 using static Utility.TerrainGeneration.MarchingCubeTables;
 using static Utility.TerrainGeneration.TerrainGenerator;
 
-namespace ECS.Jobs.TerrainGeneration.Renderer
+namespace ECS.Jobs.TerrainGeneration
 {
     [BurstCompile]
     public struct CreateMeshJob : IJobChunk
@@ -63,8 +63,15 @@ namespace ECS.Jobs.TerrainGeneration.Renderer
                 foreach (var vert in vertexes.Positions)
                     Ecb.AppendToBuffer<VertexBufferElement>(unfilteredChunkIndex, entity, vert);
 
-                if (active) Ecb.AddComponent<SetMeshTag>(unfilteredChunkIndex, entity);
-                else Ecb.AddComponent<InactiveSegmentTag>(unfilteredChunkIndex, entity);
+                if (active)
+                {
+                    if (info.IsRenderer) Ecb.AddComponent<SetRendererMeshTag>(unfilteredChunkIndex, entity);
+                    else Ecb.AddComponent<SetColliderMeshTag>(unfilteredChunkIndex, entity);
+                }
+                else
+                {
+                    Ecb.AddComponent<InactiveSegmentTag>(unfilteredChunkIndex, entity);
+                }
 
                 Ecb.RemoveComponent<CreateMeshTag>(unfilteredChunkIndex, entity);
 

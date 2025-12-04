@@ -9,7 +9,6 @@ using Unity.Transforms;
 
 namespace ECS.Systems.TerrainGeneration
 {
-    [UpdateAfter(typeof(TerrainModificationManagerSystem))]
     public partial struct SegmentModificationManagerSystem : ISystem
     {
         private BaseSegmentSettings _settings;

@@ -189,7 +189,7 @@ PrefabInstance:
     - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
       propertyPath: maxSegmentsPerFrame
-      value: 4
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: -2392491516850801781, guid: c9feefa7eac02734e94381d52ab98eea,
         type: 3}
@@ -351,6 +351,11 @@ PrefabInstance:
         type: 3}
       propertyPath: rendererMegaSegments
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
+        type: 3}
+      propertyPath: colliderMaxSegmentScale
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6431473564034125354, guid: 4688299cda1843840837b8f03c4da5da,
         type: 3}
